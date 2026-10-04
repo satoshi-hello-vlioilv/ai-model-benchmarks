@@ -12,7 +12,7 @@ if (shotDir) fs.mkdirSync(shotDir, { recursive: true });
 
 // Windows 11 / 125% スケーリングの実効CSSピクセル（2160x1440 → 1728x1152、FHD → 1536x864）を含む
 const VIEWPORTS = [[1536, 864], [1728, 1152], [1920, 1080], [2560, 1440]];
-const ROUTES = ["overview", "models/matrix", "models/profile", "guide/map", "guide/detail", "bench/index", "bench/agentic", "bench/reason", "bench/work", "bench/computer", "bench/heat", "cost", "speed", "compare", "table", "data"];
+const ROUTES = ["overview", "models/matrix", "models/profile", "guide/map", "guide/detail", "future/roadmap", "future/capability", "future/infra", "future/frontier", "future/safety", "bench/index", "bench/agentic", "bench/reason", "bench/work", "bench/computer", "bench/heat", "cost", "speed", "compare", "table", "data"];
 
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || undefined });
 const failures = [];
@@ -62,6 +62,8 @@ for (const theme of ["light", "dark"]) {
           const b = svg.getBoundingClientRect();
           svg.querySelectorAll("text").forEach(t => { const r = t.getBoundingClientRect(); if (r.width && (r.left < b.left - 4 || r.right > b.right + 4 || r.top < b.top - 6 || r.bottom > b.bottom + 6)) out.svgOverflow.push(t.textContent); });
         });
+        const f = document.querySelector("#filters"); if (f.scrollWidth > f.clientWidth + 1) out.clipped.push(`上部フィルター 横 ${f.scrollWidth}>${f.clientWidth}`);
+        document.querySelectorAll("#view .chart svg").forEach(svg => { const ls = [...svg.querySelectorAll("g.r text.lb")].map(x => x.textContent).filter(x => x.endsWith("…")); const dup = ls.filter((x, i) => ls.indexOf(x) !== i); if (dup.length) out.clipped.push("省略後に区別できないラベル: " + [...new Set(dup)].join(", ")); });
         out.empty = document.querySelectorAll("#view .empty").length;
         out.cards = document.querySelectorAll("#view .card").length;
         return out;
@@ -75,13 +77,24 @@ for (const theme of ["light", "dark"]) {
       if (res.empty) console.log(`note ${ctx}: 空表示 ${res.empty} 件`);
       if (shotDir && (theme === "light" ? [1536, 1728].includes(w) : w === 1728)) await page.screenshot({ path: path.join(shotDir, `${theme}-${w}-${r.replace("/", "_")}.png`) });
     }
+    // 旧世代を含めた最大件数でも収まるか（ベンチ・ヒートマップ・仕様一覧・コスト）
+    await page.evaluate(() => { S.f.legacy = true; });
+    for (const r of ["bench/agentic", "bench/heat", "table", "cost", "speed", "models/matrix", "overview"]) {
+      await page.evaluate(h => { location.hash = h; render(); }, r);
+      const bad = await page.evaluate(() => [...document.querySelectorAll("#view .body > div, #view .body .chart")].filter(el => getComputedStyle(el).overflow !== "auto" && (el.scrollHeight > el.clientHeight + 2 || el.scrollWidth > el.clientWidth + 2)).map(el => (el.id || el.className) + ` ${el.scrollHeight}>${el.clientHeight}/${el.scrollWidth}>${el.clientWidth}`));
+      const amb = await page.evaluate(() => { const o = []; document.querySelectorAll("#view .chart svg").forEach(svg => { const ls = [...svg.querySelectorAll("g.r text.lb")].map(x => x.textContent); const d = ls.filter((x, i) => ls.indexOf(x) !== i); if (d.length) o.push(...d); }); return o; });
+      checks++; if (amb.length) fail(`${theme} ${w}x${h} #${r}（旧世代込み）`, "同名に見えるラベル → " + [...new Set(amb)].join(", "));
+      checks++; if (bad.length) fail(`${theme} ${w}x${h} #${r}（旧世代込み）`, "内容が切れている → " + bad.join(", "));
+      if (shotDir && theme === "light" && w === 1536) await page.screenshot({ path: path.join(shotDir, `light-1536-legacy-${r.replace("/", "_")}.png`) });
+    }
+    await page.evaluate(() => { S.f.legacy = false; });
     // 個別解説・プロフィールを全件巡回（項目により文章量が異なるため）
-    for (const [route, ids, key] of [["guide/detail", await page.evaluate(() => S.D.benchmarks.map(b => b.id)), "guideBench"], ["models/profile", await page.evaluate(() => visible().map(m => m.id)), "profile"]]) {
+    for (const [route, ids, key] of [["guide/detail", await page.evaluate(() => S.D.benchmarks.map(b => b.id)), "guideBench"], ["models/profile", await page.evaluate(() => visible().map(m => m.id)), "profile"], ["future/roadmap", await page.evaluate(() => S.D.outlook.upcoming.map(u => u.id)), "upcoming"]]) {
       for (const id of ids) {
         await page.evaluate(([r, k, i]) => { S[k] = i; location.hash = r; render(); }, [route, key, id]);
         const bad = await page.evaluate(() => [...document.querySelectorAll("#view .body > div")].filter(el => el.scrollHeight > el.clientHeight + 2 || el.scrollWidth > el.clientWidth + 2).map(el => el.closest(".card")?.querySelector("h2")?.textContent + ` ${el.scrollHeight}>${el.clientHeight}`));
         checks++; if (bad.length) fail(`${theme} ${w}x${h} #${route}:${id}`, "内容があふれている → " + bad.join(", "));
-        if (shotDir && theme === "light" && w === 1536 && ["tb4", "gdpval", "claude-opus-5-5", "gemini-4-argon"].includes(id)) await page.screenshot({ path: path.join(shotDir, `light-1536-${route.replace("/", "_")}-${id}.png`) });
+        if (shotDir && theme === "light" && w === 1536 && ["tb4", "gdpval", "swepro", "claude-opus-5-5", "gemini-4-argon", "gemini4", "grok5"].includes(id)) await page.screenshot({ path: path.join(shotDir, `light-1536-${route.replace("/", "_")}-${id}.png`) });
       }
     }
     // 操作系：ドロワー・フィルター・比較選択
@@ -107,8 +120,9 @@ for (const theme of ["light", "dark"]) {
       await page.click("#fLegacy");
       // 取り込み（マージ）
       checks++;
+      const before = await page.evaluate(() => S.D.models.length);
       const merged = await page.evaluate(() => ingest({ meta: { asOf: "2026-10-05" }, models: [{ id: "test-x", name: "Test X", provider: "openai", released: "2026-10-01", price: { input: 1, output: 2 }, scores: { tb4: 99 } }] }, "merge", "local") && S.D.models.length);
-      if (merged !== 14) fail(`${theme} import`, "マージ取り込み件数が想定外: " + merged);
+      if (merged !== before + 1) fail(`${theme} import`, "マージ取り込み件数が想定外: " + merged);
       const bad = await page.evaluate(() => ingest({ models: [] }, "replace", "local"));
       checks++; if (bad) fail(`${theme} import`, "不正データを受け入れてしまう");
     }

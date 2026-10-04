@@ -20,6 +20,7 @@
   --c1:#2a78d6; --c2:#eb6834; --c3:#1baf7a; --c4:#eda100;
   --c5:#e87ba4; --c6:#008300; --c7:#4a3aa7; --c8:#e34948;
   --seq-lo:#f0efec; --seq-hi:#1c5cab;          /* 逐次（ヒートマップ）＝青1色相 */
+  --c-other:#8a8983;
   --good:#0ca30c; --warning:#fab219; --critical:#d03b3b;
   --shadow:0 1px 2px rgba(20,20,18,.05),0 4px 16px rgba(20,20,18,.05);
   --radius:10px;
@@ -34,7 +35,7 @@
     --grid:#2a2a27; --axis:#4a4a45;
     --c1:#3987e5; --c2:#d95926; --c3:#199e70; --c4:#c98500;
     --c5:#d55181; --c6:#008300; --c7:#9085e9; --c8:#e66767;
-    --seq-lo:#232321; --seq-hi:#5598e7;
+    --seq-lo:#232321; --seq-hi:#5598e7; --c-other:#9a9990;
     --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
   }
 }
@@ -47,7 +48,7 @@
   --grid:#2a2a27; --axis:#4a4a45;
   --c1:#3987e5; --c2:#d95926; --c3:#199e70; --c4:#c98500;
   --c5:#d55181; --c6:#008300; --c7:#9085e9; --c8:#e66767;
-  --seq-lo:#232321; --seq-hi:#5598e7;
+  --seq-lo:#232321; --seq-hi:#5598e7; --c-other:#9a9990;
   --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
 }
 
@@ -73,7 +74,7 @@ a{color:inherit;text-underline-offset:2px}
 .brand small{color:var(--muted);font-size:11px}
 .filters{display:flex;align-items:center;gap:6px;flex:1;min-width:0;flex-wrap:nowrap;overflow:hidden}
 .filters .lbl{color:var(--muted);font-size:11px;margin-right:2px;white-space:nowrap}
-.chip{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:13px;border:1px solid var(--border);
+.chip{display:inline-flex;align-items:center;gap:5px;height:26px;padding:0 9px;border-radius:13px;border:1px solid var(--border);
   background:var(--surface);color:var(--text-2);white-space:nowrap;font-size:12px;transition:background .12s,border-color .12s,color .12s}
 .chip:hover{border-color:var(--border-strong);color:var(--text)}
 .chip[aria-pressed="true"]{background:var(--surface-2);border-color:var(--border-strong);color:var(--text)}
@@ -163,6 +164,9 @@ table{border-collapse:collapse;width:100%}
 .tbl td{padding:0 8px;height:var(--rh,30px);border-bottom:1px solid var(--grid);white-space:nowrap}
 .tbl tr:hover td{background:var(--surface-2)}
 .tbl .r{text-align:right}
+.tbl.dense{font-size:11.5px}
+.tbl.dense th{padding:4px 6px;font-size:11px}
+.tbl.dense td{padding:0 6px}
 .tbl th.sortable{cursor:pointer;user-select:none}
 .tbl th.sortable:hover{color:var(--text)}
 .tbl th .arr{color:var(--muted);font-size:10px;margin-left:3px}
@@ -260,6 +264,11 @@ ul.plain{list-style:none;margin:0;padding:0}
 .flow .st b{display:block;font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.05em;margin-bottom:1px}
 .flow .ar{flex:none;width:16px;display:grid;place-items:center;color:var(--muted)}
 .flow .ar svg{width:10px;height:10px}
+.flow.v{flex-direction:column;gap:0}
+.flow.v .st{display:grid;grid-template-columns:58px 1fr;align-items:center}
+.flow.v .st b{margin:0}
+.flow.v .ar{width:100%;height:14px}
+.flow.v .ar svg{transform:rotate(90deg)}
 .comp{display:flex;gap:2px;height:20px;border-radius:5px;overflow:hidden}
 .comp i{display:block;height:100%;min-width:3px}
 .comp-l{display:flex;flex-wrap:wrap;gap:3px 14px;font-size:11px;color:var(--text-2);margin-top:5px}
@@ -268,7 +277,7 @@ ul.plain{list-style:none;margin:0;padding:0}
 .ab{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:-1px}
 .ab.p{background:var(--ink)} .ab.s{border:2px solid var(--ink);opacity:.5} .ab.n{width:6px;height:2px;border-radius:1px;background:var(--border-strong);vertical-align:3px}
 .list{display:flex;flex-direction:column;gap:1px;overflow:auto;height:100%}
-.li{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;padding:5px 8px;border-radius:7px;border:0;background:none;text-align:left;color:var(--text-2);font-size:12px;min-height:28px}
+.li{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;padding:3px 8px;border-radius:7px;border:0;background:none;text-align:left;color:var(--text-2);font-size:12px;min-height:26px;flex:none}
 .li > span:first-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:6px}
 .li:hover{background:var(--surface-2);color:var(--text)}
 .li[aria-current="true"]{background:var(--surface-2);color:var(--text);font-weight:600;box-shadow:inset 3px 0 0 var(--ink)}
@@ -290,10 +299,23 @@ ul.plain{list-style:none;margin:0;padding:0}
 .mat td.cat{text-align:center;font-variant-numeric:tabular-nums;font-size:11.5px;padding:0 4px}
 .mat tr[data-prof]{cursor:pointer}
 .mat .sum{color:var(--text-2);overflow:hidden;text-overflow:ellipsis;max-width:0;width:34%}
+.lim{font-size:9.5px;line-height:1;padding:2px 4px;border-radius:4px;border:1px solid var(--border-strong);color:var(--text-2);margin-left:2px;flex:none}
+.tc{display:flex;flex-direction:column;gap:10px;min-height:0}
+.tc .lead2{font-size:12px;color:var(--text-2);line-height:1.6;margin:0}
+.stats{display:grid;gap:6px}
+.stat{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:baseline}
+.stat b{font-size:19px;font-weight:700;letter-spacing:-.01em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.stat span{font-size:11.5px;color:var(--text-2);line-height:1.4}
+.impl{font-size:12px;line-height:1.6;background:var(--surface-2);border-radius:8px;padding:8px 10px;display:grid;grid-template-columns:auto 1fr;gap:8px}
+.impl::before{content:"→";font-weight:700;color:var(--text)}
+.srcs{font-size:10.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.srcs a{color:var(--muted)}
+.conf-key{display:inline-flex;align-items:center;gap:5px}
 button.info{padding:0;background:none;cursor:pointer}
 button.info:hover{border-color:var(--ink);color:var(--text)}
 @media (forced-colors: active){ .mk{forced-color-adjust:none} }
-@media (max-width:1280px){ .filters .lbl{display:none} .nav-item small{display:none} }
+@media (max-width:1700px){ .filters .lbl{display:none} .chip{padding:0 7px;font-size:11.5px} .filters{gap:4px} }
+@media (max-width:1280px){ .nav-item small{display:none} }
 </style>
 </head>
 <body>
@@ -360,6 +382,8 @@ button.info:hover{border-color:var(--ink);color:var(--text)}
     {"id": "cursorbench4", "label": "CursorBench 4.0", "short": "CursorBench", "category": "agentic", "unit": "%", "max": 100, "desc": "IDE上の実利用に近いコーディング支援タスク。", "kind": "agent", "org": "Cursor（自社ベンチマーク）", "tasks": null, "size": "非公開", "format": "実際の Cursor 利用セッションから抽出した、曖昧で複数ファイルにまたがる課題（コード理解、バグ発見、計画、レビュー、リファクタ、新機能）。", "scoring": "社内の質問と解答の組から作成。採点方式の詳細な公開は限定的。", "why": "IDEでの日常的な開発支援の使い勝手に近い。ただしツール提供企業自身のベンチである点に注意。", "flow": ["実利用から抽出した課題", "モデルがIDE上で作業", "社内基準で採点", "成功率"], "abilities": {"code": 2, "reason": 1, "deliver": 1}, "src": "cursorb", "caveat": "Cursor社自身のベンチマーク。採点方式の公開は限定的。"},
     {"id": "frontiercode", "label": "FrontierCode v1.1", "short": "FrontierCode", "category": "agentic", "unit": "%", "max": 100, "desc": "OSSメンテナーが作った実課題で「そのままマージできる品質か」を評価する。", "kind": "agent", "org": "Cognition", "tasks": 100, "size": "Main 100課題（Extended 150／Diamond 50）", "format": "OSSメンテナー20名以上が、自分の管理するリポジトリから作成した実課題（1課題あたり40時間超をかけて作成）。", "scoring": "単体テスト＋ルーブリック＋独自の検証器の組み合わせで「メンテナーがマージできる品質か」を評価（正しさ、テストの質、変更範囲、スタイル、規約遵守）。", "why": "「テストに通る」ではなく「そのままマージできる」品質を測る。レビュー工数の削減に直結。", "flow": ["実課題（簡潔な依頼文）", "パッチを作成", "テスト＋ルーブリック＋検証器", "マージ可能性スコア"], "composition": {"title": "課題セット（件）", "parts": [["Diamond", 50], ["Main（残り）", 50], ["Extended（残り）", 50]]}, "abilities": {"code": 2, "deliver": 2}, "src": "fcode"},
     {"id": "tbsci", "label": "Terminal-Bench Science 0.1", "short": "TB Science", "category": "agentic", "unit": "%", "max": 100, "desc": "科学計算・研究ワークフローを端末上で遂行する能力。", "kind": "agent", "org": "Terminal-Bench（Stanford大のチーム）", "tasks": 70, "size": "70タスク", "budget": "エージェント作業は最大8時間", "budgetH": 8, "format": "現役の研究者が提供した研究ワークフローを端末上で実行（信号の再構成、モデルの較正、計測データの処理、上界の証明など）。", "scoring": "タスク作者が書いた検証テストで、成果物の科学的な正しさを判定。", "why": "「研究者の仕事を代行できるか」を測る。研究・解析業務での実用性の目安。", "flow": ["研究ワークフローの課題", "端末で解析・計算（最大8時間）", "作者の検証テストで判定", "成功率"], "composition": {"title": "分野別タスク数（件）", "parts": [["生命科学", 19], ["物理科学", 17], ["数理科学", 17], ["工学", 9], ["地球科学", 8]]}, "abilities": {"knowledge": 2, "agent": 2, "tool": 2, "reason": 1, "code": 1}, "src": "tbsci", "caveat": "集計元で値が大きく異なる（別のリーダーボードではAstra 65.7%、Fable 5.1 34.3%）。"},
+    {"id": "swepro", "label": "SWE-bench Pro", "short": "SWE Pro", "category": "agentic", "unit": "%", "max": 100, "desc": "実在のリポジトリでの機能追加・バグ修正。SWE-bench Verified の後継として、より難しく、学習データに混入しにくい設計。", "caveat": "各社の自己申告値が中心で実行条件がそろっていない。Scaleの標準化された公開セットの値とは異なる（例：同セットではMuse Spark 1.1が61.5%で首位とされる）。", "kind": "agent", "org": "Scale AI", "tasks": null, "size": "公開セット＋非公開セット", "format": "実在のリポジトリから集めた、比較的大きな変更を要する課題。課題文をもとに、複数ファイルにわたる修正を行う。", "scoring": "テストの通過で判定し、解決率（%）で集計。", "why": "世代をまたいで報告が多く、進歩の推移を追いやすい。ただし自己申告値の比較には注意。", "flow": ["課題文＋実リポジトリ", "モデルが修正を作成", "テストで判定", "解決率"], "abilities": {"code": 2, "agent": 1, "tool": 1}, "src": "swepro"},
+    {"id": "tb21", "label": "Terminal-Bench 2.1", "short": "TB 2.1", "category": "agentic", "unit": "%", "max": 100, "desc": "端末上のタスクを自律的に完遂できるかを測る、Terminal-Bench の前の版。", "caveat": "上位は80〜90%台で飽和気味。より難しい TB 4.0 への移行が進んでいる。", "kind": "agent", "org": "Terminal-Bench（オープンソース）", "tasks": null, "size": "—", "format": "コンテナ化した端末で、ソフトウェア開発・システム管理などの作業を行う（TB 4.0より短く、基礎的な課題）。", "scoring": "タスクごとの検証テストで成否を判定し、解決率（%）で集計。", "why": "旧世代モデルとの比較に便利。現行の上位モデル同士では差がつきにくい。", "flow": ["タスク指示＋コンテナ環境", "コマンドを実行", "検証テスト", "解決率"], "abilities": {"tool": 2, "code": 2, "agent": 1}, "src": "tb4"},
     {"id": "hle_tools", "label": "Humanity's Last Exam（ツール使用）", "short": "HLE", "category": "reason", "unit": "%", "max": 100, "desc": "各分野の専門家が作成した最難関級の問題集。検索・コード実行などツール使用あり。", "caveat": "ツール有無で大きく変わる。ツールなしの値は除外。", "kind": "exam", "org": "Center for AI Safety × Scale AI", "tasks": 2500, "size": "約2,500問", "format": "数学・人文・自然科学など多分野の専門家が作成した最難関級の問題（一部は画像付き）。選択式と短答式。", "scoring": "正答との一致で自動採点（正答率%）。この表はWeb検索・コード実行などのツール使用ありの条件。", "why": "知識の限界での推論力を測る。ツール使用ありの値には、調べ方のうまさも反映される。", "flow": ["専門家作成の難問", "ツールで調査・計算", "解答", "正答率"], "abilities": {"reason": 2, "knowledge": 2, "tool": 1}, "src": "hle"},
     {"id": "gpqa", "label": "GPQA Diamond", "short": "GPQA", "category": "reason", "unit": "%", "max": 100, "desc": "大学院レベルの物理・化学・生物の難問。上位は飽和気味。", "caveat": "Opus 5.5 はAnthropic未公表のため第三者集計値。", "kind": "exam", "org": "Rein ほか（2023年の論文）", "tasks": 198, "size": "198問", "format": "生物・物理・化学の4択問題。Web検索しても答えにくい（Google-proof）ように設計されている。", "scoring": "正答率。参考：論文では、専門家の正答率は約65%、非専門家はWeb検索ありでも約34%（GPQA全体）。", "why": "上位モデルは90%超で飽和気味のため、差がつきにくい。足切り用の指標と考えるのが妥当。", "flow": ["大学院レベルの4択問題", "推論して選択", "正誤判定", "正答率"], "abilities": {"knowledge": 2, "reason": 2}, "src": "gpqa"},
     {"id": "gdpval", "label": "GDPval-AA v2.1", "short": "GDPval", "category": "work", "unit": "Elo", "zeroBased": false, "norm": "minmax", "desc": "OpenAIのGDPval（44職種の実務課題）をArtificial Analysisが独自環境で実行し、成果物の対戦比較をEloに換算したもの。", "caveat": "Eloは相対値。棒ではなく点で表示（ゼロ起点に意味がないため）。破線＝人間専門家の水準。", "kind": "pairwise", "org": "OpenAI（GDPval）× Artificial Analysis（評価環境）", "tasks": 220, "size": "220タスク（44職種）", "format": "44職種の実務課題。参照ファイルを読み、コード実行やWeb閲覧を行い、文書・表計算・スライド・図などの成果物を作る。", "scoring": "モデル同士の成果物を匿名で一対比較し（3つのLLM審査員）、Eloに換算。人間専門家の成果物 ≈ 1000（v2で再基準化）。", "why": "実務の成果物の質を測る。1000を大きく上回るほど、人間専門家の成果物より好まれやすい。", "flow": ["実務課題＋参照ファイル", "エージェントとして成果物を作成", "成果物を匿名で一対比較", "Eloに換算（専門家≈1000）"], "refs": [{"v": 1000, "label": "人間専門家 ≈1000"}], "abilities": {"deliver": 2, "agent": 1, "tool": 1, "knowledge": 1}, "src": "gdpvalaa"},
@@ -373,7 +397,9 @@ button.info:hover{border-color:var(--ink);color:var(--text)}
     {"id": "xai", "label": "xAI", "color": 4},
     {"id": "deepseek", "label": "DeepSeek", "color": 5},
     {"id": "moonshot", "label": "Moonshot AI", "color": 6},
-    {"id": "meta", "label": "Meta", "color": 7}
+    {"id": "meta", "label": "Meta", "color": 7},
+    {"id": "zhipu", "label": "Zhipu AI", "color": 8},
+    {"id": "alibaba", "label": "Alibaba", "color": null}
   ],
   "useCases": [
     {"label": "総合力を最優先", "metric": "bench:aa_index"},
@@ -422,23 +448,139 @@ button.info:hover{border-color:var(--ink);color:var(--text)}
     {"id": "osw2", "label": "Snorkel AI – OSWorld 2.0", "url": "https://snorkel.ai/blog/osworld-2-0-why-computer-use-agents-fail-most-tasks/"},
     {"id": "aaidx", "label": "Artificial Analysis – Intelligence Index v4.3", "url": "https://artificialanalysis.ai/articles/artificial-analysis-intelligence-index-v4-3"},
     {"id": "hle", "label": "Humanity's Last Exam（公式）", "url": "https://lastexam.ai/"},
-    {"id": "gpqa", "label": "Rein et al. – GPQA (arXiv:2311.12022)", "url": "https://arxiv.org/abs/2311.12022"}
+    {"id": "gpqa", "label": "Rein et al. – GPQA (arXiv:2311.12022)", "url": "https://arxiv.org/abs/2311.12022"},
+    {"id": "mythos51", "label": "VentureBeat – Claude Fable 5.1 and Mythos 5.1 arrive", "url": "https://venturebeat.com/technology/anthropics-claude-fable-5-1-and-mythos-5-1-arrive-with-a-75-cost-reduction-for-fable-cache-reads"},
+    {"id": "mythos", "label": "InfoQ – Anthropic Releases Claude Mythos Preview", "url": "https://www.infoq.com/news/2026/04/anthropic-claude-mythos/"},
+    {"id": "mythos5", "label": "AI Pricing Guru – Claude Fable 5 and Mythos 5 Pricing", "url": "https://www.aipricing.guru/news/claude-fable-5-mythos-5-pricing-june-2026/"},
+    {"id": "glm53", "label": "Morph – GLM-5.3: Benchmarks, Pricing", "url": "https://www.morphllm.com/glm-5-3"},
+    {"id": "qwen38", "label": "Artificial Analysis – Qwen3.8 Max (0902)", "url": "https://artificialanalysis.ai/models/qwen3-8-max"},
+    {"id": "muse13", "label": "TrueFoundry – Muse Spark 1.3", "url": "https://www.truefoundry.com/blog/muse-spark-1-3"},
+    {"id": "argonfw", "label": "The Next Web – Gemini 4 Argon, cyber defenders get it first", "url": "https://thenextweb.com/news/google-gemini-4-argon-cyber-defenders-fairwind"},
+    {"id": "gem4", "label": "Techjack – Gemini 4 in post-training, targeting year-end", "url": "https://techjacksolutions.com/ai-brief/gemini-4-post-training-confirmed-year-end-2026/"},
+    {"id": "gem4b", "label": "Tutorsbot – Gemini 4 Release: What We Know", "url": "https://tutorsbot.com/blog/gemini-4-release-what-we-know"},
+    {"id": "grok5", "label": "GeoToolbox – Grok 5: Release Date, Specs & What's Confirmed", "url": "https://geotoolbox.ai/blog/grok-5"},
+    {"id": "gpt7", "label": "AIToolsReview – What's the Next GPT Model? (October 2026)", "url": "https://aitoolsreview.co.uk/insights/next-gpt-model"},
+    {"id": "cal27", "label": "Father of AI – Every AI Model Coming in 2026–2027", "url": "https://www.fatherofai.in/blog/every-ai-model-coming-2026-2027-release-calendar/"},
+    {"id": "anthroad", "label": "InkeyBit – Anthropic's 2026 Roadmap", "url": "https://www.inkeybit.com/blog/future-of-claude-anthropic-roadmap"},
+    {"id": "apsara", "label": "Pandaily – Alibaba Puts Qwen4 Family Into Training", "url": "https://pandaily.com/alibaba-qwen4-training-roadmap-5-10t-apsara-2026"},
+    {"id": "dsv5", "label": "CellCog – DeepSeek V5 Release Date: The Leak vs the Record", "url": "https://cellcog.ai/blog/deepseek-v5-release-date/"},
+    {"id": "museopen", "label": "Mungomash – Llama / Muse versions", "url": "https://mungomash.com/ai/llama/versions/"},
+    {"id": "cnmodels", "label": "Yotta Labs – Best Chinese LLMs in 2026", "url": "https://www.yottalabs.ai/post/best-chinese-llm-models-2026-deepseek-qwen-glm-kimi-compared"},
+    {"id": "metr", "label": "METR – Research", "url": "https://metr.org/research/"},
+    {"id": "metrtr", "label": "AI 2027 Tracker – METR time horizon doubling", "url": "https://ai2027-tracker.com/predictions/metr-doubling/"},
+    {"id": "epochc", "label": "Epoch AI – Training compute grows 4-5x per year", "url": "https://epoch.ai/publications/training-compute-of-frontier-ai-models-grows-by-4-5x-per-year"},
+    {"id": "deluair", "label": "Deluair – Frontier AI training cost trajectory 2026", "url": "https://deluair.com/consultancy/insights/frontier-ai-training-cost-2026"},
+    {"id": "epochp", "label": "Epoch AI – LLM inference price trends", "url": "https://epoch.ai/data-insights/llm-inference-price-trends"},
+    {"id": "a16z", "label": "a16z – Welcome to LLMflation", "url": "https://a16z.com/llmflation-llm-inference-cost/"},
+    {"id": "colossus", "label": "Epoch AI – Colossus 2", "url": "https://epoch.ai/data/ai-data-centers/directory/colossus-2"},
+    {"id": "stargate", "label": "IntuitionLabs – Stargate Project", "url": "https://intuitionlabs.ai/articles/openai-stargate-datacenter-details"},
+    {"id": "chips", "label": "Zylos – AI Chip Hardware Acceleration Trends 2026", "url": "https://zylos.ai/research/2026-02-01-ai-chip-hardware-acceleration-2026/"},
+    {"id": "vbtrend", "label": "VentureBeat – Four AI research trends for 2026", "url": "https://venturebeat.com/technology/four-ai-research-trends-enterprise-teams-should-watch-in-2026"},
+    {"id": "ttc", "label": "Hugging Face – AI Trends 2026: Test-Time Reasoning", "url": "https://huggingface.co/blog/aufklarer/ai-trends-2026-test-time-reasoning-reflective-agen"},
+    {"id": "nvphys", "label": "NVIDIA – New Physical AI Models", "url": "https://nvidianews.nvidia.com/news/nvidia-releases-new-physical-ai-models-as-global-partners-unveil-next-generation-robots"},
+    {"id": "robo", "label": "Robotics Center – Physical AI in 2026", "url": "https://www.roboticscenter.ai/blog/physical-ai-2026"},
+    {"id": "worldm", "label": "TIME – World Models Are AI's Next Frontier", "url": "https://time.com/article/2026/07/15/world-models-are-ai-s-next-frontier/"},
+    {"id": "gemma", "label": "Wikipedia – Gemma (language model)", "url": "https://en.wikipedia.org/wiki/Gemma_(language_model)"},
+    {"id": "gemmaqat", "label": "WinBuzzer – Smaller Gemma 4 QAT Models", "url": "https://winbuzzer.com/2026/06/06/google-releases-smaller-gemma-4-models-for-local-ai-xcxwbn/"},
+    {"id": "ondev", "label": "AI Magicx – On-Device AI in 2026", "url": "https://www.aimagicx.com/blog/on-device-ai-models-local-llm-guide-2026"},
+    {"id": "mcp", "label": "Digital Applied – MCP Adoption Statistics 2026", "url": "https://www.digitalapplied.com/blog/mcp-adoption-statistics-2026-model-context-protocol"},
+    {"id": "agentad", "label": "Digital Applied – AI Agent Adoption 2026", "url": "https://www.digitalapplied.com/blog/ai-agent-adoption-2026-enterprise-data-points"},
+    {"id": "euai", "label": "Help Net Security – EU begins enforcing AI Act", "url": "https://www.helpnetsecurity.com/2026/08/04/eu-ai-act-enforcement-ai-models/"},
+    {"id": "rsp", "label": "Anthropic – Frontier Safety Roadmap", "url": "https://www.anthropic.com/responsible-scaling-policy/roadmap"},
+    {"id": "swepro", "label": "Morph – SWE-bench Pro Leaderboard (September 2026)", "url": "https://www.morphllm.com/swe-bench-pro"},
+    {"id": "opus48", "label": "llm-stats – Claude Opus 4.8 Release, Benchmarks", "url": "https://llm-stats.com/blog/research/claude-opus-4-8-launch"},
+    {"id": "fable5", "label": "llm-stats – Claude Fable 5: Review, Benchmarks and Pricing", "url": "https://llm-stats.com/blog/research/claude-fable-5-review"},
+    {"id": "sonnet5", "label": "Chatbase – Claude Sonnet 5 (2026): Pricing, API, Benchmarks", "url": "https://www.chatbase.co/blog/claude-sonnet-5"},
+    {"id": "gpt55", "label": "Appwrite – GPT-5.5 is here: benchmarks, pricing", "url": "https://appwrite.io/blog/post/gpt-5-5-launch"},
+    {"id": "gem31", "label": "Digital Applied – Gemini 3.1 Pro: Benchmarks, Pricing", "url": "https://www.digitalapplied.com/blog/google-gemini-3-1-pro-benchmarks-pricing-guide"},
+    {"id": "gem38", "label": "9to5Google – Gemini 3.8 Flash launch", "url": "https://9to5google.com/2026/09/02/gemini-3-8-flash-launch/"},
+    {"id": "grok46", "label": "Codersera – Grok 4.6 Launch Guide", "url": "https://codersera.com/blog/grok-4-6-launch-guide-2026/"},
+    {"id": "dsv4pro", "label": "Codersera – DeepSeek V4-Pro Review", "url": "https://codersera.com/blog/deepseek-v4-pro-review-benchmarks-pricing-2026/"},
+    {"id": "glm52", "label": "Morph – GLM-5.2: 753B Open-Weight Coding Model", "url": "https://www.morphllm.com/glm-5-2"},
+    {"id": "opus55b", "label": "Activepieces – Claude Opus 5.5: What's New, Benchmarks", "url": "https://www.activepieces.com/blog/claude-opus-55-whats-new-benchmarks-and-pricing"}
   ],
   "models": [
     {"id": "gpt-6-astra", "name": "GPT-6 Astra", "provider": "openai", "released": "2026-09-04", "tier": "フラッグシップ", "openWeights": "no", "context": 1050000, "maxOutput": 128000, "price": {"input": 10, "output": 50, "cachedInput": 1, "note": "入力272K超は約$20/$75"}, "speed": {"v": 56, "src": "aaspeed"}, "scores": {"aa_index": {"v": 53, "src": "aa"}, "tb4": {"v": 57.9, "src": "cmp55", "note": "Googleの比較表では58.2%"}, "frontierswe2": {"v": 65.5, "src": "argoncmp"}, "deepswe": {"v": 74.1, "src": "argoncmp"}, "frontiercode": {"v": 53.3, "src": "cmp55"}, "tbsci": {"v": 68.1, "src": "argon"}, "hle_tools": {"v": 57.2, "src": "cmp55", "note": "別集計では54.7%"}, "gpqa": {"v": 96.0, "src": "astra"}, "gdpval": {"v": 1542, "src": "cmp55"}, "osworld_offline": {"v": 72.6, "src": "argon"}}, "notes": "OpenAIの最上位。ARC-AGI-3で99.9%（発表値）。512Kまでの検索精度100%。初の「Critical」サイバー能力区分。", "sources": ["astra", "aa"], "summary": "OpenAIの最上位。科学・推論系で最高水準だが、単価も最上位", "strengths": ["GPQA 96%で最高、TB Science・FrontierSWE v2でも首位", "1.05Mトークンの文脈。512Kまでの検索精度100%（発表値）", "ARC-AGI-3で99.9%（発表値）"], "cautions": ["$10/$50と高額。入力272K超は約$20/$75に割増", "GDPval（実務成果物）は1542で、Claude勢より低い"], "bestFor": ["科学計算・研究", "難問の推論", "長大文書の精読"]},
     {"id": "gpt-6-1-sol", "name": "GPT-6.1 Sol", "provider": "openai", "released": "2026-09-29", "tier": "バランス", "openWeights": "no", "context": null, "maxOutput": null, "price": {"input": 2, "output": 10, "cachedInput": 0.1}, "speed": {"v": 63, "src": "aaspeed", "note": "別集計では66 tok/s"}, "scores": {"aa_index": {"v": 52, "src": "aa", "note": "Astraの1pt下（報道ベース）"}, "deepswe": {"v": 75.2, "src": "sol61", "note": "高推論努力"}}, "notes": "DevDay 2026で発表。「Astra級の知能を1/5の価格で」。OSWorld 2.0（offline）でAstraとの差2.1pt、1タスク当たりコストは約1/7。", "sources": ["sol61"], "summary": "Astraに近い性能を約1/5の価格で狙うバランス型", "strengths": ["DeepSWE 75.2%（2位）", "$2/$10、キャッシュ入力は$0.10と安い", "AutomationBenchでOpus 5.5を上回り、タスク単価は約1/3（報道）"], "cautions": ["発表直後のため、公開されているベンチ値が少ない", "コンテキスト長は未確認"], "bestFor": ["業務自動化の大量処理", "コスト重視の本番運用", "コーディング"]},
-    {"id": "gpt-5-6-sol", "name": "GPT-5.6 Sol", "provider": "openai", "released": "2026-07-09", "tier": "フラッグシップ", "legacy": true, "openWeights": "no", "context": 1050000, "maxOutput": 128000, "price": {"input": 4, "output": 20, "note": "プロモーション価格"}, "scores": {"tb4": {"v": 37.3, "src": "cmp55"}, "cursorbench4": {"v": 41.7, "src": "cmp55"}, "frontiercode": {"v": 47.5, "src": "cmp55"}, "gdpval": {"v": 1588, "src": "cmp55"}}, "notes": "GPT-5.6ファミリー（Sol/Terra/Luna）の最上位。GPT-6世代の登場で旧世代扱い。", "sources": ["gpt56"], "summary": "GPT-5.6世代の旗艦（旧世代）", "strengths": ["1.05Mトークンの文脈"], "cautions": ["TB 4.0は37.3%で、新世代と大きな差"], "bestFor": ["既存システムの継続利用"]},
+    {"id": "gpt-5-6-sol", "name": "GPT-5.6 Sol", "provider": "openai", "released": "2026-07-09", "tier": "フラッグシップ", "legacy": true, "openWeights": "no", "context": 1050000, "maxOutput": 128000, "price": {"input": 4, "output": 20, "note": "プロモーション価格"}, "scores": {"tb4": {"v": 37.3, "src": "cmp55"}, "cursorbench4": {"v": 41.7, "src": "cmp55"}, "frontiercode": {"v": 47.5, "src": "cmp55"}, "gdpval": {"v": 1588, "src": "cmp55"}, "tb21": {"v": 88.8, "src": "gpt56"}}, "notes": "GPT-5.6ファミリー（Sol/Terra/Luna）の最上位。GPT-6世代の登場で旧世代扱い。 Terminal-Bench 2.1 では 88.8%（Sol Ultraは91.9%）。", "sources": ["gpt56"], "summary": "GPT-5.6世代の旗艦（旧世代）", "strengths": ["1.05Mトークンの文脈"], "cautions": ["TB 4.0は37.3%で、新世代と大きな差"], "bestFor": ["既存システムの継続利用"]},
     {"id": "gpt-5-6-luna", "name": "GPT-5.6 Luna", "provider": "openai", "released": "2026-07-09", "tier": "軽量", "openWeights": "no", "context": 1050000, "maxOutput": 128000, "price": {"input": 0.2, "output": 1.2}, "scores": {}, "notes": "主要APIで最安水準。長文検索（MRCR v2、256K超）は41.3%と大きく低下するため長文用途は非推奨。", "sources": ["gpt56"], "summary": "主要APIで最安水準の軽量モデル", "strengths": ["$0.20/$1.20と非常に安い", "1.05Mトークンの文脈"], "cautions": ["256Kを超える長文の検索精度は41.3%と大きく低下", "公開ベンチ値がほぼない"], "bestFor": ["分類・抽出", "短文の大量処理"]},
-    {"id": "claude-opus-5-5", "name": "Claude Opus 5.5", "provider": "anthropic", "released": "2026-09-22", "tier": "フラッグシップ", "openWeights": "no", "context": 1000000, "maxOutput": 128000, "price": {"input": 4, "output": 20, "cachedInput": 0.2, "note": "1M全域で長文割増なし"}, "speed": {"v": 97, "src": "aaspeed"}, "scores": {"aa_index": {"v": 58, "src": "aa"}, "tb4": {"v": 66.4, "src": "cmp55", "note": "xhigh"}, "frontierswe2": {"v": 62.3, "src": "argoncmp"}, "cursorbench4": {"v": 57.8, "src": "cmp55"}, "frontiercode": {"v": 54.4, "src": "cmp55"}, "tbsci": {"v": 63.3, "src": "argon"}, "hle_tools": {"v": 67.7, "src": "cmp55"}, "gpqa": {"v": 94.4, "src": "opus55", "note": "第三者集計（Anthropic未公表）"}, "gdpval": {"v": 1846, "src": "cmp55"}, "osworld_partial": {"v": 81.8, "src": "opus55"}}, "notes": "Fable 5.1 相当の性能をおよそ4割安いコストで提供（Anthropic）。ARC-AGI-2 93.3%（High）。", "sources": ["opus55", "cmp55", "aa"], "summary": "総合首位。性能とコストのバランスが良いフラッグシップ", "strengths": ["AA指数・HLE・GDPval・CursorBench・FrontierCodeで首位", "1Mトークン全域で長文割増なし", "Fable 5.1相当の性能を約4割安く（Anthropic）"], "cautions": ["単価はSonnet 5.5の2倍", "TB 4.0ではSonnet 5.5が上回る"], "bestFor": ["汎用の最上位用途", "文書・分析などの知的労働", "難度の高い開発"]},
+    {"id": "claude-opus-5-5", "name": "Claude Opus 5.5", "provider": "anthropic", "released": "2026-09-22", "tier": "フラッグシップ", "openWeights": "no", "context": 1000000, "maxOutput": 128000, "price": {"input": 4, "output": 20, "cachedInput": 0.2, "note": "1M全域で長文割増なし"}, "speed": {"v": 97, "src": "aaspeed"}, "scores": {"aa_index": {"v": 58, "src": "aa"}, "tb4": {"v": 66.4, "src": "cmp55", "note": "xhigh"}, "frontierswe2": {"v": 62.3, "src": "argoncmp"}, "cursorbench4": {"v": 57.8, "src": "cmp55"}, "frontiercode": {"v": 54.4, "src": "cmp55"}, "tbsci": {"v": 63.3, "src": "argon"}, "hle_tools": {"v": 67.7, "src": "cmp55"}, "gpqa": {"v": 94.4, "src": "opus55", "note": "第三者集計（Anthropic未公表）"}, "gdpval": {"v": 1846, "src": "cmp55"}, "osworld_partial": {"v": 81.8, "src": "opus55"}, "swepro": {"v": 89.9, "src": "opus55b", "note": "llm-statsの集計値"}, "tb21": {"v": 81.3, "src": "opus55", "note": "第三者集計"}}, "notes": "Fable 5.1 相当の性能をおよそ4割安いコストで提供（Anthropic）。ARC-AGI-2 93.3%（High）。", "sources": ["opus55", "cmp55", "aa"], "summary": "総合首位。性能とコストのバランスが良いフラッグシップ", "strengths": ["AA指数・HLE・GDPval・CursorBench・FrontierCodeで首位", "1Mトークン全域で長文割増なし", "Fable 5.1相当の性能を約4割安く（Anthropic）"], "cautions": ["単価はSonnet 5.5の2倍", "TB 4.0ではSonnet 5.5が上回る"], "bestFor": ["汎用の最上位用途", "文書・分析などの知的労働", "難度の高い開発"]},
     {"id": "claude-sonnet-5-5", "name": "Claude Sonnet 5.5", "provider": "anthropic", "released": "2026-09-28", "tier": "バランス", "openWeights": "no", "context": null, "maxOutput": null, "price": {"input": 2, "output": 10, "cachedInput": 0.2}, "speed": {"v": 139, "src": "speed"}, "scores": {"aa_index": {"v": 56, "src": "aa"}, "tb4": {"v": 70.6, "src": "sonnet55", "note": "Anthropic発表値（Opus 5.5 xhigh 66.4%を上回る）"}, "frontierswe2": {"v": 61.9, "src": "argoncmp"}, "cursorbench4": {"v": 55.5, "src": "sonnet55"}, "hle_tools": {"v": 64.5, "src": "sonnet55"}, "gdpval": {"v": 1844, "src": "sonnet55"}}, "notes": "Sonnet 5 と同価格のまま出力30%以上高速、タスク当たり最大30%低コスト（Anthropic）。OSWorld 2.1 部分点 80.1%。", "sources": ["sonnet55", "aa"], "summary": "Opus級に迫る性能を半額で。速度も上位", "strengths": ["TB 4.0で首位（70.6%）", "GDPval 1844でOpus 5.5とほぼ同等", "出力139 tok/sと速い"], "cautions": ["思考モードでは初回応答まで長く待つ計測例がある", "コンテキスト長は未確認"], "bestFor": ["エージェント型コーディング", "日常的な業務自動化", "速度とコストの両立"]},
-    {"id": "claude-fable-5-1", "name": "Claude Fable 5.1", "provider": "anthropic", "released": "2026-09-01", "tier": "最上位", "openWeights": "no", "context": null, "maxOutput": null, "price": {"input": 10, "output": 50, "cachedInput": 0.25}, "speed": {"v": 69, "src": "aaspeed"}, "scores": {"tb4": {"v": 55.8, "src": "fable51"}, "deepswe": {"v": 67, "src": "cmp55", "note": "概数（約67%）"}, "cursorbench4": {"v": 51.8, "src": "cmp55"}, "frontiercode": {"v": 50.3, "src": "cmp55"}, "tbsci": {"v": 52.6, "src": "fable51"}, "hle_tools": {"v": 65.0, "src": "cmp55", "note": "発表時表記は60.9%（条件差）"}, "gdpval": {"v": 1735, "src": "cmp55", "note": "v2では1853"}, "osworld_partial": {"v": 77.9, "src": "fable51", "note": "strict 41.7%"}}, "notes": "長時間エージェント・研究・専門業務向けの最上位モデル。キャッシュ読込単価を1/4に引下げ。", "sources": ["fable51", "cmp55"], "summary": "Anthropicの最上位。長時間エージェント・研究向け", "strengths": ["OSWorld部分点77.9%（2位）", "HLE 65%（2位）", "キャッシュ読込を$0.25に値下げ"], "cautions": ["$10/$50と高額", "多くの指標で、より安いOpus 5.5が上回る"], "bestFor": ["長時間の自律タスク", "研究・専門業務"]},
-    {"id": "claude-opus-5", "name": "Claude Opus 5", "provider": "anthropic", "released": null, "tier": "フラッグシップ", "legacy": true, "openWeights": "no", "context": null, "maxOutput": null, "price": {"input": 5, "output": 25}, "scores": {"tb4": {"v": 52.3, "src": "cmp55"}, "cursorbench4": {"v": 46.6, "src": "cmp55"}, "frontiercode": {"v": 48.0, "src": "cmp55"}, "hle_tools": {"v": 63.6, "src": "cmp55"}, "gdpval": {"v": 1708, "src": "cmp55"}}, "notes": "Opus 5.5 の前世代。比較の基準点として掲載。", "sources": ["cmp55", "anthpr"], "summary": "Opus 5.5の前世代（比較の基準点）", "strengths": ["HLE 63.6%"], "cautions": ["多くの指標で後継のOpus 5.5に劣り、価格は高い"], "bestFor": ["既存システムの継続利用"]},
-    {"id": "gemini-4-argon", "name": "Gemini 4 Argon", "provider": "google", "released": "2026-09-30", "tier": "フラッグシップ", "openWeights": "no", "context": 1000000, "maxOutput": null, "price": {"input": 2, "output": 10, "note": "導入価格。導入期間後は$4/$20。キャッシュ入力95%引き"}, "scores": {"aa_index": {"v": 53, "src": "aa", "note": "52.56"}, "tb4": {"v": 57.4, "src": "argon"}, "frontierswe2": {"v": 55.0, "src": "argoncmp"}, "deepswe": {"v": 77.9, "src": "argoncmp", "note": "発表時点の最高値"}, "tbsci": {"v": 57.6, "src": "argon"}, "hle_tools": {"v": 57.1, "src": "argoncmp"}, "osworld_offline": {"v": 69.2, "src": "argon"}}, "notes": "Vals Index 1位（68.90%）。AA指数でGPT-6 Astraと同等を約6割のタスクコストで達成。1タスク平均出力は約6.2万トークンと多め。最大出力は262K／1Mと報道が分かれる。", "sources": ["argon", "argoncmp", "argonp"], "summary": "大規模改修に強いGoogleの新フラッグシップ。導入価格が安い", "strengths": ["DeepSWE 77.9%で首位", "Vals Index 1位（68.90%）", "導入価格$2/$10"], "cautions": ["導入期間の後は$4/$20に倍増", "1タスクの出力が平均約6.2万トークンと多く、実コストが増えやすい", "出力速度は未計測"], "bestFor": ["大規模リポジトリの改修", "長文の処理"]},
+    {"id": "claude-fable-5-1", "name": "Claude Fable 5.1", "provider": "anthropic", "released": "2026-09-01", "tier": "最上位", "openWeights": "no", "context": null, "maxOutput": null, "price": {"input": 10, "output": 50, "cachedInput": 0.25}, "speed": {"v": 69, "src": "aaspeed"}, "scores": {"tb4": {"v": 55.8, "src": "fable51"}, "deepswe": {"v": 67, "src": "cmp55", "note": "概数（約67%）"}, "cursorbench4": {"v": 51.8, "src": "cmp55"}, "frontiercode": {"v": 50.3, "src": "cmp55"}, "tbsci": {"v": 52.6, "src": "fable51"}, "hle_tools": {"v": 65.0, "src": "cmp55", "note": "発表時表記は60.9%（条件差）"}, "gdpval": {"v": 1735, "src": "cmp55", "note": "v2では1853"}, "osworld_partial": {"v": 77.9, "src": "fable51", "note": "strict 41.7%"}, "swepro": {"v": 81.2, "src": "opus55b"}}, "notes": "長時間エージェント・研究・専門業務向けの最上位モデル。キャッシュ読込単価を1/4に引下げ。", "sources": ["fable51", "cmp55"], "summary": "Anthropicの最上位。長時間エージェント・研究向け", "strengths": ["OSWorld部分点77.9%（2位）", "HLE 65%（2位）", "キャッシュ読込を$0.25に値下げ"], "cautions": ["$10/$50と高額", "多くの指標で、より安いOpus 5.5が上回る"], "bestFor": ["長時間の自律タスク", "研究・専門業務"]},
+    {"id": "claude-opus-5", "name": "Claude Opus 5", "provider": "anthropic", "released": null, "tier": "フラッグシップ", "legacy": true, "openWeights": "no", "context": null, "maxOutput": null, "price": {"input": 5, "output": 25}, "scores": {"tb4": {"v": 52.3, "src": "cmp55"}, "cursorbench4": {"v": 46.6, "src": "cmp55"}, "frontiercode": {"v": 48.0, "src": "cmp55"}, "hle_tools": {"v": 63.6, "src": "cmp55"}, "gdpval": {"v": 1708, "src": "cmp55"}, "swepro": {"v": 79.2, "src": "opus55b"}}, "notes": "Opus 5.5 の前世代（2026年7月発表）。比較の基準点として掲載。", "sources": ["cmp55", "anthpr"], "summary": "Opus 5.5の前世代（比較の基準点）", "strengths": ["HLE 63.6%"], "cautions": ["多くの指標で後継のOpus 5.5に劣り、価格は高い"], "bestFor": ["既存システムの継続利用"]},
+    {"id": "gemini-4-argon", "name": "Gemini 4 Argon", "provider": "google", "released": "2026-09-30", "tier": "フラッグシップ", "openWeights": "no", "context": 1000000, "maxOutput": null, "price": {"input": 2, "output": 10, "note": "導入価格。導入期間後は$4/$20。キャッシュ入力95%引き"}, "scores": {"aa_index": {"v": 53, "src": "aa", "note": "52.56"}, "tb4": {"v": 57.4, "src": "argon"}, "frontierswe2": {"v": 55.0, "src": "argoncmp"}, "deepswe": {"v": 77.9, "src": "argoncmp", "note": "発表時点の最高値"}, "tbsci": {"v": 57.6, "src": "argon"}, "hle_tools": {"v": 57.1, "src": "argoncmp"}, "osworld_offline": {"v": 69.2, "src": "argon"}}, "notes": "Vals Index 1位（68.90%）。AA指数でGPT-6 Astraと同等を約6割のタスクコストで達成。1タスク平均出力は約6.2万トークンと多め。最大出力は262K／1Mと報道が分かれる。", "sources": ["argon", "argoncmp", "argonp", "argonfw"], "summary": "大規模改修に強いGoogleの新フラッグシップ。導入価格が安い", "strengths": ["DeepSWE 77.9%で首位", "Vals Index 1位（68.90%）", "導入価格$2/$10"], "cautions": ["10/1時点では、審査済みのサイバー防御組織（Fairwindプログラム、650超）だけが利用可能。一般提供は日付未定", "導入期間の後は$4/$20に倍増", "1タスクの出力が平均約6.2万トークンと多く、実コストが増えやすい", "出力速度は未計測"], "bestFor": ["大規模リポジトリの改修", "長文の処理"], "access": "limited"},
     {"id": "grok-4-7", "name": "Grok 4.7", "provider": "xai", "released": "2026-09-21", "tier": "フラッグシップ", "openWeights": "no", "context": 500000, "maxOutput": null, "price": {"input": 2, "output": 6, "cachedInput": 0.5, "note": "200K超は全体が$4/$12"}, "speed": {"v": 73, "src": "speed"}, "scores": {"tb4": {"v": 37.6, "src": "grok47"}, "deepswe": {"v": 71.0, "src": "grok47", "note": "high effort"}, "cursorbench4": {"v": 46.3, "src": "grok47"}}, "notes": "xAIはGPQA・HLE・SWE-bench Verified等の旧来指標を公表していない。2倍速・2倍価格の高速版あり。", "sources": ["grok47", "grokp"], "summary": "出力単価の安さが特徴のxAIの主力", "strengths": ["出力$6と、フラッグシップ級では安い", "DeepSWE 71%"], "cautions": ["TB 4.0は37.6%と低い", "GPQA・HLEなど従来の主要指標を公表していない", "200K超は全体が倍額。文脈は500K"], "bestFor": ["コスト重視のコーディング支援"]},
-    {"id": "deepseek-v4-1-flash", "name": "DeepSeek V4.1 Flash", "provider": "deepseek", "released": "2026-09-10", "tier": "軽量", "openWeights": "yes", "license": "MIT", "params": "552B（MoE）", "context": 1000000, "maxOutput": 384000, "price": {"input": 0.15, "output": 0.6, "cachedInput": 0.003, "note": "オフピーク価格。ピーク時は$0.30/$1.20"}, "speed": {"v": 209, "src": "speed"}, "scores": {"aa_index": {"v": 39.5, "src": "aa"}, "deepswe": {"v": 74.2, "src": "ds41"}, "hle_tools": {"v": 63.9, "src": "ds41"}}, "notes": "MITライセンスのオープンウェイト。Terminal-Bench 2.1で90.6、Codeforces 3471。DeepSWE等でGPT-5.6 Sol・Opus 5を上回る。", "sources": ["ds41", "aa"], "summary": "MITライセンスで最安・最速のオープンウェイト", "strengths": ["混合単価$0.26で最安", "209 tok/sで最速", "DeepSWE 74.2%、HLE 63.9%"], "cautions": ["AA指数39.5で、総合力は上位と差がある", "ピーク時間帯は価格が2倍"], "bestFor": ["自社ホスティング", "大量・高速処理", "コスト最優先"]},
-    {"id": "kimi-k3", "name": "Kimi K3", "provider": "moonshot", "released": null, "tier": "フラッグシップ", "openWeights": "partial", "license": "独自（年商$20M超は別契約）", "params": "2.8T（活性104B）", "context": 1000000, "maxOutput": null, "price": {"input": 3, "output": 15, "cachedInput": 0.3}, "speed": {"v": 34, "src": "speed"}, "scores": {"aa_index": {"v": 44, "src": "aa", "note": "Max設定"}, "gpqa": {"v": 93.5, "src": "openllm", "note": "オープン系で最高"}}, "notes": "オープン系で総合首位級。ただし重みの完全公開は未了（報道時点）。HLE 56%（ツール条件不明のため表から除外）。", "sources": ["kimi", "openllm"], "summary": "オープン系で最上位級の超大規模MoE", "strengths": ["AA指数44でオープン系首位", "GPQA 93.5%"], "cautions": ["重みの完全公開は未了。年商$20M超は別契約", "34 tok/sと遅い", "API単価は他の中国系モデルより高い"], "bestFor": ["推論重視のオープン系運用"]},
-    {"id": "muse-spark-1-1", "name": "Muse Spark 1.1", "provider": "meta", "released": "2026-07-09", "tier": "バランス", "openWeights": "no", "context": 1000000, "maxOutput": null, "price": {"input": 1.25, "output": 4.25, "cachedInput": 0.15}, "scores": {"hle_tools": {"v": 62.1, "src": "muse"}}, "notes": "Metaの初の有償API（米国限定プレビュー）。MCP Atlas 88.1と外部ツール連携に強い。SWE-Bench Pro 61.5。", "sources": ["muse"], "summary": "外部ツール連携に強いMetaの初の有償API", "strengths": ["MCP Atlas 88.1（ツール連携）", "HLE 62.1%", "$1.25/$4.25と安価"], "cautions": ["米国限定のプレビュー（EUでは使えない）", "SWE-Bench Pro 61.5%で、コーディングは上位に劣る"], "bestFor": ["ツール連携型のエージェント", "検索を組み合わせた調査"]}
-  ]
+    {"id": "deepseek-v4-1-flash", "name": "DeepSeek V4.1 Flash", "provider": "deepseek", "released": "2026-09-10", "tier": "軽量", "openWeights": "yes", "license": "MIT", "params": "552B（MoE）", "context": 1000000, "maxOutput": 384000, "price": {"input": 0.15, "output": 0.6, "cachedInput": 0.003, "note": "オフピーク価格。ピーク時は$0.30/$1.20"}, "speed": {"v": 209, "src": "speed"}, "scores": {"aa_index": {"v": 39.5, "src": "aa"}, "deepswe": {"v": 74.2, "src": "ds41"}, "hle_tools": {"v": 63.9, "src": "ds41"}, "tb21": {"v": 90.6, "src": "ds41"}}, "notes": "MITライセンスのオープンウェイト。Terminal-Bench 2.1で90.6、Codeforces 3471。DeepSWE等でGPT-5.6 Sol・Opus 5を上回る。", "sources": ["ds41", "aa"], "summary": "MITライセンスで最安・最速のオープンウェイト", "strengths": ["混合単価$0.26で最安", "209 tok/sで最速", "DeepSWE 74.2%、HLE 63.9%"], "cautions": ["AA指数39.5で、総合力は上位と差がある", "ピーク時間帯は価格が2倍"], "bestFor": ["自社ホスティング", "大量・高速処理", "コスト最優先"]},
+    {"id": "kimi-k3", "name": "Kimi K3", "provider": "moonshot", "released": "2026-07-16", "tier": "フラッグシップ", "openWeights": "partial", "license": "独自（年商$20M超は別契約）", "params": "2.8T（活性104B）", "context": 1000000, "maxOutput": null, "price": {"input": 3, "output": 15, "cachedInput": 0.3}, "speed": {"v": 34, "src": "speed"}, "scores": {"aa_index": {"v": 44, "src": "aa", "note": "Max設定"}, "gpqa": {"v": 93.5, "src": "openllm", "note": "オープン系で最高"}, "tb21": {"v": 88.3, "src": "openllm"}}, "notes": "7/16発表。重みは7/27ごろHugging Faceで公開との報道もあり、「完全公開は未了」とする報道と食い違う。HLE 56%（ツール条件が不明なため表からは除外）。", "sources": ["kimi", "openllm", "cnmodels"], "summary": "オープン系で最上位級の超大規模MoE", "strengths": ["AA指数44でオープン系首位", "GPQA 93.5%"], "cautions": ["重みの完全公開は未了。年商$20M超は別契約", "34 tok/sと遅い", "API単価は他の中国系モデルより高い"], "bestFor": ["推論重視のオープン系運用"]},
+    {"id": "muse-spark-1-1", "name": "Muse Spark 1.1", "provider": "meta", "released": "2026-07-09", "tier": "バランス", "openWeights": "no", "context": 1000000, "maxOutput": null, "price": {"input": 1.25, "output": 4.25, "cachedInput": 0.15}, "scores": {"hle_tools": {"v": 62.1, "src": "muse"}, "swepro": {"v": 61.5, "src": "muse", "note": "Scale公開セット"}}, "notes": "Metaの初の有償API（米国限定プレビュー）。MCP Atlas 88.1と外部ツール連携に強い。SWE-Bench Pro 61.5。", "sources": ["muse"], "summary": "Muse Spark の旧版（1.3が後継）", "strengths": ["MCP Atlas 88.1（ツール連携）", "HLE 62.1%", "$1.25/$4.25と安価"], "cautions": ["米国限定のプレビュー（EUでは使えない）", "SWE-Bench Pro 61.5%で、コーディングは上位に劣る"], "bestFor": ["ツール連携型のエージェント", "検索を組み合わせた調査"], "legacy": true},
+    {"id": "claude-mythos-5-1", "name": "Claude Mythos 5.1", "provider": "anthropic", "released": "2026-09-01", "tier": "限定提供", "access": "limited", "openWeights": "no", "context": 1000000, "maxOutput": 128000, "price": {"input": 10, "output": 50, "cachedInput": 0.25, "note": "審査済み組織のみ（米国）"}, "scores": {}, "notes": "Fable 5.1と同時に発表。通常の安全制限を緩めた版で、サイバー防御と生命科学の審査済み組織にだけ提供される。", "summary": "安全制限を緩めた最上位版。審査済みの組織だけに限定提供", "strengths": ["前身のMythos Previewは、主要OS・ブラウザの未知の脆弱性を数千件発見（Anthropic）", "METRの自律作業時間で16時間超（Mythos Preview）"], "cautions": ["一般には提供されていない（米国の審査済み組織のみ）", "6/12〜6/30、米国の輸出管理に対応してMythos 5の提供を停止した経緯がある"], "bestFor": ["サイバー防御", "生命科学研究（許可組織）"], "sources": ["mythos51", "mythos", "mythos5"]},
+    {"id": "glm-5-3", "name": "GLM-5.3", "provider": "zhipu", "released": "2026-08-14", "tier": "フラッグシップ", "openWeights": "yes", "license": "GLM-5.3 License（商用可）", "params": "753B（MoE）", "context": 1000000, "maxOutput": 128000, "price": {"input": 1.4, "output": 4.4}, "scores": {"aa_index": {"v": 45, "src": "glm53", "note": "オープン系112モデル中1位"}, "deepswe": {"v": 66.9, "src": "glm53"}}, "notes": "GLM-5.2を事後学習で強化した版。長時間のエージェント型コーディングとサイバー防御に注力（CyberGym 84.5%）。推論は常時オン。軽量版のGLM-5.3-FlashはMITライセンス。", "summary": "オープンウェイトで総合指数トップ。サイバー防御にも強い", "strengths": ["AA指数45で、オープン系の首位（Kimi K3と同水準以上）", "CyberGym 84.5%", "$1.40/$4.40と安価"], "cautions": ["自前で動かすにはGPU 8基規模が必要", "ライセンスがMITから独自ライセンスに変更"], "bestFor": ["自社ホスティング", "エージェント型コーディング", "セキュリティ業務"], "sources": ["glm53"]},
+    {"id": "qwen3-8-max", "name": "Qwen3.8 Max", "provider": "alibaba", "released": "2026-09-02", "tier": "フラッグシップ", "openWeights": "no", "context": null, "maxOutput": null, "price": {"input": 2, "output": 6, "cachedInput": 0.25}, "scores": {"aa_index": {"v": 45, "src": "qwen38", "note": "0902版"}, "gpqa": {"v": 92.8, "src": "qwen38"}}, "notes": "0902版。Alibabaは、モデル自身による反復改善（33サイクル）でAA指数を40から45に引き上げたと発表。後継のQwen 4は学習中。", "summary": "自己改善ループで性能を上げたAlibabaの旗艦（API提供）", "strengths": ["AA指数45", "GPQA 92.8%", "$2/$6と出力単価が安い"], "cautions": ["コンテキスト長は未確認", "後継のQwen 4が学習中のため、近く世代交代の可能性"], "bestFor": ["コスト重視の汎用利用", "中国語を含む多言語業務"], "sources": ["qwen38", "apsara"]},
+    {"id": "muse-spark-1-3", "name": "Muse Spark 1.3", "provider": "meta", "released": "2026-09-02", "tier": "バランス", "openWeights": "no", "context": 1048576, "maxOutput": null, "price": {"input": 1.25, "output": 4.25, "cachedInput": 0.15, "note": "学習利用を許可するContributor枠は$0.10/$0.20"}, "scores": {"deepswe": {"v": 75.4, "src": "muse13", "note": "Meta発表値"}}, "notes": "長時間のエージェント作業・マルチエージェント・コーディング向け。100万トークン全域で検索精度98%（Meta発表）。AA指数はv4.1.1で61（本表のv4.3とは版が違うため除外）。", "summary": "低単価のまま長時間エージェント作業を強化したMetaの最新版", "strengths": ["DeepSWE 75.4%（Meta発表）", "$1.25/$4.25と安価", "100万トークンで検索精度98%（Meta発表）"], "cautions": ["独立検証では、1.2比で約3倍のトークンを使い、タスク当たりのコストが増加", "米国中心の提供"], "bestFor": ["マルチエージェント処理", "コスト重視のコーディング"], "sources": ["muse13"]},
+    {"id": "claude-opus-4-8", "name": "Claude Opus 4.8", "provider": "anthropic", "released": "2026-05-28", "tier": "フラッグシップ", "legacy": true, "openWeights": "no", "context": null, "maxOutput": null, "price": {"input": 5, "output": 25, "note": "Fast Modeは$10/$50（約2.5倍速）"}, "scores": {"swepro": {"v": 69.2, "src": "opus48"}, "tb21": {"v": 74.6, "src": "opus48"}, "gpqa": {"v": 93.6, "src": "opus48"}, "hle_tools": {"v": 57.9, "src": "opus48"}}, "notes": "Opus 4.7の41日後に発表。Claude Codeで数百の並列サブエージェントを動かす「動的ワークフロー」を導入。OSWorld-Verified 83.4%、BrowseComp 84.3%。", "summary": "Claude 4系の最終版。並列エージェント実行を導入", "strengths": ["SWE-bench Pro 69.2%（当時の首位級）", "GPQA 93.6%"], "cautions": ["Opus 5系に置き換え済み"], "bestFor": ["既存システムの継続利用"], "sources": ["opus48"]},
+    {"id": "claude-fable-5", "name": "Claude Fable 5", "provider": "anthropic", "released": "2026-06-09", "tier": "最上位", "legacy": true, "openWeights": "no", "context": 1000000, "maxOutput": 128000, "price": {"input": 10, "output": 50}, "scores": {"swepro": {"v": 80.0, "src": "fable5"}, "tb21": {"v": 88.0, "src": "fable5"}}, "notes": "Mythos級の性能を安全制限つきで一般提供した最初のモデル。Terminal-Benchでは試行の20.9%で安全上の拒否が起き、Opus 4.8に切り替わった。", "summary": "Mythos級を初めて一般提供したモデル（Fable 5.1が後継）", "strengths": ["SWE-bench Pro 80.0%", "TB 2.1 88.0%"], "cautions": ["安全上の拒否による中断が一定割合で発生", "Fable 5.1に置き換え済み"], "bestFor": ["既存システムの継続利用"], "sources": ["fable5"]},
+    {"id": "claude-sonnet-5", "name": "Claude Sonnet 5", "provider": "anthropic", "released": "2026-06-30", "tier": "バランス", "legacy": true, "openWeights": "no", "context": null, "maxOutput": null, "price": {"input": 2, "output": 10, "note": "導入価格を8/10に恒久化"}, "scores": {"tb4": {"v": 10.3, "src": "sonnet55", "note": "Sonnet 5.5発表時の比較値"}, "cursorbench4": {"v": 34.1, "src": "sonnet55"}, "gdpval": {"v": 1449, "src": "sonnet55"}}, "notes": "発表時に無料・Proプランの既定モデルになった。", "summary": "Sonnet 5.5の前世代", "strengths": ["$2/$10で手頃"], "cautions": ["TB 4.0は10.3%で、5.5（70.6%）と大差"], "bestFor": ["既存システムの継続利用"], "sources": ["sonnet5", "sonnet55"]},
+    {"id": "gpt-5-5", "name": "GPT-5.5", "provider": "openai", "released": "2026-04-23", "tier": "フラッグシップ", "legacy": true, "openWeights": "no", "context": null, "maxOutput": null, "price": {"input": 5, "output": 30, "note": "Pro版は$30/$180"}, "scores": {"swepro": {"v": 58.6, "src": "opus48"}}, "notes": "Terminal-Bench 2.0で82.7%（2.1とは版が違うため表外）。並列のテスト時計算を使うPro版あり。", "summary": "GPT-5.6・GPT-6より前の旗艦", "strengths": ["Terminal-Bench 2.0で82.7%（当時）"], "cautions": ["価格が後継より高い（$5/$30）"], "bestFor": ["既存システムの継続利用"], "sources": ["gpt55"]},
+    {"id": "gpt-5-6-terra", "name": "GPT-5.6 Terra", "provider": "openai", "released": "2026-07-09", "tier": "バランス", "openWeights": "no", "context": 1050000, "maxOutput": 128000, "price": {"input": 2, "output": 12}, "scores": {}, "notes": "GPT-5.6の中位版。長文検索（MRCR v2、256K〜512K）で89.6%と、Solに近い精度を保つ。", "summary": "GPT-5.6の中位版。長文処理に強く価格は中程度", "strengths": ["長文検索の精度がSol並み（89.6%）", "1.05Mトークンの文脈"], "cautions": ["主要ベンチの公開値が少ない"], "bestFor": ["長文の要約・検索", "中価格帯の汎用利用"], "sources": ["gpt56"]},
+    {"id": "gemini-3-1-pro", "name": "Gemini 3.1 Pro", "provider": "google", "released": "2026-02-19", "tier": "フラッグシップ", "openWeights": "no", "context": null, "maxOutput": null, "price": {"input": 2, "output": 12, "note": "200K超は$4/$18"}, "scores": {"gpqa": {"v": 94.1, "src": "gem31"}}, "notes": "ARC-AGI-2で77.1%（検証済み）。Gemini 4 Argonが限定提供のため、一般に使えるGoogleの上位モデルは引き続きこの系統。", "summary": "一般提供中のGoogleの上位モデル（Gemini 3系）", "strengths": ["GPQA 94.1%", "ARC-AGI-2 77.1%"], "cautions": ["発表から8か月が経過し、新世代のArgonが控える"], "bestFor": ["一般提供の範囲でGoogleの上位モデルを使う場合"], "sources": ["gem31"]},
+    {"id": "gemini-3-8-flash", "name": "Gemini 3.8 Flash", "provider": "google", "released": "2026-09-02", "tier": "軽量", "openWeights": "no", "context": null, "maxOutput": null, "price": {"input": 0.75, "output": 3.75}, "scores": {}, "notes": "3.7 Flashの3週間後に発表。長時間のエージェント・ループで、開発・エージェント作業・専門分野の推論を改善した主力の軽量モデル。サイバー防御向けの「3.8 Flash Cyber」もある。", "summary": "Googleの主力の軽量モデル（最新のFlash）", "strengths": ["$0.75/$3.75と安価", "前版から開発・エージェント作業を改善"], "cautions": ["主要ベンチの公開値が少ない"], "bestFor": ["大量処理", "コスト重視の汎用利用"], "sources": ["gem38"]},
+    {"id": "grok-4-6", "name": "Grok 4.6", "provider": "xai", "released": "2026-08-12", "tier": "フラッグシップ", "legacy": true, "openWeights": "no", "context": 500000, "maxOutput": null, "price": {"input": 2, "output": 6}, "scores": {}, "notes": "長時間エージェント・コーディング向け。xhigh推論を追加。AA指数は56→61（v4.1系の値のため、本表のv4.3とは比較不可）。", "summary": "Grok 4.7の前世代", "strengths": ["$2/$6と安価"], "cautions": ["Grok 4.7に置き換え済み"], "bestFor": ["既存システムの継続利用"], "sources": ["grok46"]},
+    {"id": "deepseek-v4-pro", "name": "DeepSeek V4 Pro", "provider": "deepseek", "released": "2026-04-24", "tier": "フラッグシップ", "openWeights": "yes", "license": "MIT", "params": "1.6T（活性49B）", "context": 1000000, "maxOutput": null, "price": {"input": 0.66, "output": 1.98, "note": "0813版・オフピーク価格。ピーク時は$1.32/$3.96"}, "scores": {"gpqa": {"v": 90.1, "src": "openllm"}}, "notes": "0813版（8/13）で強化。SWE-bench Verified 80.6%、LiveCodeBench 93.5%。次はV4.1 Proの予定。AA指数53は旧版の指数による値のため表外。", "summary": "MITライセンスの大規模オープンモデル（V4.1 Proが次に控える）", "strengths": ["MITライセンスで重み公開", "GPQA 90.1%"], "cautions": ["自前で動かすには大規模なGPU環境が必要", "V4.1 Flashの方が多くの指標で上回る"], "bestFor": ["自社ホスティング", "研究用途"], "sources": ["dsv4pro"]},
+    {"id": "glm-5-2", "name": "GLM-5.2", "provider": "zhipu", "released": "2026-06-16", "tier": "フラッグシップ", "legacy": true, "openWeights": "yes", "license": "MIT", "params": "753B（活性約40B）", "context": 1000000, "maxOutput": null, "price": {"input": 1.4, "output": 4.4, "cachedInput": 0.26}, "scores": {"swepro": {"v": 62.1, "src": "glm52"}}, "notes": "コーディング特化のオープンモデル。SWE-bench ProでGPT-5.5（58.6%）を上回った。", "summary": "MITライセンスのオープンなコーディングモデル（GLM-5.3が後継）", "strengths": ["SWE-bench Pro 62.1%", "MITライセンス"], "cautions": ["GLM-5.3に置き換え済み"], "bestFor": ["自社ホスティング"], "sources": ["glm52"]}
+  ],
+  "outlook": {
+    "confidence": [
+      {"id": "official", "label": "公式", "desc": "企業が公式に表明した状況・時期"},
+      {"id": "report", "label": "報道", "desc": "報道・リーク・関係者発言に基づく"},
+      {"id": "forecast", "label": "予測", "desc": "アナリストや予測市場による推定。発表はない"}
+    ],
+    "statuses": {"training": "学習中", "post-training": "事後学習中", "limited": "限定提供中", "planned": "計画を表明", "unannounced": "未発表", "rumor": "噂段階"},
+    "upcoming": [
+      {"id": "gemini4", "name": "Gemini 4（一般提供・上位版）", "provider": "google", "status": "post-training", "window": ["2026-10", "2027-03"], "conf": "report", "summary": "Gemini 4世代の最初のモデルArgonは9/30に発表されたが、提供はサイバー防御組織に限られる。有料API・Ultra会員への拡大は日付未定。", "points": ["事前学習は7/21開始、9月下旬に事後学習へ移行（報道）", "DeepMindは事後学習中と認め、できるだけ早い公開を目指すと発言", "エージェントの統率とソフトウェア開発に重点。テキスト・画像・音声・動画を単一モデルで扱う"], "srcs": ["gem4", "argonfw"]},
+      {"id": "gemini4flash", "name": "Gemini 4 Flash", "provider": "google", "status": "unannounced", "window": ["2027-07", "2027-12"], "conf": "forecast", "summary": "過去の周期（旗艦の6〜9か月後に軽量版）からの推定。", "points": ["公式発表はない"], "srcs": ["gem4b"]},
+      {"id": "gpt6x", "name": "GPT-6.x（音声・動画入力の追加版）", "provider": "openai", "status": "unannounced", "window": ["2026-11", "2027-06"], "conf": "forecast", "summary": "GPT-7の前に、Astraの改良版（GPT-6.5など）で音声・動画入力が加わるとアナリストは予想している。", "points": ["OpenAIは後継モデルを未発表"], "srcs": ["gpt7"]},
+      {"id": "gpt7", "name": "GPT-7", "provider": "openai", "status": "unannounced", "window": ["2027-07", "2027-12"], "conf": "forecast", "summary": "OpenAIは未発表。予測市場の中央値は2027年7月ごろで、アナリストは2027年後半以降と見ている。", "points": ["Altman氏は「6か月より先の目標はめったに立てない」と発言", "GPT-5 → 5.1 → 5.6 → 6 と、更新間隔は短くなる傾向"], "srcs": ["gpt7", "cal27"]},
+      {"id": "claude-next", "name": "次世代Claude（Claude 6など）", "provider": "anthropic", "status": "unannounced", "window": ["2027-03", "2027-08"], "conf": "forecast", "summary": "未発表。予測市場の中央値は2027年5月ごろ。", "points": ["方向性（解説記事）：数日〜数週間にわたって記憶を保つ長期タスク、リアルタイムの音声・映像対話"], "srcs": ["cal27", "anthroad"]},
+      {"id": "mythos-ga", "name": "Claude Mythos の提供拡大", "provider": "anthropic", "status": "limited", "window": ["2026-10", "2027-06"], "conf": "forecast", "summary": "Mythos 5.1は、米国の審査済み組織（サイバー防御・生命科学）に限って提供中。将来の拡大を目指すが、時期は未定。", "points": ["生命科学の検証プログラムは招待制ベータ", "サイバー検証プログラムにも近くMythosを追加予定"], "srcs": ["mythos51"]},
+      {"id": "grok5", "name": "Grok 5", "provider": "xai", "status": "training", "window": ["2026-10", "2027-06"], "conf": "report", "summary": "Colossus 2（GB200/GB300 約55万基）で学習中。約6兆パラメータと報道されている。公開時期は何度も延期され、確約はない。", "points": ["目標は2025年末 → 2026年Q1 → Q2 → Q3と延期", "世界初のギガワット級学習クラスタで学習"], "srcs": ["grok5"]},
+      {"id": "qwen4", "name": "Qwen 4", "provider": "alibaba", "status": "training", "window": ["2026-10", "2027-03"], "conf": "report", "summary": "9/22のApsaraカンファレンスで「学習中・まもなく」と発表。Max／Plus／Flash／27Bの4階層。", "points": ["後継のQwen 4.5／Qwen 5は5〜10兆パラメータ規模を計画", "発売日・サイズ・ライセンスは未発表"], "srcs": ["apsara"]},
+      {"id": "dsv41pro", "name": "DeepSeek V4.1 Pro", "provider": "deepseek", "status": "planned", "window": ["2026-10", "2026-12"], "conf": "report", "summary": "DeepSeekが示している計画では、次のリリースはV4.1 Pro。", "points": ["V4.1 Flashは9/10に公開済み"], "srcs": ["dsv5"]},
+      {"id": "dsv5", "name": "DeepSeek V5", "provider": "deepseek", "status": "training", "window": ["2026-11", "2027-06"], "conf": "report", "summary": "約2兆パラメータの新モデルを学習中と報道（The Information、9/23）。公式発表・日付はない。", "points": ["10月公開説も出たが、公式には未確認"], "srcs": ["dsv5"]},
+      {"id": "muse-open", "name": "Muse Spark のオープンウェイト公開", "provider": "meta", "status": "planned", "window": ["2026-10", "2026-12"], "conf": "report", "summary": "Metaは、Muse Sparkと上位Museモデルの重みを第4四半期に公開すると繰り返し発言している。日付・ライセンスは未定。", "points": ["8/10に30Bの「Muse Glimmer」をApache 2.0で公開済み"], "srcs": ["museopen"]},
+      {"id": "kimi-k31", "name": "Kimi K3.1", "provider": "moonshot", "status": "rumor", "window": ["2026-11", "2027-03"], "conf": "forecast", "summary": "小幅な改良版の可能性が取り沙汰されている段階。仕様・時期とも未確認。", "points": [], "srcs": ["cnmodels"]}
+    ],
+    "trends": [
+      {"id": "horizon", "group": "capability", "title": "自律作業時間が約3.5か月ごとに倍増", "lead": "METRの「50%時間地平」（専門家ならどれだけ時間がかかるタスクを、AIが50%の確率で完遂できるか）が急速に伸びている。", "stats": [{"v": "16時間超", "l": "Claude Mythos Preview（2026年3月）", "note": "95%信頼区間 8.5〜55時間"}, {"v": "約240倍", "l": "GPT-4o（2024年半ば・約4分）からの伸び"}, {"v": "105日", "l": "倍増期間（2026年2月までのデータ）"}], "chart": {"type": "bars", "title": "倍増期間（か月）", "unit": "か月", "items": [["2019〜2024年", 7], ["2024年以降", 4], ["2026年2月時点", 3.5]]}, "implication": "数時間〜1日規模の業務を任せる前提で、業務設計と検証体制を考える段階に入った。ただし16時間を超える値は、現行のタスク集では測定が不安定。", "srcs": ["metr", "metrtr"]},
+      {"id": "price", "group": "capability", "title": "同等性能の価格は年10倍以上のペースで下落", "lead": "同じ性能を得るための推論単価は、毎年大きく下がり続けている。下落幅は課題によって大きく異なる。", "stats": [{"v": "約10倍／年", "l": "同等性能の推論単価の下落（a16z）"}, {"v": "中央値50倍／年", "l": "ベンチ別の下落幅（Epoch。9〜900倍）"}, {"v": "$0.15", "l": "本データ最安の入力単価（DeepSeek V4.1 Flash）"}], "chart": {"type": "log", "title": "同等性能の入力単価（$／100万トークン、対数）", "unit": "$", "items": [["GPT-3級（2021年）", 60], ["GPT-3級（2026年）", 0.06], ["GPT-4級（2023年）", 30], ["GPT-4級（2026年、上限）", 1]]}, "implication": "価格は毎年大きく下がる。長期の固定契約より、定期的に見直してモデルを切り替えやすくしておく方が得になりやすい。", "srcs": ["a16z", "epochp"]},
+      {"id": "ttc", "group": "capability", "title": "「考える量」が性能とコストを左右", "lead": "推論時に中間推論を多く生成する「テスト時計算」が主流になり、推論努力（low〜max）の設定が標準になった。", "stats": [{"v": "約2.3倍", "l": "1タスク当たり出力トークン（Argon÷Astra）"}, {"v": "約3倍", "l": "Muse Spark 1.3のトークン使用量（1.2比）"}], "chart": {"type": "bars", "title": "1タスク当たりの平均出力トークン（千）", "unit": "千", "items": [["Gemini 4 Argon", 62], ["GPT-6 Astra", 27]]}, "implication": "トークン単価が同じでも、考える量が多いモデルほどタスク単価は高くなる。比較は「1タスク当たりのコスト」で行うべき。", "srcs": ["ttc", "argon", "muse13"]},
+      {"id": "infra", "group": "infra", "title": "ギガワット級の計算基盤と「推論の逆転」", "lead": "学習用クラスタは1GW級に達し、AIの計算需要は学習より推論の方が大きくなった。", "stats": [{"v": "約946MW", "l": "Colossus 2のIT電力（2026年9月、追跡対象で最大）"}, {"v": "10GW", "l": "Stargateの計画容量"}, {"v": "約2/3", "l": "AI計算に占める推論の割合（2026年）"}], "chart": {"type": "bars", "title": "推論市場での専用チップ（ASIC）の比率", "unit": "%", "max": 100, "items": [["2024年", 15], ["2026年（予測）", 40]]}, "implication": "推論向けの専用チップが増えることで、推論価格の低下は今後も続く見込み。", "srcs": ["colossus", "stargate", "chips"]},
+      {"id": "compute", "group": "infra", "title": "学習計算量は年4〜5倍で拡大、伸びは鈍化へ", "lead": "最先端モデルの学習計算量は急拡大を続けてきたが、電力などの制約で伸びが鈍るとの見通しが出ている。", "stats": [{"v": "4〜5倍／年", "l": "最先端モデルの学習計算量（Epoch）"}, {"v": "約5×10²⁶", "l": "公開推定で最大の学習（Grok 4、FLOP）"}, {"v": "3〜4倍／年", "l": "2028年までの見通し（鈍化）"}], "chart": {"type": "log", "title": "学習計算量（FLOP、対数）", "unit": "FLOP", "items": [["EU AI Actの基準", 1e+25], ["Grok 4（推定）", 5e+26], ["2026年の最先端（推定幅）", 1e+26, 1e+27]]}, "implication": "計算量の伸びが鈍る分、推論時計算・データ・アルゴリズムの工夫が差別化の中心になる。", "srcs": ["epochc", "deluair"]},
+      {"id": "agents", "group": "infra", "title": "エージェント接続の標準化（MCP・A2A）", "lead": "AIエージェントとツール・他エージェントをつなぐ共通規格が定着し、企業での本番利用が広がっている。", "stats": [{"v": "1万超", "l": "MCPを実装した企業サーバー（2026年4月）"}, {"v": "9,700万", "l": "MCP SDKのダウンロード数"}, {"v": "150超", "l": "A2Aを支持する組織"}], "chart": {"type": "bars", "title": "企業での導入状況（調査により定義が異なる）", "unit": "%", "max": 100, "items": [["本番アプリにAIエージェントを組込み（Gartner、2026年Q1）", 80], ["MCP接続エージェントを本番運用（2026年7月）", 78], ["MCPサーバーを本番運用（ソフトウェア企業）", 41], ["MCPサーバーを運用するFortune 500", 28]]}, "implication": "接続方法が標準化され、モデルの乗り換えコストが下がる。「どの標準に対応しているか」が選定の基準になる。", "srcs": ["mcp", "agentad"]},
+      {"id": "world", "group": "frontier", "title": "世界モデルとフィジカルAI", "lead": "観測から環境の動きを学んで先を予測する「世界モデル」と、ロボットを動かすVLA（視覚・言語・行動）モデルが進展している。", "stats": [{"v": "Genie 3", "l": "初のリアルタイム対話型の世界モデル（DeepMind）"}, {"v": "2億本", "l": "Cosmos Predict 2.5の学習動画クリップ（NVIDIA）"}, {"v": "2万時間", "l": "GR00T N1.7に追加した一人称視点の人間動画"}], "chart": {"type": "log", "title": "ロボット制御の二層構成（制御周期 Hz、対数）", "unit": "Hz", "items": [["遅い層：状況判断・計画（VLA）", 2, 5], ["速い層：反射的な運動制御", 200]]}, "implication": "言語の次の主戦場として、物理世界の理解と身体の制御が本格化している。", "srcs": ["worldm", "nvphys", "robo", "vbtrend"]},
+      {"id": "memory", "group": "frontier", "title": "継続学習と長期記憶", "lead": "再学習なしで知識を更新し、作業をまたいで記憶を保つ仕組みの研究が進んでいる。", "stats": [{"v": "Nested Learning", "l": "速さの異なる最適化を入れ子にした学習法（Google）"}, {"v": "Titans", "l": "推論時に長期記憶を取り込む構造（Google）"}, {"v": "数日〜数週間", "l": "記憶を保って長期タスクを続けるエージェント（方向性）"}], "chart": {"type": "flow", "title": "継続学習のイメージ", "steps": ["会話・作業", "重要な情報を記憶へ", "次の作業で再利用", "知識を更新（再学習なし）"]}, "implication": "毎回説明し直す手間が減り、長期プロジェクトを任せやすくなる。一方で、記憶の管理と削除の仕組みが必要になる。", "srcs": ["vbtrend", "anthroad"]},
+      {"id": "ondevice", "group": "frontier", "title": "小型モデル・オンデバイスAI", "lead": "スマートフォンやPCの中で動く小型モデルが実用水準に達し、オフラインでも使える用途が広がっている。", "stats": [{"v": "1GB未満", "l": "Gemma 4 E2B（テキストのみ・量子化）の必要メモリ"}, {"v": "Apache 2.0", "l": "Muse Glimmer 30B（Meta、8月公開）"}, {"v": "25億台", "l": "2027年のエッジAI機器（予測）"}], "chart": {"type": "bars", "title": "Gemma 4 のサイズ（十億パラメータ）", "unit": "B", "items": [["E2B（実効2B）", 2], ["E4B（実効4B）", 4], ["26B MoE", 26], ["31B Dense", 31]]}, "implication": "データを外部に出さずに使えるため、機密情報を扱う業務やオフライン環境での利用が現実的になった。", "srcs": ["gemma", "gemmaqat", "ondev", "museopen"]},
+      {"id": "rsi", "group": "frontier", "title": "モデル自身による改善（自己改善ループ）", "lead": "モデルが自分の学習データや手順を改善する反復ループが、実際の製品開発に使われ始めた。", "stats": [{"v": "33回", "l": "Qwen3.8-Maxの反復改善サイクル（Alibaba発表）"}, {"v": "40→45", "l": "その結果のAA指数"}], "chart": {"type": "bars", "title": "Qwen3.8 Max のAA指数", "unit": "pt", "items": [["初版（8/3）", 40], ["0902版", 45]]}, "implication": "改善の速度がさらに上がる可能性がある一方、何がどう変わったかを検証する重要性も増す。", "srcs": ["apsara", "qwen38"]},
+      {"id": "gating", "group": "safety", "title": "高度なサイバー能力と段階的な公開", "lead": "最上位モデルを、まず審査済みの組織だけに提供する「段階的公開」が各社で相次いでいる。", "stats": [{"v": "数千件", "l": "Mythos Previewが見つけた未知の脆弱性（Anthropic）"}, {"v": "650超", "l": "Argonを先行提供したFairwindの参加組織（Google）"}, {"v": "Critical", "l": "GPT-6 Astra：OpenAI初の最高サイバー能力区分"}], "chart": null, "implication": "最新・最上位のモデルほど、すぐには一般利用できない時代になった。導入計画では「提供範囲」も確認が必要。", "srcs": ["mythos", "argonfw", "astra"]},
+      {"id": "euact", "group": "safety", "title": "EU AI Act の本格適用", "lead": "2026年8月2日にEU AI Actが広く適用され、汎用AIモデルへの監督が本格化した。", "stats": [{"v": "10²⁵ FLOP", "l": "システミックリスクありとされる学習計算量の基準"}, {"v": "8モデル", "l": "月次のリスク評価の提出が必要なモデル"}, {"v": "€1,500万／3%", "l": "汎用AIの義務違反の制裁金上限（高い方）"}], "chart": null, "implication": "EUで提供・利用する場合、透明性や著作権への配慮など、提供者側の義務に対応したモデルかを確認する必要がある。", "srcs": ["euai"]}
+    ],
+    "events": [
+      {"id": "e1", "date": "2025-08-02", "lane": "regulation", "title": "EU：汎用AIの義務が適用開始", "detail": "下流事業者への透明性、学習データの著作権への配慮、最上位モデルへの安全義務", "srcs": ["euai"]},
+      {"id": "e2", "date": "2026-04-07", "lane": "gating", "title": "Mythos Preview を非公開で発表", "detail": "Project Glasswing（大手IT・金融・政府）の枠組みでのみ提供", "srcs": ["mythos"]},
+      {"id": "e3", "date": "2026-06-09", "lane": "gating", "title": "Fable 5 / Mythos 5", "detail": "同じモデルを、安全制限ありの一般版（Fable）と制限を緩めた限定版（Mythos）に分けて提供", "srcs": ["mythos5"]},
+      {"id": "e4", "date": "2026-06-12", "lane": "regulation", "title": "輸出管理で提供停止", "detail": "米商務省の輸出管理に対応して両モデルを停止。6/30に解除、7/1に再開", "srcs": ["mythos5"]},
+      {"id": "e5", "date": "2026-08-02", "lane": "regulation", "title": "EU AI Act 本格適用", "detail": "第50条の透明性義務などが適用。AI Officeが汎用AIを直接監督し、制裁金を科せる", "srcs": ["euai"]},
+      {"id": "e6", "date": "2026-09-01", "lane": "gating", "title": "Mythos 5.1 を限定提供", "detail": "米国の審査済み組織（サイバー防御・生命科学）に限定", "srcs": ["mythos51"]},
+      {"id": "e7", "date": "2026-09-04", "lane": "gating", "title": "GPT-6 Astra が Critical 区分", "detail": "OpenAI初の最高サイバー能力区分のモデル", "srcs": ["astra"]},
+      {"id": "e8", "date": "2026-09-30", "lane": "gating", "title": "Argon をサイバー防御者に先行提供", "detail": "Fairwindプログラム（650超の組織）から提供を開始", "srcs": ["argonfw"]},
+      {"id": "e9", "date": "2027-01-01", "lane": "safety", "title": "Anthropic 安全目標の期限①", "detail": "Frontier Safety Roadmapで示した安全対策の目標期限", "srcs": ["rsp"]},
+      {"id": "e10", "date": "2027-07-01", "lane": "safety", "title": "Anthropic 安全目標の期限②", "detail": "Frontier Safety Roadmapで示したセキュリティの目標期限", "srcs": ["rsp"]}
+    ],
+    "lanes": [
+      {"id": "regulation", "label": "規制"},
+      {"id": "gating", "label": "段階的公開"},
+      {"id": "safety", "label": "安全目標"}
+    ]
+  }
 }
 </script>
 
@@ -483,6 +625,12 @@ function placeLabels(items, box) {
     placed.push({ x: c[0], y: c[1], w, h }); it.p._l = c;
   });
 }
+/** 幅に収まるモデル名：入らなければブランド名を省いて型番を残し（例：Claude Opus 5.5 → Opus 5.5）、それでも入らなければ末尾を省略 */
+function fitName(m, maxW, px = 12, w = 400) {
+  if (measure(m.name, px, w) <= maxW) return m.name;
+  const short = m.short || m.name.replace(/^(Claude|Gemini|DeepSeek|Muse)\s+/, "");
+  return fitText(short, maxW, px, w);
+}
 const seqStyle = t => { const pc = Math.round(12 + clamp(t, 0, 1) * 78); return `background:color-mix(in oklab,var(--seq-hi) ${pc}%,var(--seq-lo));color:${pc > 58 ? "#fff" : "var(--text)"}`; };
 function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("on"); clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove("on"), 2200); }
 const ICON = {
@@ -494,6 +642,7 @@ const ICON = {
   table: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="14" height="12" rx="1.5"/><path d="M3 8h14M3 12h14M8 4v12"/></svg>',
   models: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="7" r="3.2"/><path d="M3.8 16.5c.9-3 3.3-4.6 6.2-4.6s5.3 1.6 6.2 4.6"/></svg>',
   guide: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M3 4.5c2.5-1 4.8-.8 7 .8v11c-2.2-1.6-4.5-1.8-7-.8zM17 4.5c-2.5-1-4.8-.8-7 .8v11c2.2-1.6 4.5-1.8 7-.8z"/></svg>',
+  future: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15l4-5 3 3 6-8"/><path d="M12 5h4v4"/></svg>',
   data: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><ellipse cx="10" cy="5" rx="6" ry="2.3"/><path d="M4 5v10c0 1.3 2.7 2.3 6 2.3s6-1 6-2.3V5M4 10c0 1.3 2.7 2.3 6 2.3s6-1 6-2.3"/></svg>',
   sun: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="10" cy="10" r="3.2"/><path d="M10 2.5v1.8M10 15.7v1.8M2.5 10h1.8M15.7 10h1.8M4.7 4.7l1.3 1.3M14 14l1.3 1.3M4.7 15.3L6 14M14 6l1.3-1.3"/></svg>',
   moon: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M16 12.5A6.5 6.5 0 0 1 7.5 4a6.5 6.5 0 1 0 8.5 8.5z"/></svg>',
@@ -516,8 +665,9 @@ const Data = {
     const B = ids(d.benchmarks, "benchmarks"), P = ids(d.providers, "providers"), M = ids(d.models, "models");
     const C = new Set((d.categories || []).map(c => c.id)), S = new Set((d.sources || []).map(s => s.id));
     d.benchmarks.forEach(b => { if (b.category && C.size && !C.has(b.category)) warnings.push(`ベンチ ${b.id}: 未定義カテゴリ "${b.category}"`); });
-    d.providers.forEach(p => { if (!(p.color >= 1 && p.color <= 8)) warnings.push(`提供元 ${p.id}: color は1〜8の系列番号で指定してください`); });
-    if (P.size > 8) warnings.push("提供元が8を超えています。9番目以降は色が重複します（その他へ集約を推奨）");
+    const used = new Map(); d.providers.forEach(p => { if (p.color == null) return; if (!(p.color >= 1 && p.color <= 8)) warnings.push(`提供元 ${p.id}: color は1〜8の系列番号か null（その他・グレー）で指定してください`); else if (used.has(p.color)) warnings.push(`提供元 ${p.id}: 色番号 ${p.color} が ${used.get(p.color)} と重複`); else used.set(p.color, p.id); });
+    const o = d.outlook; if (o) { (o.upcoming || []).forEach(u => { if (!/^\d{4}-\d{2}$/.test(u.window?.[0] || "") || !/^\d{4}-\d{2}$/.test(u.window?.[1] || "")) warnings.push(`次世代 ${u.id}: window は ["YYYY-MM","YYYY-MM"] で指定してください`); });
+      (o.events || []).forEach(e => { if (!/^\d{4}-\d{2}-\d{2}$/.test(e.date || "")) warnings.push(`出来事 ${e.id}: date は YYYY-MM-DD で指定してください`); }); }
     (d.sources || []).forEach(s => { if (s.url && !safeUrl(s.url)) warnings.push(`出典 ${s.id}: http(s) 以外のURLは無効化されます`); });
     d.models.forEach(m => {
       if (!m.name) errors.push(`モデル ${m.id}: name がありません`);
@@ -543,6 +693,7 @@ const Data = {
     for (const k of ["categories", "benchmarks", "providers", "sources", "models"]) if (add[k]) out[k] = byId(out[k], add[k]);
     for (const k of ["useCases", "kpis"]) if (add[k]) out[k] = add[k];
     if (add.meta) out.meta = { ...out.meta, ...add.meta };
+    if (add.outlook) { const o = out.outlook || {}; out.outlook = { ...o, ...add.outlook }; for (const k of ["upcoming", "trends", "events", "lanes", "confidence"]) if (add.outlook[k]) out.outlook[k] = byId(o[k], add.outlook[k]); }
     return out;
   },
 
@@ -562,10 +713,11 @@ const Data = {
       const speed = typeof m.speed === "object" && m.speed ? m.speed : (isNum(m.speed) ? { v: m.speed } : null);
       const p = m.price || {};
       const blended = isNum(p.input) && isNum(p.output) ? (3 * p.input + p.output) / 4 : null; // 入力:出力=3:1 の混合単価
-      return { ...m, scores, speedObj: speed, speed: speed?.v ?? null, blended, prov: pv.get(m.provider) || { label: m.provider, color: 8 } };
+      return { ...m, scores, speedObj: speed, speed: speed?.v ?? null, blended, prov: pv.get(m.provider) || { label: m.provider, color: null } };
     });
     return { raw: d, meta: d.meta || {}, pv, bm, src, cats, models, benchmarks: d.benchmarks, providers: d.providers,
-      useCases: d.useCases || [], kpis: d.kpis || [], abilities: d.abilities || [], kinds: new Map((d.kinds || []).map(k => [k.id, k])) };
+      useCases: d.useCases || [], kpis: d.kpis || [], abilities: d.abilities || [], kinds: new Map((d.kinds || []).map(k => [k.id, k])),
+      outlook: { upcoming: [], trends: [], events: [], lanes: [], confidence: [], statuses: {}, ...(d.outlook || {}) } };
   },
 };
 
@@ -583,12 +735,15 @@ const S = {
   heatSort: null,
   guideBench: store.get("guideBench", null),
   profile: store.get("profile", null),
+  upcoming: store.get("upcoming", null),
   source: "seed",
 };
 function visible() {
   return S.D.models.filter(m => !S.f.off.has(m.provider) && (S.f.legacy || !m.legacy) && (!S.f.open || m.openWeights === "yes" || m.openWeights === "partial"));
 }
-const color = m => `var(--c${m.prov.color || 8})`;
+/** 提供元の系列色。1〜8は固定スロット、それ以外（9社目以降）は「その他」のグレー（名前は常に直接ラベルで併記） */
+const provColor = p => p && p.color >= 1 && p.color <= 8 ? `var(--c${p.color})` : "var(--c-other)";
+const color = m => provColor(m.prov);
 const score = (m, b) => m.scores[b]?.v ?? null;
 
 /** メトリクス指定子（"bench:id" / "spec:speed" / "spec:context" / "price:blended" / "value:benchId"）を解決 */
@@ -631,7 +786,8 @@ function tipModel(m, title, value, extra) {
     ${s ? `<div class="tm">出典: ${esc(s.label)}</div>` : ""}
     <div class="tm" style="margin-top:4px">クリックで詳細</div>`;
 }
-function mName(m) { return `<span class="mname" data-m="${esc(m.id)}"><span class="sw" style="background:${color(m)}"></span><span>${esc(m.name)}</span></span>`; }
+const LIM = '<span class="lim" title="一般提供されていない（審査済みの組織のみ）">限定</span>';
+function mName(m) { return `<span class="mname" data-m="${esc(m.id)}"><span class="sw" style="background:${color(m)}"></span><span>${esc(m.name)}</span>${m.access === "limited" ? LIM : ""}</span>`; }
 
 /* ==================================================================
    4. Charts — 依存ライブラリなしのSVG描画（高速・オフライン動作）
@@ -646,7 +802,7 @@ const Chart = {
     const { W, H } = this.size(host);
     const dot = o.zeroBased === false, n = rows.length;
     const valW = o.valW || 58, axisH = 16;
-    const labelW = clamp(Math.max(...rows.map(r => measure(r.m.name, 12, 600))) + 24, 80, W * 0.42);
+    const labelW = clamp(Math.max(...rows.map(r => measure(r.m.name, 12, 600))) + 24, 80, W * 0.46);
     const padT = (o.refs || []).length ? 16 : 0;
     const rowH = Math.min(o.maxRow || 40, (H - axisH - 2 - padT) / n);
     const barH = clamp(rowH * 0.5, 5, 18);
@@ -664,7 +820,7 @@ const Chart = {
     rows.forEach((r, i) => {
       const y = i * rowH, cy = y + rowH / 2, m = r.m, top = r.v === best;
       const tip = Tip.add(tipModel(m, o.title, o.fmt(r.v), { rank: `${i + 1}位 / ${n}` + (i ? `（首位との差 ${o.diff ? o.diff(rows[0].v, r.v) : fmt.num(Math.abs(rows[0].v - r.v))}）` : ""), note: r.note, src: r.src }));
-      const name = fitText(m.name, labelW - 22, 12, top ? 600 : 400);
+      const name = fitName(m, labelW - 22, 12, top ? 600 : 400);
       s += `<g class="r" data-t="${tip}" data-m="${esc(m.id)}"><rect class="row-hover" x="0" y="${y}" width="${W}" height="${rowH}" rx="5"/>
         <circle cx="7" cy="${cy}" r="4" fill="${color(m)}"/>
         <text class="lb" x="16" y="${cy + 4}"${top ? ' font-weight="600"' : ""}>${esc(name)}</text>`;
@@ -732,7 +888,7 @@ const Chart = {
       const cy = i * rowH + rowH / 2, m = r.m;
       const tip = Tip.add(tipModel(m, "API単価（100万トークン当たり）", `${fmt.usd(r.a)} → ${fmt.usd(r.b)}`, { rank: `入力 ${fmt.usd(r.a)} / 出力 ${fmt.usd(r.b)}` + (isNum(m.price?.cachedInput) ? ` / キャッシュ入力 ${fmt.usd(m.price.cachedInput)}` : ""), note: m.price?.note }));
       s += `<g class="r" data-t="${tip}" data-m="${esc(m.id)}"><rect class="row-hover" x="0" y="${i * rowH}" width="${W}" height="${rowH}" rx="5"/>
-        <circle cx="7" cy="${cy}" r="4" fill="${color(m)}"/><text class="lb" x="16" y="${cy + 4}">${esc(fitText(m.name, labelW - 22))}</text>
+        <circle cx="7" cy="${cy}" r="4" fill="${color(m)}"/><text class="lb" x="16" y="${cy + 4}">${esc(fitName(m, labelW - 22))}</text>
         <line x1="${X(r.a)}" x2="${X(r.b)}" y1="${cy}" y2="${cy}" stroke="${color(m)}" stroke-width="2" opacity=".55"/>
         <circle class="mk" cx="${X(r.a)}" cy="${cy}" r="4.5" fill="var(--surface)" stroke="${color(m)}" stroke-width="2"/>
         <circle class="mk" cx="${X(r.b)}" cy="${cy}" r="5" fill="${color(m)}" stroke="var(--surface)" stroke-width="1.5"/>
@@ -788,11 +944,11 @@ const Chart = {
         const cands = [[x - w / 2, y - 7 - h], [x - w / 2, y + 7], [x + 8, y - h / 2], [x - 8 - w, y - h / 2], [x - w / 2, y - 9 - 2 * h], [x - w / 2, y + 9 + h], [x - w, y - 7 - h], [x, y + 7]]
           .map(([lx, ly]) => [clamp(lx, L, W - R - w), ly]).filter(([, ly]) => ly > 0 && ly + h < H - Bm);
         const cost = ([lx, ly]) => placed.reduce((acc, b) => acc + Math.max(0, Math.min(lx + w, b.x + b.w) - Math.max(lx, b.x)) * Math.max(0, Math.min(ly + h, b.y + b.h) - Math.max(ly, b.y)), 0);
-        const pos = cands.find(c => cost(c) === 0) || cands.reduce((m, c) => cost(c) < cost(m) ? c : m, cands[0]);
-        placed.push({ x: pos[0], y: pos[1], w, h });
+        const pos = cands.find(c => cost(c) === 0);   // 置けない場合はラベルを省略（点のツールチップで確認できる）
+        if (pos) placed.push({ x: pos[0], y: pos[1], w, h });
         const tip = Tip.add(tipModel(m, "発表日", fmt.date(m.released), { rank: m.tier }));
         s += `<g data-t="${tip}" data-m="${esc(m.id)}"><circle class="hit" cx="${x}" cy="${y}" r="11"/><circle class="mk" cx="${x}" cy="${y}" r="5.5" fill="${color(m)}" stroke="var(--surface)" stroke-width="2"/>
-          <text class="lb2" x="${pos[0]}" y="${pos[1] + 10}" ${m.legacy ? 'style="opacity:.6"' : ""}>${esc(m.name)}</text></g>`;
+          ${pos ? `<text class="lb2" x="${pos[0]}" y="${pos[1] + 10}" ${m.legacy ? 'style="opacity:.6"' : ""}>${esc(m.name)}</text>` : ""}</g>`;
       });
     });
     host.innerHTML = s + "</svg>";
@@ -810,6 +966,7 @@ const VIEWS = [
   { id: "models", label: "モデル特徴", hint: "各モデルの強みと注意点", lead: "モデルごとの得意・不得意と立ち位置", subs: () => [{ id: "matrix", label: "早見表" }, { id: "profile", label: "プロフィール" }], render: renderModels },
   { id: "bench", label: "ベンチマーク", hint: "カテゴリ別の性能", lead: "カテゴリを選ぶと、その全ベンチマークを並べて表示", subs: () => [...S.D.cats.map(c => ({ id: c.id, label: c.label, n: S.D.benchmarks.filter(b => (b.category || "other") === c.id).length })), { id: "heat", label: "全体ヒートマップ" }], render: renderBench },
   { id: "guide", label: "ベンチ解説", hint: "何を測る指標か", lead: "各ベンチマークが測る能力・採点方法・読み方", subs: () => [{ id: "map", label: "全体像" }, { id: "detail", label: "個別解説" }], render: renderGuide },
+  { id: "future", label: "次世代・動向", hint: "今後のモデルと技術", lead: "旧世代 → 現行 → 次世代の流れと、技術・規制の動向", subs: () => [{ id: "roadmap", label: "系譜と投入予定" }, { id: "capability", label: "能力とコスト" }, { id: "infra", label: "基盤と普及" }, { id: "frontier", label: "新領域" }, { id: "safety", label: "安全・規制" }], render: renderFuture },
   { id: "cost", label: "コスト", hint: "価格性能と月額試算", lead: "性能あたりの価格と、利用量に応じた月額の目安", render: renderCost },
   { id: "speed", label: "速度・容量", hint: "速度とコンテキスト長", lead: "応答の速さと、一度に扱える情報量", render: renderSpeed },
   { id: "compare", label: "比較", hint: "最大4モデルを比較", lead: "モデルを選ぶと、レーダーと差分表で比較", render: renderCompare },
@@ -867,7 +1024,7 @@ function renderBench(v) {
   const sub = S.sub.bench || D.cats[0]?.id;
   if (sub === "heat") return renderHeat(v, ms);
   const bs = D.benchmarks.filter(b => (b.category || "other") === sub);
-  const n = bs.length, cols = n <= 1 ? 1 : n === 2 ? 2 : n === 4 ? 2 : 3, rowsN = Math.ceil(n / cols);
+  const n = bs.length, cols = n <= 1 ? 1 : n === 2 ? 2 : n === 4 ? 2 : n >= 7 ? 4 : 3, rowsN = Math.ceil(n / cols);
   v.style.gridTemplateColumns = n === 1 ? "minmax(0,1.5fr) minmax(0,1fr)" : `repeat(${cols},minmax(0,1fr))`;
   v.style.gridTemplateRows = `repeat(${rowsN},minmax(0,1fr))`;
   v.innerHTML = bs.map(b => card(esc(b.label), `${esc(b.unit === "Elo" ? "Elo（相対評価）" : b.unit === "%" ? "正答・成功率" : b.unit)}`,
@@ -917,9 +1074,9 @@ function renderHeat(v, ms) {
     const tip = Tip.add(tipModel(m, b.label, fmt.unit(val, b.unit), { rank: `表示中の範囲 ${fmt.unit(lo, b.unit)}〜${fmt.unit(hi, b.unit)}`, note: m.scores[b.id]?.note, src: m.scores[b.id]?.src }));
     return `<td class="r num${val === (b.higherIsBetter === false ? lo : hi) ? " best" : ""}" data-t="${tip}" style="${seqStyle(tt)}">${esc(fmt.unit(val, b.unit).replace("%", ""))}</td>`;
   }).join("")}<td class="r muted num">${Object.keys(m.scores).length}/${D.benchmarks.length}</td></tr>`).join("");
-  v.innerHTML = card("全ベンチマーク ヒートマップ", "色の濃さ＝各列（ベンチ）内での相対位置。★＝列の首位。空欄は未公表", `<div id="heatWrap" style="position:absolute;inset:0;overflow:hidden"><table class="tbl">${head1}${head2}<tbody>${body}</tbody></table></div>`,
+  v.innerHTML = card("全ベンチマーク ヒートマップ", "色の濃さ＝各列（ベンチ）内での相対位置。★＝列の首位。空欄は未公表", `<div id="heatWrap" style="position:absolute;inset:0;overflow:hidden"><table class="tbl fit${sorted.length > 16 || bs.length > 12 ? " dense" : ""}">${head1}${head2}<tbody>${body}</tbody></table></div>`,
     { right: `<span class="legend"><span>低</span><span style="width:90px;height:8px;border-radius:4px;background:linear-gradient(90deg,color-mix(in oklab,var(--seq-hi) 12%,var(--seq-lo)),var(--seq-hi))"></span><span>高</span></span>` });
-  const wrap = $("#heatWrap"); wrap.style.setProperty("--rh", clamp((wrap.clientHeight - 62) / Math.max(1, sorted.length), 24, 52) + "px");
+  const wrap = $("#heatWrap"); wrap.style.setProperty("--rh", clamp((wrap.clientHeight - wrap.querySelector("thead, tr").closest("table").querySelectorAll("tr")[1].getBoundingClientRect().bottom + wrap.getBoundingClientRect().top - 2) / Math.max(1, sorted.length), 18, 52) + "px");
   wrap.querySelectorAll("[data-hs]").forEach(th => th.onclick = () => { const k = th.dataset.hs; S.heatSort = { key: k, dir: hs.key === k ? -hs.dir : (k === "name" ? 1 : -1) }; render(); });
 }
 
@@ -1036,11 +1193,11 @@ function renderTable(v, nb = 8) {
     const bar = c.bar && isNum(val) && e ? `<i style="width:calc(${Math.round((val / e.mx) * 100)}% - 16px)"></i>` : "";
     return `<td class="${c.num ? "r num" : ""}${isBest ? " best" : ""}${val == null ? " na" : ""}${bar ? " bar-cell" : ""}">${c.cell(m)}${bar}</td>`; }).join("")}</tr>`).join("");
   const hidden = benchAll.length - benchCols.length;
-  v.innerHTML = card("仕様一覧", `${ms.length}モデル・★＝列の最良値・$は100万トークン当たり・混合$は入力3:出力1${hidden > 0 ? `・幅の都合で${hidden}ベンチを省略（ヒートマップで全表示）` : ""}`, `<div id="tblWrap" style="position:absolute;inset:0;overflow:hidden"><table class="tbl"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`,
+  v.innerHTML = card("仕様一覧", `${ms.length}モデル・★＝列の最良値・$は100万トークン当たり・混合$は入力3:出力1${hidden > 0 ? `・幅の都合で${hidden}ベンチを省略（ヒートマップで全表示）` : ""}`, `<div id="tblWrap" style="position:absolute;inset:0;overflow:hidden"><table class="tbl${rows.length > 18 ? " dense" : ""}"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`,
     { right: `<button class="btn" id="csvBtn">CSVで書き出し</button>` });
   const w = $("#tblWrap");
   if (w.scrollWidth > w.clientWidth + 1 && nb > 0) { Tip.reset(); return renderTable(v, nb - 1); }
-  w.style.setProperty("--rh", clamp((w.clientHeight - 34) / Math.max(1, rows.length), 26, 48) + "px");
+  w.style.setProperty("--rh", clamp((w.clientHeight - w.querySelector("thead").offsetHeight - 2) / Math.max(1, rows.length), 18, 48) + "px");
   w.querySelectorAll("[data-sk]").forEach(th => th.onclick = () => { const k = th.dataset.sk; S.sort = { key: k, dir: so.key === k ? -so.dir : (cols.find(c => c.k === k).lo || k === "name" || k === "provider" ? 1 : -1) }; store.set("sort", S.sort); render(); });
   $("#csvBtn").onclick = () => {
     const q = s => `"${String(s ?? "").replace(/"/g, '""')}"`;
@@ -1109,7 +1266,7 @@ function catStrength(m, ms) {
 const ARROW = '<span class="ar" aria-hidden="true"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 1.5L7 5l-4 3.5"/></svg></span>';
 const KIND_GLYPH = { exam: "?", agent: "▶", pairwise: "⇄", composite: "Σ" };
 function kindBadge(b) { const k = S.D.kinds.get(b.kind); return k ? `<span class="kb" title="${esc(k.desc)}"><i>${KIND_GLYPH[b.kind] || "・"}</i>${esc(k.label)}</span>` : ""; }
-function flowHtml(steps) { return `<div class="flow">${steps.map((t, i) => `<div class="st"><b>STEP ${i + 1}</b>${esc(t)}</div>`).join(ARROW)}</div>`; }
+function flowHtml(steps, vertical) { return `<div class="flow${vertical ? " v" : ""}">${steps.map((t, i) => `<div class="st"><b>STEP ${i + 1}</b>${esc(t)}</div>`).join(ARROW)}</div>`; }
 /** 構成の帯グラフ。系列色（提供元）と混同しないよう無彩色の段階で塗り、直接ラベルを付ける */
 function compHtml(c) {
   if (!c) return "";
@@ -1247,16 +1404,16 @@ function renderModels(v) {
     return `<td><span style="display:inline-flex;align-items:center;gap:8px"><svg width="70" height="12" aria-hidden="true"><line x1="4" x2="66" y1="6" y2="6" stroke="var(--border-strong)" stroke-width="3" stroke-linecap="round"/><circle cx="${4 + t * 62}" cy="6" r="4.5" fill="${color(m)}"/></svg><span class="num">${esc(fmt.usd(m.blended))}</span></span></td>`; };
   const ow = { yes: "オープン", partial: "一部公開", no: "—" };
   const rows = order.map(m => { const cs = catStrength(m, ms);
-    return `<tr data-prof="${esc(m.id)}" data-t="${Tip.add(tipModel(m, m.tier, null, { rank: m.summary }))}"><td><span class="mname"><span class="sw" style="background:${color(m)}"></span><span style="font-weight:600">${esc(m.name)}</span></span></td>
+    return `<tr data-prof="${esc(m.id)}" data-t="${Tip.add(tipModel(m, m.tier, null, { rank: m.summary }))}"><td><span class="mname"><span class="sw" style="background:${color(m)}"></span><span style="font-weight:600">${esc(m.name)}</span>${m.access === "limited" ? LIM : ""}${m.legacy ? '<span class="muted" style="font-size:10.5px">旧</span>' : ""}</span></td>
       <td class="sum">${esc(m.summary || "")}</td>
       ${D.cats.map(c => { const x = cs[c.id]; return x ? `<td class="cat" style="${seqStyle(x.p)}" data-t="${Tip.add(tipModel(m, c.label, String(Math.round(x.p * 100)), { rank: `${x.n}指標の順位から算出（100＝首位・0＝最下位）`, note: x.n === 1 ? "1指標のみのため参考値" : null }))}">${Math.round(x.p * 100)}</td>` : `<td class="cat na">—</td>`; }).join("")}
       ${priceCell(m)}
       <td class="r num">${isNum(m.speed) ? fmt.num(m.speed, 0) : '<span class="na">—</span>'}</td>
       <td class="r num">${esc(fmt.tok(m.context))}</td><td class="t2">${esc(ow[m.openWeights] || "—")}</td></tr>`; }).join("");
   const legend = `<span class="legend"><span>数値＝カテゴリ内の相対位置（100＝首位・0＝最下位）</span><span style="width:80px;height:8px;border-radius:4px;background:linear-gradient(90deg,color-mix(in oklab,var(--seq-hi) 12%,var(--seq-lo)),var(--seq-hi))"></span></span>`;
-  v.innerHTML = card("モデル特徴の早見表", "行クリックでプロフィール・AA指数順", `<div id="matWrap" style="position:absolute;inset:0;overflow:hidden"><table class="tbl mat fit"><thead><tr><th>モデル</th><th>ひとことで言うと</th>${D.cats.map(c => `<th style="text-align:center;width:76px;white-space:nowrap" title="${esc(c.label)}：${esc(c.desc || "")}">${esc(c.short || c.label)}</th>`).join("")}<th style="width:150px;white-space:nowrap" title="入力3:出力1の混合単価。左ほど安い（対数）">混合単価（左＝安い）</th><th class="r" style="width:80px">速度 tok/s</th><th class="r" style="width:70px">文脈</th><th style="width:66px">重み</th></tr></thead><tbody>${rows}</tbody></table></div>`,
+  v.innerHTML = card("モデル特徴の早見表", "行クリックでプロフィール・AA指数順", `<div id="matWrap" style="position:absolute;inset:0;overflow:hidden"><table class="tbl mat fit${order.length > 18 ? " dense" : ""}"><thead><tr><th>モデル</th><th>ひとことで言うと</th>${D.cats.map(c => `<th style="text-align:center;width:76px;white-space:nowrap" title="${esc(c.label)}：${esc(c.desc || "")}">${esc(c.short || c.label)}</th>`).join("")}<th style="width:150px;white-space:nowrap" title="入力3:出力1の混合単価。左ほど安い（対数）">混合単価（左＝安い）</th><th class="r" style="width:80px">速度 tok/s</th><th class="r" style="width:70px">文脈</th><th style="width:66px">重み</th></tr></thead><tbody>${rows}</tbody></table></div>`,
     { right: legend, foot: `<div class="caveat"><span>相対位置は、表示中のモデルのうちデータのあるものの順位から算出（カテゴリ内の各ベンチの平均）。データがない場合は「—」とし、推測で補完していません。</span></div>` });
-  const w = $("#matWrap"); w.style.setProperty("--rh", clamp((w.clientHeight - w.querySelector("thead").offsetHeight - 2) / Math.max(1, order.length), 28, 52) + "px");
+  const w = $("#matWrap"); w.style.setProperty("--rh", clamp((w.clientHeight - w.querySelector("thead").offsetHeight - 2) / Math.max(1, order.length), 18, 52) + "px");
 }
 
 function renderProfile(v, ms) {
@@ -1266,12 +1423,13 @@ function renderProfile(v, ms) {
   v.style.gridTemplateColumns = "220px minmax(0,1.25fr) minmax(0,1fr)";
   v.style.gridTemplateRows = "minmax(0,1fr)";
   const sig = x => { const cs = catStrength(x, ms); return `<span class="sig" title="カテゴリ別の相対位置">${D.cats.map(c => cs[c.id] ? `<i style="height:${3 + cs[c.id].p * 11}px" title="${esc(c.short || c.label)} ${Math.round(cs[c.id].p * 100)}"></i>` : `<i class="na" style="height:3px"></i>`).join("")}</span>`; };
-  const list = D.providers.filter(p => ms.some(x => x.provider === p.id)).map(p => `<div class="li-g">${esc(p.label)}</div>` + ms.filter(x => x.provider === p.id).map(x =>
+  const grpOn = ms.length <= 14;
+  const list = D.providers.filter(p => ms.some(x => x.provider === p.id)).map(p => (grpOn ? `<div class="li-g">${esc(p.label)}</div>` : "") + ms.filter(x => x.provider === p.id).map(x =>
     `<button class="li" data-prof="${esc(x.id)}" aria-current="${x.id === m.id}"><span><span class="sw" style="background:${color(x)}"></span>${esc(x.name)}</span>${sig(x)}</button>`).join("")).join("");
   const top = D.benchmarks.map(b => ({ b, r: rankOf(b, m, ms) })).filter(x => x.r && x.r.rank <= 2).sort((a, c) => a.r.rank - c.r.rank);
   const ow = { yes: "オープンウェイト", partial: "重み一部公開", no: "クローズド" }[m.openWeights] || "";
   const center = `<div class="stack" style="position:absolute;inset:0;overflow:auto;padding-right:2px">
-    <div style="display:flex;gap:8px;flex-wrap:wrap">${[m.tier, ow, m.released ? "発表 " + fmt.date(m.released) : null, m.legacy ? "旧世代" : null, m.license].filter(Boolean).map(t => `<span class="kb">${esc(t)}</span>`).join("")}</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">${[m.tier, m.access === "limited" ? "限定提供" : null, ow, m.released ? "発表 " + fmt.date(m.released) : null, m.legacy ? "旧世代" : null, m.license].filter(Boolean).map(t => `<span class="kb">${esc(t)}</span>`).join("")}</div>
     <p class="lead-q">${esc(m.summary || m.notes || "")}</p>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
       <div><div class="sec-h">強み</div><ul class="pros">${(m.strengths || []).map(t => `<li>${esc(t)}</li>`).join("") || '<li class="muted">未登録</li>'}</ul></div>
@@ -1287,7 +1445,7 @@ function renderProfile(v, ms) {
     return `<div data-t="${Tip.add(`<div class="tt">${esc(c.label)}</div><div class="tm">${esc(c.desc || "")}</div>${x ? `<div class="tv">${Math.round(x.p * 100)}</div><div class="tm">${x.n}指標の順位から算出（100＝首位）</div>` : '<div class="tm">データなし</div>'}`)}">
       <div style="display:flex;justify-content:space-between;font-size:12px"><span>${esc(c.label)}</span><span class="${x ? "num" : "muted"}" style="${x ? "font-weight:650" : ""}">${x ? Math.round(x.p * 100) : "データなし"}${x ? `<span class="muted" style="font-weight:400;font-size:11px"> （${x.n}指標）</span>` : ""}</span></div>
       <div class="mini" style="height:8px;border-radius:4px;margin-top:4px"><i style="width:${x ? Math.max(2, x.p * 100) : 0}%;background:${color(m)};border-radius:4px"></i></div></div>`; }).join("")}</div>`;
-  v.innerHTML = card("モデル", `${ms.length}件・バー＝カテゴリ別の強さ`, `<div class="list">${list}</div>`)
+  v.innerHTML = card("モデル", `${ms.length}件・バー＝カテゴリ別の強さ`, `<div class="list" id="pList">${list}</div>`)
     + card(`<span class="sw" style="display:inline-block;width:11px;height:11px;margin-right:7px;background:${color(m)}"></span>${esc(m.name)}`, esc(m.prov.label), center)
     + `<div style="display:grid;grid-template-rows:auto minmax(0,1fr);gap:12px;min-height:0">${card("カテゴリ別の強さ", "表示中モデル内の相対位置", bars, { style: "flex:none" })}
       ${card("仕様の立ち位置", "灰色＝他モデル・色＝このモデル", host("ch-strip"))}</div>`;
@@ -1297,8 +1455,199 @@ function renderProfile(v, ms) {
     { label: "出力速度", get: x => x.speed, fmt: x => fmt.num(x, 0) + " tok/s" },
     { label: "コンテキスト", get: x => x.context, fmt: fmt.tok, log: true },
   ], m, ms);
+  const pl = $("#pList"), nli = pl.querySelectorAll(".li").length, ng = pl.querySelectorAll(".li-g").length;
+  pl.querySelectorAll(".li").forEach(el => el.style.minHeight = clamp((pl.clientHeight - ng * 24) / Math.max(1, nli) - 1, 19, 28) + "px");
+  if (pl.scrollHeight > pl.clientHeight) pl.querySelectorAll(".li").forEach(el => { el.style.padding = "1px 8px"; el.style.fontSize = "11.5px"; });
   $("#pCmp").onclick = () => { S.compare = [...(S.compare || []).filter(x => x !== m.id), m.id].slice(-4); store.set("compare", S.compare); go("compare"); };
   $("#pAll").onclick = () => openDrawer(m.id);
+}
+
+/* ---------- 次世代・動向 ---------- */
+const ym = s => { const [y, m] = s.split("-").map(Number); return Date.UTC(y, m - 1, 1); };
+const ymd = s => Date.UTC(+s.slice(0, 4), +s.slice(5, 7) - 1, +s.slice(8, 10));
+const CONF_STYLE = { official: "solid", report: "hatch", forecast: "outline" };
+function confKey(id, provC = "var(--text-2)") {
+  const st = CONF_STYLE[id];
+  const fill = st === "solid" ? provC : st === "hatch" ? "url(#hatch-key)" : "none";
+  return `<svg width="22" height="10" aria-hidden="true"><defs><pattern id="hatch-key" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="2" height="4" fill="${provC}"/></pattern></defs><rect x="1" y="1" width="20" height="8" rx="3" fill="${fill}" stroke="${provC}" stroke-width="1.5" ${st === "outline" ? 'stroke-dasharray="3 2"' : ""}/></svg>`;
+}
+
+/** 系譜：提供元ごとのレーンに、旧世代（中抜き）・現行（塗り）・今後の予定（期間バー＝確度を塗り方で表現）を並べる */
+Chart.lineage = function (host, models, upcoming, asOf, selId) {
+  const { W, H } = this.size(host), O = S.D.outlook;
+  const provIds = [...new Set([...models.map(m => m.provider), ...upcoming.map(u => u.provider)])];
+  const provs = S.D.providers.filter(p => provIds.includes(p.id));
+  if (!provs.length) return this.empty(host);
+  const times = [...models.filter(m => m.released).map(m => ymd(m.released)), ...upcoming.flatMap(u => [ym(u.window[0]), ym(u.window[1])]), ymd(asOf)];
+  const d0 = new Date(Math.min(...times)); d0.setUTCDate(1); d0.setUTCMonth(d0.getUTCMonth() - 1);
+  const d1 = new Date(Math.max(...times)); d1.setUTCMonth(d1.getUTCMonth() + 2, 1);
+  const L = clamp(Math.max(...provs.map(p => measure(p.label, 11))) + 16, 60, 110), R = 10, T = 6, Bm = 22, laneH = (H - T - Bm) / provs.length;
+  const X = t => L + (t - d0.getTime()) / (d1.getTime() - d0.getTime()) * (W - L - R);
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="モデルの系譜と投入予定"><defs>`;
+  provs.forEach(p => { s += `<pattern id="h-${esc(p.id)}" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="2.2" height="5" fill="${provColor(p)}"/></pattern>`; });
+  s += `</defs>`;
+  const asX = X(ymd(asOf));
+  s += `<rect x="${asX}" y="${T}" width="${W - R - asX}" height="${laneH * provs.length}" fill="var(--surface-2)" opacity=".6"/>`;
+  for (const d = new Date(d0); d <= d1; d.setUTCMonth(d.getUTCMonth() + 1)) {
+    const x = X(d.getTime()), m = d.getUTCMonth() + 1, yr = m === 1;
+    s += `<line class="gl" x1="${x}" x2="${x}" y1="${T}" y2="${T + laneH * provs.length}"${yr ? ' style="stroke:var(--axis)"' : ""}/>`;
+    if ((m % 2 === 1 || yr) && x + 34 < W - R && Math.abs(x - asX) > 30) s += `<text class="ax" x="${x + 3}" y="${H - 8}">${yr ? d.getUTCFullYear() + "/" : ""}${m}月</text>`;
+  }
+  s += `<line x1="${asX}" x2="${asX}" y1="${T}" y2="${T + laneH * provs.length}" stroke="var(--text)" stroke-width="1.5"/><text class="ax" x="${asX}" y="${H - 8}" text-anchor="middle" style="fill:var(--text);font-weight:600">今日</text>`;
+  s += `<text class="ax" x="${asX - 6}" y="${T + 11}" text-anchor="end">← 発表済み</text><text class="ax" x="${asX + 6}" y="${T + 11}">今後の見通し →</text>`;
+  const placed = [];
+  const free = (x, y, w, h) => !placed.some(b => x < b.x + b.w && x + w > b.x && y < b.y + b.h && y + h > b.y);
+  provs.forEach((p, i) => {
+    const y0 = T + i * laneH, cy = y0 + laneH / 2;
+    s += `<text class="lb2" x="0" y="${cy + 4}" style="fill:var(--text);font-weight:600">${esc(p.label)}</text>${i ? `<line class="gl" x1="0" x2="${W - R}" y1="${y0}" y2="${y0}"/>` : ""}`;
+    // 今後の予定（バー）：レーン内で重ならないよう段をずらす
+    const ups = upcoming.filter(u => u.provider === p.id), rowH = Math.min(16, (laneH - 8) / Math.max(1, ups.length + 1));
+    ups.forEach((u, j) => {
+      const x1 = X(ym(u.window[0])), x2 = X(ym(u.window[1]) + 31 * 864e5), by = y0 + 4 + (j + 1) * rowH - rowH * 0.5, bh = Math.max(6, rowH - 5), st = CONF_STYLE[u.conf];
+      const fill = st === "solid" ? provColor(p) : st === "hatch" ? `url(#h-${esc(p.id)})` : "none";
+      const sel = u.id === selId, conf = (O.confidence.find(c => c.id === u.conf) || {}).label || "";
+      const tip = Tip.add(`<div class="tt"><span class="sw" style="background:${provColor(p)}"></span>${esc(u.name)}</div><div class="tm">${esc(O.statuses[u.status] || u.status)}・確度：${esc(conf)}</div><div class="tm">見通し：${esc(u.window[0].replace("-", "/"))} 〜 ${esc(u.window[1].replace("-", "/"))}</div><div class="tm" style="margin-top:4px">${esc(u.summary)}</div><div class="tm" style="margin-top:4px">クリックで詳細</div>`);
+      const lw = measure(u.name, 11, sel ? 600 : 400);
+      const lx = x2 + 5 + lw < W - R ? x2 + 5 : x1 - 5 - lw;
+      placed.push({ x: Math.min(lx, x1), y: by - 2, w: Math.max(x2, lx + lw) - Math.min(lx, x1), h: bh + 4 });
+      s += `<g data-t="${tip}" data-up="${esc(u.id)}" style="cursor:pointer"><rect class="hit" x="${x1}" y="${by - 3}" width="${Math.max(10, x2 - x1)}" height="${bh + 6}"/>
+        <rect x="${x1}" y="${by}" width="${Math.max(6, x2 - x1)}" height="${bh}" rx="${Math.min(4, bh / 2)}" fill="${fill}" stroke="${provColor(p)}" stroke-width="${sel ? 2.5 : 1.5}" ${st === "outline" ? 'stroke-dasharray="4 3"' : ""}/>
+        <text class="lb2" x="${lx}" y="${by + bh / 2 + 4}"${sel ? ' style="fill:var(--text);font-weight:600"' : ""}>${esc(u.name)}</text></g>`;
+    });
+    // 発表済みモデル（点）：旧世代は中抜き
+    const ms = models.filter(m => m.provider === p.id && m.released).sort((a, b) => ymd(a.released) - ymd(b.released));
+    const dy = laneH - 12 - ups.length * rowH > 24 ? cy + (ups.length ? rowH * 0.6 : 0) : y0 + laneH - 9;
+    ms.forEach(m => placed.push({ x: X(ymd(m.released)) - 5, y: dy - 5, w: 10, h: 10 }));   // 点を先に登録してからラベルを置く
+    ms.forEach(m => {
+      const x = X(ymd(m.released)), w = measure(m.name, 10.5) + 2, h = 12;
+      const cands = [[x - w / 2, dy - 7 - h], [x - w / 2, dy + 7], [x + 7, dy - h / 2], [x - 7 - w, dy - h / 2], [x - w / 2, dy - 9 - 2 * h], [x - w / 2, dy + 9 + h], [x + 4, dy - 7 - h], [x - w - 4, dy + 7], [x + 4, dy + 7], [x - w - 4, dy - 7 - h]].map(([a, b]) => [clamp(a, L, W - R - w), b]);
+      const pos = cands.find(([a, b]) => b > y0 - 2 && b + h < y0 + laneH + 2 && free(a, b, w, h));
+      if (pos) placed.push({ x: pos[0], y: pos[1], w, h });
+      const tip = Tip.add(tipModel(m, m.legacy ? "旧世代" : "現行", fmt.date(m.released), { rank: m.summary }));
+      s += `<g data-t="${tip}" data-m="${esc(m.id)}"><circle class="hit" cx="${x}" cy="${dy}" r="9"/><circle cx="${x}" cy="${dy}" r="${m.legacy ? 4 : 5}" fill="${m.legacy ? "var(--surface)" : color(m)}" stroke="${color(m)}" stroke-width="2"/>
+        ${pos ? `<text class="lb2" x="${pos[0]}" y="${pos[1] + 9.5}" style="font-size:10.5px;fill:${m.legacy ? "var(--muted)" : "var(--text-2)"}">${esc(m.name)}</text>` : ""}</g>`;
+    });
+  });
+  host.innerHTML = s + "</svg>";
+};
+
+/** 汎用ミニチャート（トレンドカード用）：bars＝線形の横棒、log＝対数軸の点・範囲、flow＝手順図 */
+Chart.mini = function (host, c) {
+  if (c.type === "flow") { host.innerHTML = `<div style="position:absolute;inset:0;display:grid;align-content:center">${flowHtml(c.steps, host.clientWidth < 120 * c.steps.length)}</div>`; return; }
+  const { W, H } = this.size(host), n = c.items.length, rowH = Math.min(64, (H - 18) / n), barH = clamp(rowH * 0.34, 6, 16), R = 64;
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(c.title)}">`;
+  const vals = c.items.flatMap(it => it.slice(1).filter(isNum));
+  let X, tks = [];
+  if (c.type === "log") {
+    const lo = Math.pow(10, Math.floor(Math.log10(Math.min(...vals)))), hi = Math.pow(10, Math.ceil(Math.log10(Math.max(...vals))));
+    X = v => (Math.log10(v) - Math.log10(lo)) / (Math.log10(hi) - Math.log10(lo) || 1) * (W - R);
+    tks = logTicks(lo, hi, W - R).filter((t, i, a) => a.length <= 6 || Math.log10(t) % 1 === 0);
+  } else { const hi = c.max ?? niceMax(Math.max(...vals) * 1.05); X = v => v / hi * (W - R); tks = ticks(0, hi, 4); }
+  const tf = t => { if (c.type !== "log") return fmt.num(t, 0); if (t >= 1e4) { const e = Math.floor(Math.log10(t) + 1e-9), mm = Math.round(t / Math.pow(10, e)); return `${mm === 1 ? "" : mm + "×"}1e${e}`; } return t < 1 ? String(+t.toPrecision(2)) : fmt.num(t, 0); };
+  tks.forEach(t => { const x = X(t); s += `<line class="gl" x1="${x}" x2="${x}" y1="0" y2="${n * rowH}"/><text class="ax" x="${x}" y="${n * rowH + 12}" text-anchor="${x < 10 ? "start" : "middle"}">${esc(tf(t))}</text>`; });
+  const vf = v => c.type === "log" && v >= 1e4 ? v.toExponential(0).replace("e+", "e") : fmt.num(v, Number.isInteger(v) ? 0 : (v < 1 ? 2 : 1));
+  c.items.forEach(([label, a, b], i) => {
+    const y = i * rowH, by = y + 16, val = isNum(b) ? `${vf(a)}〜${vf(b)}` : vf(a), unit = c.unit === "%" ? "%" : c.unit === "$" ? "" : "";
+    const txt = (c.unit === "$" ? "$" : "") + val + unit, tip = Tip.add(`<div class="tt">${esc(label)}</div><div class="tv">${esc(txt)}${c.unit && !["%", "$"].includes(c.unit) ? " " + esc(c.unit) : ""}</div>`);
+    s += `<g data-t="${tip}"><text class="lb2" x="0" y="${y + 11}">${esc(fitText(label, W - 4, 11))}</text>`;
+    if (c.type === "log") {
+      s += `<line x1="0" x2="${W - R}" y1="${by + barH / 2}" y2="${by + barH / 2}" stroke="var(--border)" stroke-width="1"/>`;
+      if (isNum(b)) s += `<rect x="${X(a)}" y="${by}" width="${Math.max(4, X(b) - X(a))}" height="${barH}" rx="${barH / 2}" fill="var(--ink)" opacity=".55"/>`;
+      else s += `<circle cx="${X(a)}" cy="${by + barH / 2}" r="${barH / 2 + 1}" fill="var(--ink)"/>`;
+    } else s += `<rect x="0" y="${by}" width="${Math.max(2, X(a))}" height="${barH}" rx="3" fill="var(--ink)" opacity=".8"/>`;
+    const tw = measure(txt, 11.5), ex = (isNum(b) ? X(b) : X(a)) + 7, inside = ex + tw > W;
+    s += `<text class="vl" x="${inside ? X(a) - 7 : ex}" y="${by + barH / 2 + 4}" text-anchor="${inside ? "end" : "start"}">${esc(txt)}</text></g>`;
+  });
+  host.innerHTML = s + "</svg>";
+};
+
+/** 出来事の年表（レーン別） */
+Chart.events = function (host, events, lanes) {
+  if (!events.length) return this.empty(host);
+  const { W, H } = this.size(host), ts = events.map(e => ymd(e.date)), asOf = ymd(S.D.meta.asOf);
+  const d0 = new Date(Math.min(...ts, asOf)); d0.setUTCDate(1); d0.setUTCMonth(d0.getUTCMonth() - 1);
+  const d1 = new Date(Math.max(...ts, asOf)); d1.setUTCMonth(d1.getUTCMonth() + 2, 1);
+  const L = 84, R = 12, T = 4, Bm = 20, laneH = (H - T - Bm) / lanes.length;
+  const X = t => L + (t - d0.getTime()) / (d1.getTime() - d0.getTime()) * (W - L - R);
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="安全・規制の年表">`;
+  for (const d = new Date(d0); d <= d1; d.setUTCMonth(d.getUTCMonth() + 1)) { const x = X(d.getTime()), m = d.getUTCMonth() + 1; s += `<line class="gl" x1="${x}" x2="${x}" y1="${T}" y2="${H - Bm}"${m === 1 ? ' style="stroke:var(--axis)"' : ""}/>`; if ((m - 1) % 3 === 0 && x + 40 < W - R) s += `<text class="ax" x="${x + 3}" y="${H - 6}">${d.getUTCFullYear()}/${m}</text>`; }
+  const ax = X(asOf); s += `<line x1="${ax}" x2="${ax}" y1="${T}" y2="${H - Bm}" stroke="var(--text)" stroke-width="1.5"/><text class="ax" x="${ax + 4}" y="${T + 10}" style="fill:var(--text);font-weight:600">今日</text>`;
+  const placed = [];
+  lanes.forEach((ln, i) => {
+    const y0 = T + i * laneH, cy = y0 + laneH / 2;
+    s += `<text class="lb2" x="0" y="${cy + 4}" style="fill:var(--text);font-weight:600">${esc(ln.label)}</text>${i ? `<line class="gl" x1="0" x2="${W - R}" y1="${y0}" y2="${y0}"/>` : ""}<line x1="${L}" x2="${W - R}" y1="${cy}" y2="${cy}" stroke="var(--border-strong)"/>`;
+    const evs = events.filter(e => e.lane === ln.id).sort((a, b) => ymd(a.date) - ymd(b.date));
+    evs.forEach(e => placed.push({ x: X(ymd(e.date)) - 6, y: cy - 6, w: 12, h: 12 }));
+    placed.push({ x: X(asOf) - 1, y: T, w: 2, h: H - Bm - T });
+    evs.forEach(e => {
+      const x = X(ymd(e.date)), w = measure(e.title, 11) + 4, h = 13, fut = ymd(e.date) > asOf;
+      const cands = [[x - w / 2, cy - 9 - h], [x - w / 2, cy + 9], [x - w / 2, cy - 11 - 2 * h], [x - w / 2, cy + 11 + h], [x + 8, cy - h / 2], [x - 8 - w, cy - h / 2]].map(([a, b]) => [clamp(a, L, W - R - w), b]).filter(([, b]) => b > y0 && b + h < y0 + laneH);
+      const cost = ([a, b]) => placed.reduce((acc, q) => acc + Math.max(0, Math.min(a + w, q.x + q.w) - Math.max(a, q.x)) * Math.max(0, Math.min(b + h, q.y + q.h) - Math.max(b, q.y)), 0);
+      const pos = cands.find(c => cost(c) === 0) || cands.reduce((m, c) => cost(c) < cost(m) ? c : m, cands[0] || [x, cy - 9 - h]);
+      placed.push({ x: pos[0], y: pos[1], w, h });
+      const tip = Tip.add(`<div class="tt">${esc(e.title)}</div><div class="tm">${esc(fmt.date(e.date))}${fut ? "（予定）" : ""}</div><div class="tm" style="margin-top:4px">${esc(e.detail || "")}</div>`);
+      s += `<g data-t="${tip}"><circle class="hit" cx="${x}" cy="${cy}" r="10"/><circle cx="${x}" cy="${cy}" r="5.5" fill="${fut ? "var(--surface)" : "var(--ink)"}" stroke="var(--ink)" stroke-width="2"/>
+        <line x1="${x}" x2="${x}" y1="${cy}" y2="${pos[1] < cy ? pos[1] + h : pos[1]}" stroke="var(--border-strong)"/><text class="lb2" x="${pos[0]}" y="${pos[1] + 10}">${esc(e.title)}</text></g>`;
+    });
+  });
+  host.innerHTML = s + "</svg>";
+};
+
+function srcLinks(ids) {
+  const xs = (ids || []).map(id => S.D.src.get(id)).filter(Boolean);
+  return xs.length ? `<div class="srcs" title="${esc(xs.map(x => x.label).join(" / "))}">出典：${xs.map(x => { const u = safeUrl(x.url); return u ? `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(x.label.split(" – ")[0])}</a>` : esc(x.label); }).join("・")}</div>` : "";
+}
+function trendCard(t, i) {
+  return card(esc(t.title), "", `<div class="tc" style="position:absolute;inset:0">
+      <p class="lead2">${esc(t.lead)}</p>
+      <div class="stats">${t.stats.map(x => `<div class="stat"${x.note ? ` data-t="${Tip.add(`<div class="tt">${esc(x.l)}</div><div class="tv">${esc(x.v)}</div><div class="tm">${esc(x.note)}</div>`)}"` : ""}><b>${esc(x.v)}</b><span>${esc(x.l)}${x.note ? ' <span class="info" style="display:inline-grid;width:13px;height:13px;font-size:9px">i</span>' : ""}</span></div>`).join("")}</div>
+      ${t.chart ? `<div><div class="sec-h" style="margin-bottom:2px">${esc(t.chart.title)}</div></div><div style="position:relative;flex:1;min-height:70px">${host("ch-tr-" + i)}</div>` : '<div style="flex:1"></div>'}
+      <div class="impl"><span>${esc(t.implication)}</span></div>
+      ${srcLinks(t.srcs)}
+    </div>`);
+}
+
+function renderFuture(v) {
+  const D = S.D, O = D.outlook, sub = S.sub.future || "roadmap";
+  if (sub === "roadmap") return renderRoadmap(v);
+  const ts = O.trends.filter(t => t.group === sub);
+  if (sub === "safety") {
+    v.style.gridTemplateColumns = `repeat(${Math.max(1, ts.length)},minmax(0,1fr))`;
+    v.style.gridTemplateRows = "minmax(0,1.35fr) minmax(0,1fr)";
+    v.innerHTML = card("安全・規制の年表", "●＝実施済み・○＝予定。項目にカーソルで詳細", host("ch-ev"), { style: `grid-column:1/-1` }) + ts.map(trendCard).join("");
+    Chart.events($("#ch-ev"), O.events, O.lanes);
+  } else {
+    v.style.gridTemplateColumns = `repeat(${Math.max(1, ts.length)},minmax(0,1fr))`;
+    v.style.gridTemplateRows = "minmax(0,1fr)";
+    v.innerHTML = ts.length ? ts.map(trendCard).join("") : `<div class="card"><div class="empty">このカテゴリの動向データはまだありません</div></div>`;
+  }
+  ts.forEach((t, i) => t.chart && Chart.mini($("#ch-tr-" + i), t.chart));
+}
+
+function renderRoadmap(v) {
+  const D = S.D, O = D.outlook;
+  const provOk = id => !S.f.off.has(id);
+  const ms = D.models.filter(m => provOk(m.provider) && (!S.f.open || m.openWeights !== "no"));   // 系譜は旧世代も常に表示
+  const ups = O.upcoming.filter(u => provOk(u.provider));
+  if (!ups.some(u => u.id === S.upcoming)) S.upcoming = ups[0]?.id;
+  const u = ups.find(x => x.id === S.upcoming);
+  v.style.gridTemplateColumns = "minmax(0,2.3fr) minmax(0,1fr)";
+  v.style.gridTemplateRows = "minmax(0,1fr)";
+  const legend = `<span class="legend"><span><svg width="12" height="12"><circle cx="6" cy="6" r="4" fill="var(--surface)" stroke="var(--text-2)" stroke-width="2"/></svg>旧世代</span><span><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="var(--text-2)"/></svg>現行</span>${O.confidence.map(c => `<span class="conf-key" title="${esc(c.desc)}">${confKey(c.id)}${esc(c.label)}</span>`).join("")}</span>`;
+  const p = u && D.pv.get(u.provider), conf = u && O.confidence.find(c => c.id === u.conf);
+  const others = ups.map(x => `<button class="li" data-up="${esc(x.id)}" aria-current="${x.id === u?.id}"><span><span class="sw" style="background:${provColor(D.pv.get(x.provider))}"></span>${esc(x.name)}</span><span class="muted" style="font-size:10.5px">${esc(x.window[0].replace("-", "/"))}〜</span></button>`).join("");
+  const detail = u ? `<div class="stack" style="position:absolute;inset:0;overflow:auto;gap:10px">
+      <div style="display:flex;gap:6px;flex-wrap:wrap"><span class="kb"><span class="sw" style="background:${provColor(p)}"></span>${esc(p?.label || u.provider)}</span><span class="kb">${esc(O.statuses[u.status] || u.status)}</span><span class="kb" title="${esc(conf?.desc || "")}">${confKey(u.conf, provColor(p))}確度：${esc(conf?.label || "")}</span></div>
+      <dl class="kv" style="grid-template-columns:1fr"><div><dt>見通しの時期（このページでの目安の幅）</dt><dd>${esc(u.window[0].replace("-", "年") + "月")} 〜 ${esc(u.window[1].replace("-", "年") + "月")}</dd></div></dl>
+      <p class="txt" style="font-weight:600">${esc(u.summary)}</p>
+      ${u.points?.length ? `<ul class="pros">${u.points.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}
+      ${srcLinks(u.srcs)}
+      <div class="sec-h" style="margin-top:4px">ほかの予定</div><div class="list" style="height:auto;overflow:visible">${others}</div>
+    </div>` : `<div class="empty">表示中の提供元に予定はありません</div>`;
+  v.innerHTML = card("モデルの系譜と今後の投入予定", "点＝発表済みモデル（クリックで詳細）・帯＝今後の見通し（クリックで右に表示）", host("ch-lin"), { right: legend })
+    + card(u ? esc(u.name) : "予定", "選択中の見通し", detail);
+  Chart.lineage($("#ch-lin"), ms, ups, D.meta.asOf, u?.id);
+  v.querySelectorAll("[data-up]").forEach(el => el.onclick = e => { e.stopPropagation(); S.upcoming = el.dataset.up; store.set("upcoming", S.upcoming); Tip.hide(); render(); });
 }
 
 /* ==================================================================
@@ -1329,7 +1678,7 @@ function renderShell() {
   const D = S.D;
   // フィルター
   const all = D.models.length, shown = visible().length;
-  $("#filters").innerHTML = `<span class="lbl">提供元</span>${D.providers.map(p => `<button class="chip" data-prov="${esc(p.id)}" aria-pressed="${!S.f.off.has(p.id)}" title="クリックで表示切替／ダブルクリックでこの提供元のみ"><span class="sw" style="background:var(--c${p.color || 8})"></span>${esc(p.label)}</button>`).join("")}
+  $("#filters").innerHTML = `<span class="lbl">提供元</span>${D.providers.map(p => `<button class="chip" data-prov="${esc(p.id)}" aria-pressed="${!S.f.off.has(p.id)}" title="クリックで表示切替／ダブルクリックでこの提供元のみ"><span class="sw" style="background:${provColor(p)}"></span>${esc(p.label)}</button>`).join("")}
     <span class="sep"></span><button class="chip toggle" id="fOpen" aria-pressed="${S.f.open}" title="オープンウェイト（一部公開含む）のみ表示">オープンのみ</button>
     <button class="chip toggle" id="fLegacy" aria-pressed="${S.f.legacy}" title="旧世代モデルも表示">旧世代も表示</button>
     <span class="muted num" style="font-size:11.5px;white-space:nowrap;margin-left:4px">${shown}/${all}モデル</span>`;
@@ -1345,7 +1694,7 @@ function renderShell() {
   fr.lastElementChild.textContent = `データ基準日 ${fmt.date(D.meta.asOf)}${stale ? `（${days}日経過・要更新）` : ""}`;
   fr.title = stale ? "データ管理タブから最新データを取り込んでください" : "データ基準日";
   // ナビ
-  $("#rail").innerHTML = VIEWS.map((vw, i) => `<button class="nav-item" data-view="${vw.id}"${S.view === vw.id ? ' aria-current="page"' : ""}>${ICON[vw.id] || ""}<span>${esc(vw.label)}<small>${esc(vw.hint)}</small></span><kbd>${i + 1}</kbd></button>`).join("")
+  $("#rail").innerHTML = VIEWS.map((vw, i) => `<button class="nav-item" data-view="${vw.id}"${S.view === vw.id ? ' aria-current="page"' : ""}>${ICON[vw.id] || ""}<span>${esc(vw.label)}<small>${esc(vw.hint)}</small></span><kbd>${i < 9 ? i + 1 : i === 9 ? 0 : ""}</kbd></button>`).join("")
     + `<div class="rail-foot"><b>操作</b><br>項目にカーソル＝詳細<br>モデル名クリック＝個別ページ<br>数字キー＝画面切替</div>`;
   $("#rail").querySelectorAll("[data-view]").forEach(b => b.onclick = () => go(b.dataset.view));
   // サブバー
@@ -1442,7 +1791,7 @@ function boot() {
   document.addEventListener("keydown", e => {
     if (e.key === "Escape") return closeDrawer();
     if (e.target.matches("input,select,textarea") || e.ctrlKey || e.metaKey || e.altKey) return;
-    const i = +e.key; if (i >= 1 && i <= VIEWS.length) go(VIEWS[i - 1].id);
+    const i = e.key === "0" ? 10 : +e.key; if (i >= 1 && i <= VIEWS.length) go(VIEWS[i - 1].id);
   });
   window.addEventListener("hashchange", () => { readHash(); render(); });
   let rt; new ResizeObserver(() => { clearTimeout(rt); rt = setTimeout(render, 120); }).observe($("#view"));
