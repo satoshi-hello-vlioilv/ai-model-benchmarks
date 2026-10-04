@@ -12,7 +12,7 @@ if (shotDir) fs.mkdirSync(shotDir, { recursive: true });
 
 // Windows 11 / 125% スケーリングの実効CSSピクセル（2160x1440 → 1728x1152、FHD → 1536x864）を含む
 const VIEWPORTS = [[1536, 864], [1728, 1152], [1920, 1080], [2560, 1440]];
-const ROUTES = ["overview", "models/matrix", "models/profile", "guide/map", "guide/detail", "future/roadmap", "future/capability", "future/infra", "future/frontier", "future/safety", "bench/index", "bench/agentic", "bench/reason", "bench/work", "bench/computer", "bench/heat", "cost", "speed", "compare", "table", "data"];
+const ROUTES = ["overview", "models/matrix", "models/profile", "guide/map", "guide/detail", "future/roadmap", "future/diffusion", "history/timeline", "history/growth", "future/capability", "future/infra", "future/frontier", "future/safety", "bench/index", "bench/agentic", "bench/reason", "bench/work", "bench/computer", "bench/heat", "cost", "speed", "compare", "table", "data"];
 
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || undefined });
 const failures = [];
