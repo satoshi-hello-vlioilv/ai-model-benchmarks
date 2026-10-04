@@ -12,7 +12,7 @@ if (shotDir) fs.mkdirSync(shotDir, { recursive: true });
 
 // Windows 11 / 125% スケーリングの実効CSSピクセル（2160x1440 → 1728x1152、FHD → 1536x864）を含む
 const VIEWPORTS = [[1536, 864], [1728, 1152], [1920, 1080], [2560, 1440]];
-const ROUTES = ["overview", "bench/index", "bench/agentic", "bench/reason", "bench/work", "bench/computer", "bench/heat", "cost", "speed", "compare", "table", "data"];
+const ROUTES = ["overview", "models/matrix", "models/profile", "guide/map", "guide/detail", "bench/index", "bench/agentic", "bench/reason", "bench/work", "bench/computer", "bench/heat", "cost", "speed", "compare", "table", "data"];
 
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || undefined });
 const failures = [];
@@ -41,7 +41,10 @@ for (const theme of ["light", "dark"]) {
         const out = { pageScroll: document.documentElement.scrollHeight > innerHeight + 1 || document.documentElement.scrollWidth > innerWidth + 1, clipped: [], empty: 0, svgOverflow: [] };
         // 内容がはみ出して隠れている領域（overflow:hidden のラッパー）
         document.querySelectorAll("#view .body > div, #view .body .chart").forEach(el => {
-          if (getComputedStyle(el).overflow === "auto") return; // 意図したスクロール領域（出典リスト等）は除外
+          if (getComputedStyle(el).overflow === "auto") { // スクロール領域：出典リスト・JSON見本以外で中身があふれたら「スクロールレス違反」
+            if (!el.closest(".src-list, pre") && !el.querySelector(":scope > .src-list, :scope > pre") && el.scrollHeight > el.clientHeight + 2) out.clipped.push("要スクロール:" + (el.closest(".card")?.querySelector("h2")?.textContent || el.className) + ` ${el.scrollHeight}>${el.clientHeight}`);
+            return;
+          }
           if (el.scrollHeight > el.clientHeight + 2) out.clipped.push((el.id || el.className) + ` 縦 ${el.scrollHeight}>${el.clientHeight}`);
           if (el.scrollWidth > el.clientWidth + 2) out.clipped.push((el.id || el.className) + ` 横 ${el.scrollWidth}>${el.clientWidth}`);
         });
@@ -72,6 +75,15 @@ for (const theme of ["light", "dark"]) {
       if (res.empty) console.log(`note ${ctx}: 空表示 ${res.empty} 件`);
       if (shotDir && (theme === "light" ? [1536, 1728].includes(w) : w === 1728)) await page.screenshot({ path: path.join(shotDir, `${theme}-${w}-${r.replace("/", "_")}.png`) });
     }
+    // 個別解説・プロフィールを全件巡回（項目により文章量が異なるため）
+    for (const [route, ids, key] of [["guide/detail", await page.evaluate(() => S.D.benchmarks.map(b => b.id)), "guideBench"], ["models/profile", await page.evaluate(() => visible().map(m => m.id)), "profile"]]) {
+      for (const id of ids) {
+        await page.evaluate(([r, k, i]) => { S[k] = i; location.hash = r; render(); }, [route, key, id]);
+        const bad = await page.evaluate(() => [...document.querySelectorAll("#view .body > div")].filter(el => el.scrollHeight > el.clientHeight + 2 || el.scrollWidth > el.clientWidth + 2).map(el => el.closest(".card")?.querySelector("h2")?.textContent + ` ${el.scrollHeight}>${el.clientHeight}`));
+        checks++; if (bad.length) fail(`${theme} ${w}x${h} #${route}:${id}`, "内容があふれている → " + bad.join(", "));
+        if (shotDir && theme === "light" && w === 1536 && ["tb4", "gdpval", "claude-opus-5-5", "gemini-4-argon"].includes(id)) await page.screenshot({ path: path.join(shotDir, `light-1536-${route.replace("/", "_")}-${id}.png`) });
+      }
+    }
     // 操作系：ドロワー・フィルター・比較選択
     if (w === 1728) {
       await page.evaluate(() => { location.hash = "overview"; });
@@ -79,6 +91,14 @@ for (const theme of ["light", "dark"]) {
       checks++; if (!(await page.$eval("#drawer", d => d.classList.contains("on")))) fail(`${theme} drawer`, "モデル詳細が開かない");
       if (shotDir && theme === "light") await page.screenshot({ path: path.join(shotDir, `light-1728-drawer.png`) });
       await page.keyboard.press("Escape");
+      // 画面間の導線：ベンチの i → 解説、早見表の行 → プロフィール
+      await page.evaluate(() => { location.hash = "bench/agentic"; }); await page.waitForTimeout(80);
+      await page.click('#view [data-gb="tb4"]'); await page.waitForTimeout(80);
+      checks++; if (await page.evaluate(() => location.hash) !== "#guide/detail" || !(await page.evaluate(() => S.guideBench === "tb4"))) fail(`${theme} nav`, "ベンチ解説への遷移が効かない");
+      await page.evaluate(() => { location.hash = "models/matrix"; }); await page.waitForTimeout(80);
+      await page.click('#view tr[data-prof="gemini-4-argon"]'); await page.waitForTimeout(80);
+      checks++; if (!(await page.evaluate(() => location.hash === "#models/profile" && S.profile === "gemini-4-argon"))) fail(`${theme} nav`, "プロフィールへの遷移が効かない");
+      await page.evaluate(() => { location.hash = "overview"; }); await page.waitForTimeout(80);
       await page.click('[data-prov="anthropic"]');
       checks++; const n = await page.evaluate(() => visible().some(m => m.provider === "anthropic")); if (n) fail(`${theme} filter`, "提供元フィルターが効かない");
       await page.click('[data-prov="anthropic"]');
