@@ -1081,8 +1081,14 @@ const Tip = {
   el: null, reg: new Map(), n: 0,
   reset() { this.reg.clear(); this.n = 0; },
   add(html) { const k = "t" + (++this.n); this.reg.set(k, html); return k; },
-  show(k, x, y) { const h = this.reg.get(k); if (!h) return this.hide(); const t = this.el; t.innerHTML = h; t.classList.add("on");
-    const r = t.getBoundingClientRect(); let px = x + 14, py = y + 14; if (px + r.width > innerWidth - 8) px = x - r.width - 14; if (py + r.height > innerHeight - 8) py = y - r.height - 14; t.style.left = px + "px"; t.style.top = py + "px"; },
+  /** グラフの行（anchor）にカーソルがあるときは、読んでいる行や隣の行を覆わないよう、カード（グラフ）の外側の左右に出す。
+   *  外側に入らない場合と、行以外の要素ではカーソルの右下（はみ出す方向は反転） */
+  show(k, x, y, anchor) { const h = this.reg.get(k); if (!h) return this.hide(); const t = this.el; t.innerHTML = h; t.classList.add("on");
+    const r = t.getBoundingClientRect(); let px = x + 14, py = y + 14;
+    const card = anchor?.closest("svg") && anchor.closest(".card"), c = card?.getBoundingClientRect();
+    if (c && (c.right + 8 + r.width <= innerWidth - 8 || c.left - 8 - r.width >= 8)) { px = c.right + 8 + r.width <= innerWidth - 8 ? c.right + 8 : c.left - 8 - r.width; py = clamp(y - r.height / 2, 8, innerHeight - r.height - 8); }
+    else { if (px + r.width > innerWidth - 8) px = x - r.width - 14; if (py + r.height > innerHeight - 8) py = y - r.height - 14; }
+    t.style.left = px + "px"; t.style.top = py + "px"; },
   hide() { this.el.classList.remove("on"); },
 };
 function tipModel(m, title, value, extra) {
@@ -2453,7 +2459,7 @@ function boot() {
   else if (store.get("autoFetch", false) && safeUrl(store.get("remoteUrl", ""))) fetchRemote(store.get("remoteUrl"), "merge", true);
 
   // イベント委譲：ツールチップ & モデル詳細
-  document.addEventListener("mousemove", e => { const t = e.target.closest?.("[data-t]"); t ? Tip.show(t.dataset.t, e.clientX, e.clientY) : Tip.hide(); });
+  document.addEventListener("mousemove", e => { const t = e.target.closest?.("[data-t]"); t ? Tip.show(t.dataset.t, e.clientX, e.clientY, t) : Tip.hide(); });
   document.addEventListener("click", e => {
     const g = e.target.closest("[data-gb]"); if (g) { Tip.hide(); closeDrawer(); S.guideBench = g.dataset.gb; store.set("guideBench", S.guideBench); return go("guide", "detail"); }
     const pf = e.target.closest("[data-prof]"); if (pf) { Tip.hide(); closeDrawer(); S.profile = pf.dataset.prof; store.set("profile", S.profile); return go("models", "profile"); }

@@ -9,7 +9,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const url = pathToFileURL(path.join(root, "index.html")).href;
 const out = process.argv[2] || "shots";
 fs.mkdirSync(out, { recursive: true });
-const ROUTES = ["overview", "models/matrix", "models/profile", "bench/agentic", "bench/heat", "guide/map", "guide/detail", "future/roadmap", "future/diffusion", "future/capability", "future/safety", "history/timeline", "history/growth", "cost", "speed", "compare", "table", "data"];
+const ROUTES = ["overview", "models/matrix", "models/profile", "compare", "bench/index", "bench/agentic", "bench/reason", "bench/work", "bench/computer", "bench/heat", "guide/map", "guide/detail", "cost", "speed", "table", "future/roadmap", "future/diffusion", "future/capability", "future/infra", "future/frontier", "future/safety", "history/timeline", "history/growth", "data"];
 const SETS = [["light", 1728, 1152], ["light", 1536, 864], ["dark", 1728, 1152]];
 const browser = await chromium.launch();
 for (const [theme, w, h] of SETS) {
@@ -24,7 +24,8 @@ for (const [theme, w, h] of SETS) {
   if (theme === "light" && w === 1728) {
     // 操作状態：ツールチップとモデル詳細ドロワー
     await page.evaluate(() => { location.hash = "bench/agentic"; }); await page.waitForTimeout(120);
-    const bar = await page.$("#view svg g[data-t] path, #view svg g[data-t] rect:not(.row-hover)"); const b = bar && await bar.boundingBox(); if (!b) console.warn("tooltip target not found"); if (b) { await page.mouse.move(b.x + b.width * 0.6, b.y + b.height / 2); await page.waitForTimeout(150); await page.screenshot({ path: path.join(out, `state-tooltip.png`) }); }
+    await page.waitForTimeout(250);   // 再描画（レイアウト確定後）を待ってから、画面上の座標を取得する
+    const b = await page.evaluate(() => { const el = [...document.querySelectorAll("#view svg g[data-t] .mk")].find(e => e.getBoundingClientRect().width > 20); if (!el) return null; const r = el.getBoundingClientRect(); return { x: r.left, y: r.top, width: r.width, height: r.height }; }); if (!b) console.warn("tooltip target not found"); if (b) { await page.mouse.move(b.x + b.width * 0.6, b.y + b.height / 2); await page.waitForTimeout(150); await page.screenshot({ path: path.join(out, `state-tooltip.png`) }); }
     await page.evaluate(() => { location.hash = "overview"; }); await page.waitForTimeout(120);
     await page.click(".kpi .k-m"); await page.waitForTimeout(300);
     await page.screenshot({ path: path.join(out, `state-drawer.png`) });
