@@ -24,7 +24,7 @@ for (const [theme, w, h] of SETS) {
   if (theme === "light" && w === 1728) {
     // 操作状態：ツールチップとモデル詳細ドロワー
     await page.evaluate(() => { location.hash = "bench/agentic"; }); await page.waitForTimeout(120);
-    const bar = await page.$("#view g.r .mk"); const b = bar && await bar.boundingBox(); if (b) { await page.mouse.move(b.x + b.width * 0.6, b.y + b.height / 2); await page.waitForTimeout(150); await page.screenshot({ path: path.join(out, `state-tooltip.png`) }); }
+    const bar = await page.$("#view svg g[data-t] path, #view svg g[data-t] rect:not(.row-hover)"); const b = bar && await bar.boundingBox(); if (!b) console.warn("tooltip target not found"); if (b) { await page.mouse.move(b.x + b.width * 0.6, b.y + b.height / 2); await page.waitForTimeout(150); await page.screenshot({ path: path.join(out, `state-tooltip.png`) }); }
     await page.evaluate(() => { location.hash = "overview"; }); await page.waitForTimeout(120);
     await page.click(".kpi .k-m"); await page.waitForTimeout(300);
     await page.screenshot({ path: path.join(out, `state-drawer.png`) });
