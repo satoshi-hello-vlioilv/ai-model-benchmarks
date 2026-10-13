@@ -51,8 +51,11 @@ for (const [theme, w, h] of SETS) {
         });
       });
       // コントラスト（主要な文字）
-      const lum = c => { const m = c.match(/[\d.]+/g); if (!m) return null; const [r, g, b] = m.slice(0, 3).map(x => { x = +x / 255; return x <= 0.03928 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4); }); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
-      const bgOf = el => { for (let e = el; e; e = e.parentElement) { if (e.tagName === "svg" || e.closest?.("svg")) { if (e.tagName !== "svg") continue; } const c = getComputedStyle(e).backgroundColor; const a = c.match(/[\d.]+/g); if (a && (a.length < 4 || +a[3] > 0.5)) return c; } return getComputedStyle(document.body).backgroundColor; };
+      // oklab()/color() など任意の色表記を、canvas で sRGB に正規化してから輝度を計算
+      const cv = document.createElement("canvas").getContext("2d", { willReadFrequently: true });
+      const rgb = c => { cv.clearRect(0, 0, 1, 1); cv.fillStyle = "#000"; cv.fillStyle = c; cv.fillRect(0, 0, 1, 1); const d = cv.getImageData(0, 0, 1, 1).data; return `rgb(${d[0]},${d[1]},${d[2]})`; };
+      const lum = c0 => { const c = rgb(c0); const m = c.match(/[\d.]+/g); if (!m) return null; const [r, g, b] = m.slice(0, 3).map(x => { x = +x / 255; return x <= 0.03928 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4); }); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
+      const bgOf = el => { for (let e = el; e; e = e.parentElement) { if (e.tagName === "svg" || e.closest?.("svg")) { if (e.tagName !== "svg") continue; } const c = getComputedStyle(e).backgroundColor; if (c.startsWith("oklab") || c.startsWith("color(") || c.startsWith("oklch")) { const al = c.match(/\/\s*([\d.]+)/); if (!al || +al[1] > 0.5) return c; continue; } const a = c.match(/[\d.]+/g); if (a && (a.length < 4 || +a[3] > 0.5)) return c; } return getComputedStyle(document.body).backgroundColor; };
       const seen = new Set();
       document.querySelectorAll("#view *, .top *, .rail *, .subbar *").forEach(el => {
         if (!vis(el)) return;

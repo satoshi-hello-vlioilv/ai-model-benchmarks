@@ -138,6 +138,8 @@ main{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto mi
 .ax{font-size:10.5px;fill:var(--muted)}
 .lb{font-size:12px;fill:var(--text)}
 .lb2{font-size:11px;fill:var(--text-2)}
+/* 点ラベル・軸ラベルの縁取り（線や点の上でも読める） */
+svg .lb2, svg .ax, svg .halo{paint-order:stroke;stroke:var(--surface);stroke-width:3px;stroke-linejoin:round}
 .vl{font-size:11.5px;fill:var(--text);font-variant-numeric:tabular-nums}
 .vl.top{font-weight:700}
 .gl{stroke:var(--grid);stroke-width:1}
@@ -163,6 +165,8 @@ g.r:hover .row-hover{opacity:1}
 .mname span{overflow:hidden;text-overflow:ellipsis}
 .mname > span:first-of-type + span, .mname > span:nth-child(2){text-decoration:underline dotted;text-decoration-color:var(--border-strong);text-underline-offset:3px}
 .mname:hover > span:nth-child(2){text-decoration:underline solid;text-decoration-color:currentColor}
+span.bn[data-gb], .tag[data-gb]{text-decoration:underline dotted;text-decoration-color:var(--border-strong);text-underline-offset:3px}
+span.bn[data-gb]:hover{text-decoration:underline solid}
 svg .ul{stroke:var(--axis);stroke-dasharray:1.5 2.5;stroke-width:1.2}
 g[data-m]:hover .ul{stroke:var(--text);stroke-dasharray:none}
 .go{border:0;background:none;padding:0;color:var(--text);font-weight:600;font-size:12px;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--border-strong);white-space:nowrap;cursor:pointer}
@@ -198,7 +202,7 @@ table{border-collapse:collapse;width:100%}
 .podium{table-layout:fixed}
 .podium .lim{display:none}
 .podium td{font-size:11.5px}
-.podium td{height:var(--rh,30px);overflow:hidden}
+.podium td{height:var(--rh,30px);overflow:hidden;padding-top:1px;padding-bottom:1px;line-height:1.3}
 .pc{display:flex;align-items:center;min-width:0}
 .pc .mname{flex:0 1 auto}
 .podium .rk{font-size:11px;color:var(--muted);margin-right:4px}
@@ -209,8 +213,38 @@ table{border-collapse:collapse;width:100%}
 .podium .cat{display:block;color:var(--muted);font-size:10.5px;font-weight:400;line-height:1.2}
 
 .recs{display:grid;gap:0;align-content:start}
-.rec{display:grid;grid-template-columns:minmax(0,10.5em) minmax(0,1fr) auto;gap:12px;align-items:center;height:var(--rh,48px);padding:0 4px;border-bottom:1px solid var(--grid)}
-.rec .u{font-size:12.5px;color:var(--text);font-weight:600;line-height:1.35}
+.rec{display:grid;grid-template-columns:22px minmax(0,9.2em) minmax(0,1fr) auto;gap:10px;align-items:center;height:var(--rh,56px);padding:0 4px;border-bottom:1px solid var(--grid)}
+.rec .wl{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;min-width:0}
+.rec .wl b{font-size:13px}
+.rec .wr{display:flex;align-items:center;gap:10px;margin-top:1px}
+.rec .wr .why{margin:0;flex:none}
+.rec .wr .lanew{flex:1}
+.recs.tall .wr{flex-direction:column;align-items:stretch;gap:2px}
+.recs.tall .wr .why{margin-top:1px}
+.recs.tall .lane{height:26px}
+/* アイコン */
+.ico{display:inline-flex;flex:none;color:var(--text-2)}
+.ico svg{width:15px;height:15px}
+.ico.lg{width:22px;height:22px;border-radius:6px;background:var(--surface-2);align-items:center;justify-content:center;color:var(--text)}
+.ico.lg svg{width:15px;height:15px}
+.ico.sm svg{width:11px;height:11px}
+.ico.sm{margin-right:3px;vertical-align:-1px}
+/* ドットレーン（共通部品） */
+.lanew{display:flex;align-items:center;gap:6px;min-width:0}
+.lane{position:relative;flex:1;height:22px;min-width:60px}
+.lane::before{content:"";position:absolute;left:0;right:0;top:50%;height:2px;margin-top:-1px;background:var(--grid);border-radius:1px}
+.ld{position:absolute;top:50%;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;background:var(--border-strong);cursor:pointer}
+.ld.rk{width:15px;height:15px;margin:-7.5px 0 0 -7.5px;color:#fff;font-weight:700;font-size:10px;line-height:15px;text-align:center;box-shadow:0 0 0 1.5px var(--surface);text-shadow:0 0 2px rgba(0,0,0,.55)}
+.ld.rk.up{margin-top:-12.5px}.ld.rk.dn{margin-top:-2.5px}
+.ld:hover{outline:2px solid var(--text);outline-offset:1px}
+.le{font-size:10.5px;color:var(--muted);flex:none}
+.kpi .k-row{display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px;align-items:end}
+.kpi .k-row .lanew{margin-bottom:4px}
+.podium .p1 .pc{font-weight:600}
+.podium .p23{display:flex;gap:14px;margin-top:2px;color:var(--text-2)}
+.podium .p23 .pc{font-size:11px}
+.podium .pc{display:inline-flex;align-items:baseline;min-width:0;white-space:nowrap}
+.rec .u{font-size:12.5px;color:var(--text);font-weight:600;line-height:1.35;word-break:keep-all}
 .rec .u small{display:block;font-weight:400;color:var(--muted);font-size:11px}
 .rec .why{font-size:11.5px;color:var(--text-2);margin-top:2px}
 .kpi[data-m]{cursor:pointer}
@@ -432,12 +466,12 @@ button.info:hover{border-color:var(--ink);color:var(--text)}
   "useCases": [
     {"label": "総合力を最優先", "metric": "bench:aa_index"},
     {"label": "エージェント型コーディング", "metric": "bench:tb4"},
-    {"label": "大規模リポジトリの改修", "metric": "bench:deepswe"},
+    {"label": "大規模リポジトリの改修", "metric": "bench:deepswe", "icon": "repo"},
     {"label": "高度な推論・研究", "metric": "bench:hle_tools"},
     {"label": "文書・分析などの知的労働", "metric": "bench:gdpval"},
     {"label": "コスト効率（指数/$）", "metric": "value:aa_index"},
     {"label": "応答速度", "metric": "spec:speed"},
-    {"label": "自社運用（オープンウェイト）", "metric": "bench:aa_index", "filter": "open"}
+    {"label": "自社運用（重み公開）", "metric": "bench:aa_index", "filter": "open", "icon": "server"}
   ],
   "kpis": [
     {"label": "総合指数 首位", "metric": "bench:aa_index"},
@@ -774,7 +808,15 @@ const store = {
 const fmt = {
   num(v, d) { if (!isNum(v)) return "—"; const dd = d ?? (Math.abs(v) >= 100 || Number.isInteger(v) ? 0 : 1); return v.toLocaleString("ja-JP", { minimumFractionDigits: dd, maximumFractionDigits: dd }); },
   tok(v) { if (!isNum(v)) return "—"; if (v >= 1e6) return +(v / 1e6).toFixed(2) + "M"; if (v >= 1e3) return Math.round(v / 1e3) + "K"; return String(v); },
-  usd(v) { if (!isNum(v)) return "—"; if (v === 0) return "$0"; if (v < 0.1) return "$" + v.toFixed(3); if (v < 10) return "$" + v.toFixed(2); return "$" + v.toLocaleString("en-US", { maximumFractionDigits: v < 100 ? 1 : 0 }); },
+  /** 価格の桁ルール：$0.1未満は3桁、$100未満は2桁、それ以上は整数 */
+  usd(v) { if (!isNum(v)) return "—"; if (v === 0) return "$0"; if (v < 0.1) return "$" + v.toFixed(3); if (v < 100) return "$" + v.toFixed(2); return "$" + Math.round(v).toLocaleString("en-US"); },
+  /** 大きな数：FLOPは 10ⁿ（上付き）、それ以外は 万・億・兆 */
+  big(v, unit) {
+    if (!isNum(v)) return "—"; if (v < 1e4) return v < 1 ? String(+v.toPrecision(2)) : fmt.num(v, Number.isInteger(v) ? 0 : 1);
+    if (unit === "FLOP") { const e = Math.floor(Math.log10(v) + 1e-9), m = +(v / Math.pow(10, e)).toPrecision(2); return `${m === 1 ? "" : m + "×"}10${String(e).replace(/\d/g, d => "⁰¹²³⁴⁵⁶⁷⁸⁹"[d])}`; }
+    const [d, u] = v >= 1e12 ? [1e12, "兆"] : v >= 1e8 ? [1e8, "億"] : [1e4, "万"], q = v / d;
+    return (q >= 10000 ? fmt.big(q, unit) : +q.toPrecision(q < 10 ? 2 : 3)).toLocaleString("ja-JP") + u;
+  },
   date(s) { return s ? s.replaceAll("-", "/") : "—"; },
   unit(v, unit) { if (!isNum(v)) return "—"; if (unit === "%") return fmt.num(v) + "%"; if (unit === "Elo") return fmt.num(v, 0); if (unit === "$") return fmt.usd(v); return fmt.num(v); },
 };
@@ -803,7 +845,9 @@ function fitName(m, maxW, px = 12, w = 400) {
   const short = m.short || m.name.replace(/^(Claude|Gemini|DeepSeek|Muse)\s+/, "");
   return fitText(short, maxW, px, w);
 }
-const seqStyle = t => { const pc = Math.round(12 + clamp(t, 0, 1) * 78); return `background:color-mix(in oklab,var(--seq-hi) ${pc}%,var(--seq-lo));color:${pc > 58 ? "#fff" : "var(--text)"}`; };
+/** 逐次色のセル：濃さの上限を64%に抑え、ライト/ダークとも本文色で 4.5:1 以上を保つ（白抜きとの切替帯を作らない） */
+const SEQ_MAX = 64, seqBg = pc => `color-mix(in oklab,var(--seq-hi) ${pc}%,var(--seq-lo))`;
+const seqStyle = t => `background:${seqBg(Math.round(12 + clamp(t, 0, 1) * (SEQ_MAX - 12)))};color:var(--text)`;
 function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("on"); clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove("on"), 2200); }
 const ICON = {
   overview: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="6" height="6" rx="1.5"/><rect x="11" y="3" width="6" height="6" rx="1.5"/><rect x="3" y="11" width="6" height="6" rx="1.5"/><rect x="11" y="11" width="6" height="6" rx="1.5"/></svg>',
@@ -817,10 +861,32 @@ const ICON = {
   future: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15l4-5 3 3 6-8"/><path d="M12 5h4v4"/></svg>',
   history: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l2.5 2"/></svg>',
   data: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><ellipse cx="10" cy="5" rx="6" ry="2.3"/><path d="M4 5v10c0 1.3 2.7 2.3 6 2.3s6-1 6-2.3V5M4 10c0 1.3 2.7 2.3 6 2.3s6-1 6-2.3"/></svg>',
+  // 用途・カテゴリのアイコン（二重符号化：文字＋形）
+  star: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M10 2.8l2.2 4.6 5 .7-3.6 3.5.9 5-4.5-2.4-4.5 2.4.9-5L2.8 8.1l5-.7z"/></svg>',
+  code: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 6l-4 4 4 4M13 6l4 4-4 4M11 4.5l-2 11"/></svg>',
+  repo: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M2.8 5.5c0-.8.6-1.4 1.4-1.4h3.4l1.6 1.8h6.6c.8 0 1.4.6 1.4 1.4v7.4c0 .8-.6 1.4-1.4 1.4H4.2c-.8 0-1.4-.6-1.4-1.4z"/></svg>',
+  bulb: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 14.5h5M8.5 17h3M10 2.8a5 5 0 0 0-3 9c.6.5 1 1.2 1 2h4c0-.8.4-1.5 1-2a5 5 0 0 0-3-9z"/></svg>',
+  doc: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2.8h6.5L15 6.3v10.9H5zM11.5 2.8v3.5H15M7.5 10h5M7.5 13h5"/></svg>',
+  bolt: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M11 2.5L4.5 11H10l-1 6.5L15.5 9H10z"/></svg>',
+  server: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="3.5" width="14" height="5" rx="1.2"/><rect x="3" y="11.5" width="14" height="5" rx="1.2"/><path d="M6 6h.01M6 14h.01"/></svg>',
+  screen: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="2.8" y="3.5" width="14.4" height="10" rx="1.2"/><path d="M7 17h6M10 13.5V17"/></svg>',
+  window: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="2.8" y="4" width="14.4" height="12" rx="1.2"/><path d="M2.8 7.5h14.4M6 13h8"/></svg>',
   sun: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="10" cy="10" r="3.2"/><path d="M10 2.5v1.8M10 15.7v1.8M2.5 10h1.8M15.7 10h1.8M4.7 4.7l1.3 1.3M14 14l1.3 1.3M4.7 15.3L6 14M14 6l1.3-1.3"/></svg>',
   moon: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M16 12.5A6.5 6.5 0 0 1 7.5 4a6.5 6.5 0 1 0 8.5 8.5z"/></svg>',
   auto: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="6.5"/><path d="M10 3.5a6.5 6.5 0 0 1 0 13z" fill="currentColor"/></svg>',
 };
+/** アイコン（装飾ではなく意味の手がかり。文字と必ず併記する） */
+const ico = (k, cls = "") => ICON[k] ? `<span class="ico ${cls}" aria-hidden="true">${ICON[k]}</span>` : "";
+/** 日本語の文節境界（助詞・記号の後、括弧の前）にだけ改行を許す（word-break:keep-all と併用し、語の途中で折り返さない） */
+const phr = t => esc(t).replace(/([をとでにはがのな型・、）])(?=.)/g, "$1<wbr>").replace(/(.)（/g, "$1<wbr>（");
+const CAT_ICON = { index: "star", agentic: "code", reason: "bulb", work: "doc", computer: "screen" };
+/** 指標指定子 → アイコン名（データの icon 指定を優先。ベンチはカテゴリのアイコン） */
+function metricIcon(spec, explicit) {
+  if (explicit && ICON[explicit]) return explicit;
+  const [kind, id] = String(spec).split(":");
+  if (kind === "bench") { const b = S.D.bm.get(id), c = S.D.cats.find(c => c.id === (b?.category || "other")); return c?.icon || CAT_ICON[c?.id] || "bench"; }
+  return kind === "spec" ? (id === "speed" ? "bolt" : "window") : "cost";
+}
 
 /* ==================================================================
    1. Data layer — 検証・正規化・マージ（スキーマ駆動。モデル/ベンチ追加はJSONのみで完結）
@@ -962,6 +1028,29 @@ function tipModel(m, title, value, extra) {
 const LIM = '<span class="lim" title="一般提供されていない（審査済みの組織のみ）">限定</span>';
 const DIFF = '<span class="lim" title="拡散型（下書きを並列に推敲して生成）">拡散</span>';
 function mName(m) { return `<span class="mname" data-m="${esc(m.id)}"><span class="sw" style="background:${color(m)}"></span><span>${esc(m.name)}</span>${m.access === "limited" ? LIM : ""}${m.arch === "diffusion" ? DIFF : ""}</span>`; }
+/** ドットレーン：表示中モデルの値を1本の軸に点で並べ、上位 top 件を提供元色＋順位で強調する共通部品。
+ *  「全体の中での位置」と「首位と次点の差」を、文字を読まずに把握できるようにする（概要・KPI・ベンチ上位で共通） */
+function lane(r, mt, opt = {}) {
+  if (!r.length) return "";
+  const top = opt.top ?? 3, log = ["$/1M", "tok/s", "pt/$", "tok"].includes(mt.unit) && r.every(x => x.v > 0);
+  const f = v => log ? Math.log10(v) : v, fs = r.map(x => f(x.v)), lo = Math.min(...fs), hi = Math.max(...fs);
+  const pos = v => hi > lo ? 3 + (f(v) - lo) / (hi - lo) * 94 : 50;
+  const tip = (x, i) => Tip.add(tipModel(x.m, mt.name, mt.fmt(x.v), { rank: `${i + 1}位 / ${r.length}モデル` }));
+  const dots = r.map((x, i) => i < top ? "" : `<i class="ld" style="left:${pos(x.v).toFixed(2)}%" data-m="${esc(x.m.id)}" data-t="${tip(x, i)}"></i>`).join("")
+    + r.slice(0, top).map((x, i) => ({ x, i })).reverse().map(({ x, i }) => `<i class="ld rk" style="left:${pos(x.v).toFixed(2)}%;background:${color(x.m)}" data-m="${esc(x.m.id)}" data-t="${tip(x, i)}">${i + 1}</i>`).join("");
+  const end = v => `<span class="le num">${esc(mt.fmt(v).replace(/ (tok\/s|pt\/\$)|\/1M/, ""))}</span>`;
+  const [a, b] = mt.higher ? [r[r.length - 1].v, r[0].v] : [r[0].v, r[r.length - 1].v];
+  return `<div class="lanew${opt.ends ? " ends" : ""}" title="${esc(opt.title || "")}">${opt.ends ? end(Math.min(a, b)) : ""}<div class="lane${log ? " log" : ""}">${dots}</div>${opt.ends ? end(Math.max(a, b)) : ""}</div>`;
+}
+/** レーン上で近接する順位点（15px未満）を、まとまりごとに上下交互にずらして重なりを防ぐ（描画後に実寸で判定） */
+function fixLanes(root) {
+  root.querySelectorAll(".lane").forEach(l => {
+    const ds = [...l.querySelectorAll(".ld.rk")].sort((a, b) => a.offsetLeft - b.offsetLeft);
+    let grp = [];
+    const flush = () => { if (grp.length > 1) grp.forEach((d, i) => d.classList.add(i % 2 ? "up" : "dn")); grp = []; };
+    ds.forEach(d => { if (grp.length && d.offsetLeft - grp[grp.length - 1].offsetLeft >= 15) flush(); grp.push(d); }); flush();
+  });
+}
 
 /* ==================================================================
    4. Charts — 依存ライブラリなしのSVG描画（高速・オフライン動作）
@@ -1156,42 +1245,47 @@ const VIEWS = [
 
 function renderOverview(v) {
   const ms = visible(), D = S.D;
-  v.style.gridTemplateColumns = "minmax(0,0.85fr) minmax(0,1.4fr)";
+  v.style.gridTemplateColumns = "minmax(0,1fr) minmax(0,1.2fr)";
   v.style.gridTemplateRows = "auto minmax(0,1fr)";
-  // ① 結論：KPI（各指標の首位と次点との差）
+  // ① 結論：KPI（各指標の首位・次点との差・全体の中の位置）
   const kpi = D.kpis.map(k => {
     const mt = metric(k.metric); if (!mt) return "";
     const r = ranked(mt, ms, k.filter); const a = r[0], b = r[1];
     if (!a) return `<div class="card kpi"><div class="k-l">${esc(k.label)}</div><div class="k-d">データなし</div></div>`;
     const diff = b && Math.abs(a.v - b.v) < 1e-9 ? `次点 ${esc(b.m.name)} と同${mt.unit === "$/1M" ? "額" : "値"}` : b ? (mt.unit === "$/1M" ? `次点 ${esc(b.m.name)} は ${fmt.num(b.v / a.v, 1)} 倍` : `次点 ${esc(b.m.name)} に ${mt.higher ? "+" : "−"}${fmt.num(Math.abs(a.v - b.v))}${mt.unit === "%" ? "pt" : ""}`) : "比較対象なし";
-    return `<div class="card kpi" data-m="${esc(a.m.id)}" title="${esc(mt.name)}"><div class="k-l">${esc(k.label)}<span class="go" style="margin-left:auto;font-size:11.5px">詳細</span></div>
-      <div class="k-m"><span class="sw" style="background:${color(a.m)}"></span>${esc(a.m.name)}</div>
-      <div class="k-v"><b class="num">${esc(mt.fmt(a.v).replace(/ tok\/s|\/1M/, ""))}</b><span>${esc(mt.unit === "%" ? "" : mt.unit)}</span></div>
+    return `<div class="card kpi" data-m="${esc(a.m.id)}" title="${esc(mt.name)}"><div class="k-l">${ico(metricIcon(k.metric, k.icon))}${esc(k.label)}<span class="go" style="margin-left:auto;font-size:11.5px">詳細</span></div>
+      <div class="k-row"><div><div class="k-m"><span class="sw" style="background:${color(a.m)}"></span>${esc(a.m.name)}</div>
+      <div class="k-v"><b class="num">${esc(mt.fmt(a.v).replace(/ tok\/s|\/1M/, ""))}</b><span>${esc(mt.unit === "%" ? "" : mt.unit)}</span></div></div>
+      ${lane(r, mt, { top: 2, ends: true })}</div>
       <div class="k-d">${diff}</div></div>`;
   }).join("");
-  // ② 用途別の推奨（主役）：推奨・根拠の数値・次点・比較への導線
+  // ② 用途別の推奨（主役）：アイコン＋用途、推奨モデルと値、全体の中の位置（首位・次点）、比較への導線
   const recs = D.useCases.map(u => {
     const mt = metric(u.metric); if (!mt) return "";
     const r = ranked(mt, ms, u.filter); const a = r[0], b = r[1];
-    if (!a) return `<div class="rec"><div class="u">${esc(u.label)}</div><div class="w na">該当データなし</div><span></span></div>`;
-    return `<div class="rec"><div class="u">${esc(u.label)}<small>${esc(mt.short)}</small></div>
-      <div class="w"><div>${mName(a.m)}<b class="num" style="margin-left:8px">${esc(mt.fmt(a.v))}</b></div><div class="why">${b ? `次点 ${esc(b.m.name)}（${esc(mt.fmt(b.v))}）` : "比較対象なし"}</div></div>
+    const head = `${ico(metricIcon(u.metric, u.icon), "lg")}<div class="u">${phr(u.label)}<small>${esc(mt.short)}</small></div>`;
+    if (!a) return `<div class="rec">${head}<div class="w na">該当データなし</div><span></span></div>`;
+    return `<div class="rec">${head}
+      <div class="w"><div class="wl">${mName(a.m)}<b class="num">${esc(mt.fmt(a.v))}</b></div><div class="wr"><span class="why">${b ? `次点 ${esc(b.m.name)}（${esc(mt.fmt(b.v))}）` : "比較対象なし"}</span>${lane(r, mt, { top: 2 })}</div></div>
       ${b ? `<button class="go" data-cmp="${esc(a.m.id)},${esc(b.m.id)}" title="${esc(a.m.name)} と ${esc(b.m.name)} を比較">比較</button>` : "<span></span>"}</div>`;
   }).join("");
-  // ③ 根拠：ベンチマーク別の上位3
+  // ③ 根拠：ベンチマーク別の上位3（位置のレーン＋名前）
   const rows = D.benchmarks.map(bm => {
     const mt = metric("bench:" + bm.id), r = ranked(mt, ms);
     if (!r.length) return "";
     const cat = D.cats.find(c => c.id === (bm.category || "other"));
-    return `<tr><td><span class="bn" data-gb="${esc(bm.id)}" style="cursor:pointer" title="${esc(bm.label)}の解説">${esc(bm.short || bm.label)}</span><span class="cat">${esc(cat?.short || cat?.label || "")}・${r.length}モデル</span></td>
-      ${[0, 1, 2].map(i => r[i] ? `<td class="c${i + 1}"><div class="pc"><span class="rk">${i + 1}</span>${mName(r[i].m)}<span class="v">${esc(mt.fmt(r[i].v))}</span></div></td>` : `<td class="na">—</td>`).join("")}</tr>`;
+    const nm = (i, cls) => r[i] ? `<span class="pc ${cls}"><span class="rk">${i + 1}</span>${mName(r[i].m)}<span class="v">${esc(mt.fmt(r[i].v))}</span></span>` : "";
+    return `<tr><td><span class="bn" data-gb="${esc(bm.id)}" style="cursor:pointer" title="${esc(bm.label)}の解説">${esc(bm.short || bm.label)}</span><span class="cat" title="${esc(cat?.label || "")}">${ico(CAT_ICON[cat?.id] || "bench", "sm")}${r.length}モデル</span></td>
+      <td>${lane(r, mt)}</td><td><div class="p1">${nm(0, "c1")}</div><div class="p23">${nm(1, "")}${nm(2, "")}</div></td></tr>`;
   }).join("");
   v.innerHTML = `<div class="kpis" style="grid-column:1/-1">${kpi}</div>
-    ${card("用途別の推奨", "目的に合う首位モデルと、その根拠", `<div class="recs" id="recs">${recs}</div>`)}
-    ${card("ベンチマーク別の上位3モデル", `表示中 ${ms.length} モデルの公表値から算出・ベンチ名で解説へ`, `<div style="position:absolute;inset:0;overflow:hidden" id="podiumWrap"><table class="tbl podium"><colgroup><col style="width:19%"><col style="width:29%"><col style="width:26%"><col style="width:26%"></colgroup><thead><tr><th>ベンチマーク</th><th>1位</th><th>2位</th><th>3位</th></tr></thead><tbody>${rows}</tbody></table></div>`)}`;
-  const recEl = $("#recs"); recEl.style.setProperty("--rh", Math.max(44, (recEl.parentElement.clientHeight - 2) / Math.max(1, D.useCases.length)) + "px");
+    ${card("用途別の推奨", "首位モデルと、全モデル中の位置（①首位 ②次点・灰＝その他）", `<div class="recs" id="recs">${recs}</div>`)}
+    ${card("ベンチマーク別の上位3モデル", `表示中 ${ms.length} モデルの公表値・点の位置＝スコア（右ほど高い）・ベンチ名で解説へ`, `<div style="position:absolute;inset:0;overflow:hidden" id="podiumWrap"><table class="tbl podium"><colgroup><col style="width:16%"><col style="width:27%"><col style="width:57%"></colgroup><thead><tr><th>ベンチマーク</th><th>全モデル中の位置</th><th>上位3モデル</th></tr></thead><tbody>${rows}</tbody></table></div>`)}`;
+  const recEl = $("#recs"), rh = Math.max(48, (recEl.parentElement.clientHeight - 2) / Math.max(1, D.useCases.length));
+  recEl.style.setProperty("--rh", rh + "px"); recEl.classList.toggle("tall", rh >= 84);   // 縦に余裕があれば位置レーンを全幅に広げる
   const wrap = $("#podiumWrap"), n = wrap.querySelectorAll("tbody tr").length;
-  wrap.style.setProperty("--rh", clamp((wrap.clientHeight - wrap.querySelector("thead").offsetHeight - 2) / Math.max(1, n), 26, 48) + "px");
+  wrap.style.setProperty("--rh", clamp((wrap.clientHeight - wrap.querySelector("thead").offsetHeight - 2) / Math.max(1, n), 30, 56) + "px");
+  fixLanes(v);
   v.querySelectorAll("[data-cmp]").forEach(btn => btn.onclick = () => compareWith(btn.dataset.cmp.split(",")).run());
 }
 
@@ -1263,8 +1357,8 @@ function renderHeat(v, ms) {
     const tip = Tip.add(tipModel(m, b.label, fmt.unit(val, b.unit), { rank: `表示中の範囲 ${fmt.unit(lo, b.unit)}〜${fmt.unit(hi, b.unit)}`, note: m.scores[b.id]?.note, src: m.scores[b.id]?.src }));
     return `<td class="r num${val === (b.higherIsBetter === false ? lo : hi) ? " best" : ""}" data-t="${tip}" style="${seqStyle(tt)}">${esc(fmt.unit(val, b.unit).replace("%", ""))}</td>`;
   }).join("")}<td class="r muted num">${Object.keys(m.scores).length}/${D.benchmarks.length}</td></tr>`).join("");
-  v.innerHTML = card("全ベンチマーク ヒートマップ", "色の濃さ＝各列（ベンチ）内での相対位置。★＝列の首位。空欄は未公表", `<div id="heatWrap" style="position:absolute;inset:0;overflow:hidden"><table class="tbl fit${sorted.length > 16 || bs.length > 12 ? " dense" : ""}">${head1}${head2}<tbody>${body}</tbody></table></div>`,
-    { right: `<span class="legend"><span>低</span><span style="width:90px;height:8px;border-radius:4px;background:linear-gradient(90deg,color-mix(in oklab,var(--seq-hi) 12%,var(--seq-lo)),var(--seq-hi))"></span><span>高</span></span>` });
+  v.innerHTML = card("全ベンチマーク ヒートマップ", "色の濃さ＝各列（ベンチ）内での相対位置。★＝列の首位。—＝未公表", `<div id="heatWrap" style="position:absolute;inset:0;overflow:hidden"><table class="tbl fit${sorted.length > 16 || bs.length > 12 ? " dense" : ""}">${head1}${head2}<tbody>${body}</tbody></table></div>`,
+    { right: `<span class="legend"><span>低</span><span style="width:90px;height:8px;border-radius:4px;background:linear-gradient(90deg,${seqBg(12)},${seqBg(SEQ_MAX)})"></span><span>高</span></span>` });
   const wrap = $("#heatWrap"); wrap.style.setProperty("--rh", clamp((wrap.clientHeight - wrap.querySelector("thead, tr").closest("table").querySelectorAll("tr")[1].getBoundingClientRect().bottom + wrap.getBoundingClientRect().top - 2) / Math.max(1, sorted.length), 18, 52) + "px");
   wrap.querySelectorAll("[data-hs]").forEach(th => th.onclick = () => { const k = th.dataset.hs; S.heatSort = { key: k, dir: hs.key === k ? -hs.dir : (k === "name" ? 1 : -1) }; render(); });
 }
@@ -1343,7 +1437,7 @@ function renderCompare(v) {
     <tr class="grp"><td colspan="${sel.length + 1}">ベンチマーク（★＝選択中の最高）</td></tr>${benchRows}</tbody></table></div>` : `<div class="empty">左のリストからモデルを選んでください</div>`;
   v.innerHTML = card("モデルを選択", `${sel.length}/4`, `<div class="pick">${picker}</div>`)
     + card("レーダー比較", `共通ベンチ ${axes.length} 軸・表示中モデルの首位＝100`, host("ch-rd"), { foot: `<div style="margin-top:6px">${legend}</div>` })
-    + card("差分表", "空欄＝未公表", tbl);
+    + card("差分表", "—＝未公表", tbl);
   Chart.radar($("#ch-rd"), series, axes);
   // 選択リストは件数に応じて行を詰め、スクロールさせない
   const pk = v.querySelector(".pick"), labs = pk.querySelectorAll("label");
@@ -1374,7 +1468,7 @@ function renderTable(v, nb = 8) {
     { k: "blended", l: "混合$", get: m => m.blended, cell: m => esc(fmt.usd(m.blended)), num: true, lo: true, bar: true },
     { k: "speed", l: "速度", get: m => m.speed, cell: m => esc(fmt.num(m.speed, 0)), num: true, hi: true, bar: true },
     ...benchCols.map(b => ({ k: b.id, l: b.short || b.label, title: b.label, get: m => score(m, b.id), cell: m => esc(score(m, b.id) == null ? "—" : fmt.unit(score(m, b.id), b.unit)), num: true, hi: b.higherIsBetter !== false, lo: b.higherIsBetter === false, bar: true })),
-    { k: "open", l: "重み", get: m => ow[m.openWeights] || "—", cell: m => esc(ow[m.openWeights] || "—") + (m.license ? `<span class="muted" style="font-size:10.5px"> ${esc(m.license.length > 10 ? m.license.slice(0, 9) + "…" : m.license)}</span>` : "") },
+    { k: "open", l: "重みの公開", get: m => ow[m.openWeights] || "—", cell: m => esc(ow[m.openWeights] || "—") + (m.license ? `<span class="muted" style="font-size:10.5px"> ${esc(m.license.length > 10 ? m.license.slice(0, 9) + "…" : m.license)}</span>` : "") },
   ];
   const so = S.sort; const col = cols.find(c => c.k === so.key) || cols[0];
   const rows = [...ms].sort((a, b) => { const va = col.get(a), vb = col.get(b); if (va == null && vb == null) return 0; if (va == null) return 1; if (vb == null) return -1; return (typeof va === "string" ? va.localeCompare(vb, "ja") : va - vb) * so.dir; });
@@ -1598,11 +1692,11 @@ function renderModels(v) {
   const rows = order.map(m => { const cs = catStrength(m, ms);
     return `<tr data-prof="${esc(m.id)}" data-t="${Tip.add(tipModel(m, m.tier, null, { rank: m.summary }))}"><td><span class="mname"><span class="sw" style="background:${color(m)}"></span><span style="font-weight:600">${esc(m.name)}</span>${m.access === "limited" ? LIM : ""}${m.legacy ? '<span class="muted" style="font-size:10.5px">旧</span>' : ""}</span></td>
       <td class="sum">${esc(m.summary || "")}</td>
-      ${D.cats.map(c => { const x = cs[c.id]; return x ? `<td class="cat" style="${seqStyle(x.p)}" data-t="${Tip.add(tipModel(m, c.label, String(Math.round(x.p * 100)), { rank: `${x.n}指標の順位から算出（100＝首位・0＝最下位）`, note: x.n === 1 ? "1指標のみのため参考値" : null }))}">${Math.round(x.p * 100)}</td>` : `<td class="cat na">—</td>`; }).join("")}
+      ${D.cats.map(c => { const x = cs[c.id]; return x ? `<td class="cat" style="${seqStyle(x.p)}" data-t="${Tip.add(tipModel(m, c.label, String(Math.round(x.p * 100)), { rank: `${x.n}指標の順位から算出（100＝首位・0＝最下位）`, note: x.n === 1 ? "1指標のみのため参考値" : null }))}">${x.p >= 1 && x.n ? "首位" : x.p <= 0 ? "最下位" : Math.round(x.p * 100)}</td>` : `<td class="cat na">—</td>`; }).join("")}
       ${priceCell(m)}
       <td class="r num">${isNum(m.speed) ? fmt.num(m.speed, 0) : '<span class="na">—</span>'}</td>
       <td class="r num">${esc(fmt.tok(m.context))}</td><td class="t2">${esc(ow[m.openWeights] || "—")}</td></tr>`; }).join("");
-  const legend = `<span class="legend"><span>数値＝カテゴリ内の相対位置（100＝首位・0＝最下位）</span><span style="width:80px;height:8px;border-radius:4px;background:linear-gradient(90deg,color-mix(in oklab,var(--seq-hi) 12%,var(--seq-lo)),var(--seq-hi))"></span></span>`;
+  const legend = `<span class="legend"><span>数値＝カテゴリ内の相対位置（100＝首位・0＝最下位）</span><span style="width:80px;height:8px;border-radius:4px;background:linear-gradient(90deg,${seqBg(12)},${seqBg(SEQ_MAX)})"></span></span>`;
   v.innerHTML = card("モデル特徴の早見表", "行クリックでプロフィール・AA指数順", `<div id="matWrap" style="position:absolute;inset:0;overflow:hidden"><table class="tbl mat fit${order.length > 18 ? " dense" : ""}"><thead><tr><th>モデル</th><th>ひとことで言うと</th>${D.cats.map(c => `<th style="text-align:center;width:76px;white-space:nowrap" title="${esc(c.label)}：${esc(c.desc || "")}">${esc(c.short || c.label)}</th>`).join("")}<th style="width:150px;white-space:nowrap" title="入力3:出力1の混合単価。左ほど安い（対数）">混合単価（左＝安い）</th><th class="r" style="width:80px">速度 tok/s</th><th class="r" style="width:70px">文脈</th><th style="width:66px">重み</th></tr></thead><tbody>${rows}</tbody></table></div>`,
     { right: legend, foot: `<div class="caveat"><span>相対位置は、表示中のモデルのうちデータのあるものの順位から算出（カテゴリ内の各ベンチの平均）。データがない場合は「—」とし、推測で補完していません。</span></div>` });
   const w = $("#matWrap"); w.style.setProperty("--rh", clamp((w.clientHeight - w.querySelector("thead").offsetHeight - 2) / Math.max(1, order.length), 16, 52) + "px");
@@ -1735,9 +1829,9 @@ Chart.mini = function (host, c) {
     X = v => (Math.log10(v) - Math.log10(lo)) / (Math.log10(hi) - Math.log10(lo) || 1) * (W - R);
     tks = logTicks(lo, hi, W - R).filter((t, i, a) => a.length <= 6 || Math.log10(t) % 1 === 0);
   } else { const hi = c.max ?? niceMax(Math.max(...vals) * 1.05); X = v => v / hi * (W - R); tks = ticks(0, hi, 4); }
-  const tf = t => { if (c.type !== "log") return fmt.num(t, 0); if (t >= 1e4) { const e = Math.floor(Math.log10(t) + 1e-9), mm = Math.round(t / Math.pow(10, e)); return `${mm === 1 ? "" : mm + "×"}1e${e}`; } return t < 1 ? String(+t.toPrecision(2)) : fmt.num(t, 0); };
+  const tf = t => c.type !== "log" ? fmt.num(t, 0) : c.unit === "$" ? fmt.usd(t) : fmt.big(t, c.unit);
   tks.forEach(t => { const x = X(t); s += `<line class="gl" x1="${x}" x2="${x}" y1="0" y2="${n * rowH}"/><text class="ax" x="${x}" y="${n * rowH + 12}" text-anchor="${x < 10 ? "start" : "middle"}">${esc(tf(t))}</text>`; });
-  const vf = v => c.type === "log" && v >= 1e4 ? v.toExponential(0).replace("e+", "e") : fmt.num(v, Number.isInteger(v) ? 0 : (v < 1 ? 2 : 1));
+  const vf = v => c.type === "log" ? (c.unit === "$" ? fmt.usd(v) : fmt.big(v, c.unit)) : fmt.num(v, Number.isInteger(v) ? 0 : (v < 1 ? 2 : 1));
   c.items.forEach(([label, a, b], i) => {
     b = isNum(b) ? b : undefined;
     const y = i * rowH, by = y + 16, val = isNum(b) ? `${vf(a)}〜${vf(b)}` : vf(a), unit = c.unit === "%" ? "%" : c.unit === "$" ? "" : "";
@@ -1829,7 +1923,7 @@ Chart.growth = function (host, g) {
   if (g.log) { y0 = Math.pow(10, Math.floor(Math.log10(Math.min(...ys)))); y1 = Math.pow(10, Math.ceil(Math.log10(Math.max(...ys)))); Y = v => T + (1 - (Math.log10(v) - Math.log10(y0)) / (Math.log10(y1) - Math.log10(y0) || 1)) * (H - T - B); }
   else { y0 = 0; y1 = g.max ?? niceMax(Math.max(...ys)); Y = v => T + (1 - v / y1) * (H - T - B); }
   const X = v => L + (v - x0) / (x1 - x0) * (W - L - R);
-  const yf = v => v === 0 ? "0" : g.unit === "$" ? fmt.usd(v) : v >= 1e4 ? `1e${Math.round(Math.log10(v))}` : fmt.num(v, v < 1 ? 2 : 0);
+  const yf = v => v === 0 ? "0" : g.unit === "$" ? fmt.usd(v) : g.log ? fmt.big(v, g.unit) : fmt.num(v, v < 1 ? 2 : 0);
   let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(g.title)}">`;
   const yt = g.log ? (() => { const a = [], dec = Math.log10(y1) - Math.log10(y0), every = Math.max(1, Math.ceil(dec / Math.max(2, Math.floor((H - T - B) / 26)))); for (let e = Math.log10(y0); e <= Math.log10(y1) + 1e-9; e += every) a.push(Math.pow(10, e)); return a; })() : ticks(0, y1, 4);
   yt.forEach(t => { s += `<line class="gl" x1="${L}" x2="${W - R}" y1="${Y(t)}" y2="${Y(t)}"/><text class="ax" x="${L - 5}" y="${Y(t) + 3.5}" text-anchor="end">${esc(yf(t))}</text>`; });
@@ -1841,7 +1935,7 @@ Chart.growth = function (host, g) {
   const obstacles = (g.refs || []).map(r => { const w = measure(r.label, 10.5) + 6; return { x: L + 2, y: Y(r.v) - 15, w, h: 13 }; });
   placeLabels(items, { L, R: W - R, T: 0, B: H - B }, { obstacles, hide: true });
   pts.forEach((p, i) => {
-    const tip = Tip.add(`<div class="tt">${esc(p[0])}</div><div class="tv">${esc(g.unit === "$" ? fmt.usd(p[2]) : p[2] >= 1e4 ? p[2].toExponential(1).replace("e+", "e") : fmt.num(p[2]))}${g.unit && g.unit !== "$" ? " " + esc(g.unit) : ""}</div><div class="tm">${Math.floor(p[1])}年</div>`);
+    const tip = Tip.add(`<div class="tt">${esc(p[0])}</div><div class="tv">${esc(g.unit === "$" ? fmt.usd(p[2]) : p[2] >= 1e4 ? fmt.big(p[2], g.unit) : fmt.num(p[2]))}${g.unit && g.unit !== "$" ? " " + esc(g.unit) : ""}</div><div class="tm">${Math.floor(p[1])}年</div>`);
     s += `<g data-t="${tip}"><circle class="hit" cx="${X(p[1])}" cy="${Y(p[2])}" r="9"/><circle cx="${X(p[1])}" cy="${Y(p[2])}" r="4.5" fill="var(--ink)" stroke="var(--surface)" stroke-width="1.5"/>${items[i].p._l ? `<text class="lb2" x="${items[i].p._l[0]}" y="${items[i].p._l[1] + 11}">${esc(p[0])}</text>` : ""}</g>`;
   });
   host.innerHTML = s + "</svg>";
@@ -2089,7 +2183,7 @@ function openDrawer(id) {
   const scs = D.benchmarks.filter(b => m.scores[b.id]).map(b => {
     const r = ranked(metric("bench:" + b.id), vis.includes(m) ? vis : [...vis, m]); const i = r.findIndex(x => x.m === m);
     const vs = r.map(x => x.v), mx = Math.max(...vs), mn = Math.min(...vs), t = b.norm === "minmax" ? (mx > mn ? (m.scores[b.id].v - mn) / (mx - mn) : 1) : m.scores[b.id].v / (b.max || mx);
-    return `<div class="sc-row"><div>${esc(b.label)}${m.scores[b.id].note ? `<span class="info" style="margin-left:4px" title="${esc(m.scores[b.id].note)}">i</span>` : ""}<div class="mini"><i style="width:${clamp(t, 0.02, 1) * 100}%;background:${color(m)}"></i></div></div><div class="r num" style="text-align:right;font-weight:600">${esc(fmt.unit(m.scores[b.id].v, b.unit))}</div><div class="rk">${i + 1}/${r.length}位</div></div>`;
+    return `<div class="sc-row"><div><span data-gb="${esc(b.id)}" class="bn" title="${esc(b.label)}（クリックで解説へ）" style="cursor:pointer">${esc(b.short || b.label)}</span>${m.scores[b.id].note ? `<span class="info" style="margin-left:4px" title="${esc(m.scores[b.id].note)}">i</span>` : ""}<div class="mini"><i style="width:${clamp(t, 0.02, 1) * 100}%;background:${color(m)}"></i></div></div><div class="r num" style="text-align:right;font-weight:600">${esc(fmt.unit(m.scores[b.id].v, b.unit))}</div><div class="rk">${i + 1}/${r.length}位</div></div>`;
   }).join("") || `<div class="muted">公表済みのベンチマーク値はありません</div>`;
   const ow = { yes: "オープン", partial: "一部公開", no: "非公開" }[m.openWeights] || "—";
   const srcIds = [...new Set([...(m.sources || []), ...Object.values(m.scores).map(s => s.src).filter(Boolean), m.speedObj?.src].filter(Boolean))];
