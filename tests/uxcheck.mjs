@@ -1,6 +1,6 @@
 // UI品質の自動検査：見た目の退行を機械的に検出する（UI/UX評価基準 E・D の客観項目）
 // 使い方: node tests/uxcheck.mjs [--verbose]
-// 検査: ページの縦横はみ出し／文字のはみ出し・省略（…）／SVG文字同士の重なり／線が文字を貫く／10.5px未満の文字／コントラスト不足
+// 検査: ページの縦横はみ出し／文字のはみ出し・省略（…）／SVG文字同士の重なり／強調線が文字を貫く／文字が図形に重なる／番号バッジの重なり／1文字の取り残し改行／10.5px未満の文字／コントラスト不足
 import { chromium } from "playwright";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import path from "node:path";
@@ -42,14 +42,21 @@ for (const [theme, w, h] of SETS) {
         const texts = [...svg.querySelectorAll("text")].filter(vis);
         const rects = texts.map(t => ({ t, r: t.getBoundingClientRect() }));
         texts.forEach(t => { if (t.textContent.trim().endsWith("…")) add("ellipsis", `SVG省略: "${t.textContent.trim()}"`); if (parseFloat(getComputedStyle(t).fontSize) < 10.5 && t.textContent.trim().length > 1) add("small", `SVG ${getComputedStyle(t).fontSize}: "${t.textContent.trim().slice(0, 20)}"`); });
-        for (let i = 0; i < rects.length; i++) for (let j = i + 1; j < rects.length; j++) { const a = rects[i].r, b = rects[j].r; const ox = Math.min(a.right, b.right) - Math.max(a.left, b.left), oy = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top); if (ox > 1.5 && oy > 2.5) add("overlap", `重なり: "${rects[i].t.textContent}" × "${rects[j].t.textContent}"`); }
-        // 文字より後に描かれた線が文字を貫く（ハロー＝文字の背面に線があれば可）
-        const all = [...svg.querySelectorAll("*")];
-        rects.forEach(({ t, r }) => {
-          const idx = all.indexOf(t);
-          all.slice(idx + 1).filter(e => e.tagName === "line" && vis(e)).forEach(l => { const q = l.getBoundingClientRect(); if (q.left < r.right - 2 && q.right > r.left + 2 && q.top < r.bottom - 3 && q.bottom > r.top + 3) add("line-over-text", `線が文字を貫く: "${t.textContent}"`); });
-        });
+        for (let i = 0; i < rects.length; i++) for (let j = i + 1; j < rects.length; j++) { const a = rects[i].r, b = rects[j].r; const ox = Math.min(a.right, b.right) - Math.max(a.left, b.left), oy = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top); if (ox > 1.5 && oy > 1.5) add("overlap", `重なり: "${rects[i].t.textContent}" × "${rects[j].t.textContent}"`); }
+        // 強調線（基準線・今日線・中央値など：破線または太線、格子線 .gl と下線 .ul は除く）が文字の内側を通る（描画順・ハローに関係なく）
+        const lineVis = l => { const q = l.getBoundingClientRect(), cs = getComputedStyle(l); return (q.width > 0 || q.height > 0) && cs.display !== "none" && cs.visibility !== "hidden" && +cs.opacity > 0; };
+        const lines = [...svg.querySelectorAll("line")].filter(l => lineVis(l) && !l.matches(".gl, .ul") && (getComputedStyle(l).strokeDasharray !== "none" || parseFloat(getComputedStyle(l).strokeWidth) >= 1.5));
+        rects.forEach(({ t, r }) => lines.forEach(l => { const q = l.getBoundingClientRect(); const vert = q.width < q.height;
+          const cross = vert ? q.left > r.left + 2 && q.left < r.right - 2 && q.top < r.bottom - 3 && q.bottom > r.top + 3 : q.top > r.top + 3 && q.top < r.bottom - 3 && q.left < r.right - 2 && q.right > r.left + 2;
+          if (cross) add("line-over-text", `線が文字を貫く: "${t.textContent.trim().slice(0, 24)}"`); }));
+        // 文字が図形（帯・棒・点）の上に重なる（同じグループ内の自分のラベル用の図形は除く）
+        const shapes = [...svg.querySelectorAll("rect, path, circle")].filter(s => vis(s) && !s.matches(".row-hover, .hit") && (getComputedStyle(s).fill !== "none" || getComputedStyle(s).stroke !== "none") && s.getBoundingClientRect().height < 40 && s.getBoundingClientRect().width < svg.getBoundingClientRect().width * 0.9);
+        rects.forEach(({ t, r }) => shapes.forEach(s => { if (s.parentNode === t.parentNode || s.closest("defs")) return; const q = s.getBoundingClientRect(); const ox = Math.min(r.right, q.right) - Math.max(r.left, q.left), oy = Math.min(r.bottom, q.bottom) - Math.max(r.top, q.top); if (ox > 4 && oy > 4) add("text-over-mark", `文字が図形に重なる: "${t.textContent.trim().slice(0, 24)}"`); }));
       });
+      // 位置レーンの番号バッジ同士の重なり（番号が読めなくなる）
+      document.querySelectorAll("#view .lane").forEach(l => { const bs = [...l.querySelectorAll(".ld.rk, .ld.grp")].map(e => e.getBoundingClientRect()); for (let i = 0; i < bs.length; i++) for (let j = i + 1; j < bs.length; j++) { const a = bs[i], c = bs[j]; const ox = Math.min(a.right, c.right) - Math.max(a.left, c.left), oy = Math.min(a.bottom, c.bottom) - Math.max(a.top, c.top); if (ox > 3 && oy > 3) add("marker-overlap", `番号の重なり: ${l.closest("tr, .rec, .kpi")?.textContent.trim().slice(0, 16) || ""}`); } });
+      // 1文字だけが次の行に落ちる改行（単語の途中で折り返して読みにくい）
+      document.querySelectorAll("#view *, .subbar *").forEach(el => { if (!vis(el) || el.closest("svg, pre, .tip")) return; [...el.childNodes].filter(n => n.nodeType === 3 && n.textContent.trim().length > 4).forEach(n => { const rg = document.createRange(); rg.selectNodeContents(n); const ls = [...rg.getClientRects()].filter(q => q.width > 0); if (ls.length < 2) return; const last = ls[ls.length - 1], fs = parseFloat(getComputedStyle(el).fontSize); if (last.width < fs * 1.5 && Math.abs(last.top - ls[0].top) > 2) add("orphan", `行末の取り残し: "${n.textContent.trim().slice(0, 20)}"`); }); });
       // コントラスト（主要な文字）
       // oklab()/color() など任意の色表記を、canvas で sRGB に正規化してから輝度を計算
       const cv = document.createElement("canvas").getContext("2d", { willReadFrequently: true });

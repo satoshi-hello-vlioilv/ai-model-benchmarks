@@ -56,7 +56,7 @@
 /* ============================== Base ============================== */
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;overflow:hidden;background:var(--bg);color:var(--text)}
-body{font:13px/1.5 "Segoe UI","Yu Gothic UI","Meiryo UI","Hiragino Sans","Noto Sans JP",system-ui,sans-serif;
+body{word-break:auto-phrase;text-wrap:pretty;font:13px/1.5 "Segoe UI","Yu Gothic UI","Meiryo UI","Hiragino Sans","Noto Sans JP",system-ui,sans-serif;
   -webkit-font-smoothing:antialiased;font-feature-settings:"palt" 1}
 button,input,select{font:inherit;color:inherit}
 button{cursor:pointer}
@@ -243,12 +243,14 @@ table{border-collapse:collapse;width:100%}
 .ico.sm svg{width:11px;height:11px}
 .ico.sm{margin-right:3px;vertical-align:-1px}
 /* ドットレーン（共通部品） */
-.lanew{display:flex;align-items:center;gap:6px;min-width:0}
+.lanew{display:flex;align-items:center;gap:8px;min-width:0}
 .lane{position:relative;flex:1;height:22px;min-width:60px}
 .lane::before{content:"";position:absolute;left:0;right:0;top:50%;height:2px;margin-top:-1px;background:var(--grid);border-radius:1px}
 .ld{position:absolute;top:50%;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;background:var(--border-strong);cursor:pointer}
 .ld.rk{width:15px;height:15px;margin:-7.5px 0 0 -7.5px;color:#fff;font-weight:700;font-size:10px;line-height:15px;text-align:center;box-shadow:0 0 0 1.5px var(--surface);text-shadow:0 0 2px rgba(0,0,0,.55)}
-.ld.rk.up{margin-top:-12.5px}.ld.rk.dn{margin-top:-2.5px}
+.ld.grp{display:flex;gap:1px;width:auto;height:15px;margin:-7.5px 0 0 0;transform:translateX(-50%);background:var(--surface);border-radius:8px;box-shadow:0 0 0 1.5px var(--surface);z-index:1}
+.ld.grp b{display:block;min-width:15px;height:15px;border-radius:8px;color:#fff;font-size:10px;font-weight:700;line-height:15px;text-align:center;text-shadow:0 0 2px rgba(0,0,0,.55);cursor:pointer}
+.ld.grp b:hover{outline:2px solid var(--text);outline-offset:1px}
 .ld:hover{outline:2px solid var(--text);outline-offset:1px}
 .le{font-size:10.5px;color:var(--muted);flex:none}
 .kpi .k-row{display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px;align-items:end}
@@ -1121,21 +1123,29 @@ function lane(r, mt, opt = {}) {
   const marks = opt.marks || r.slice(0, opt.top ?? 3).map((x, i) => ({ m: x.m, t: i + 1 })), mk = new Map(marks.map(k => [k.m, k]));
   const log = ["$/1M", "tok/s", "pt/$", "tok"].includes(mt.unit) && r.every(x => x.v > 0);
   const f = v => log ? Math.log10(v) : v, fs = r.map(x => f(x.v)), lo = Math.min(...fs), hi = Math.max(...fs);
-  const pos = v => hi > lo ? 3 + (f(v) - lo) / (hi - lo) * 94 : 50;
+  // 位置は0〜1。両端に番号バッジの半幅（8px）を残して配置し、レーンの外にはみ出さない
+  const fr = v => hi > lo ? (f(v) - lo) / (hi - lo) : 0.5, pos = v => `calc(8px + (100% - 16px) * ${fr(v).toFixed(4)})" data-f="${fr(v).toFixed(4)}`;
   const tip = (x, i) => Tip.add(tipModel(x.m, mt.name, mt.fmt(x.v), { rank: `${i + 1}位 / ${r.length}モデル` }));
-  const dots = r.map((x, i) => mk.has(x.m) ? "" : `<i class="ld" style="left:${pos(x.v).toFixed(2)}%" data-m="${esc(x.m.id)}" data-t="${tip(x, i)}"></i>`).join("")
-    + r.map((x, i) => ({ x, i, k: mk.get(x.m) })).filter(o => o.k).reverse().map(({ x, i, k }) => `<i class="ld rk" style="left:${pos(x.v).toFixed(2)}%;background:${color(x.m)}" data-m="${esc(x.m.id)}" data-t="${tip(x, i)}">${k.t}</i>`).join("");
+  const dots = r.map((x, i) => mk.has(x.m) || opt.others === false ? "" : `<i class="ld" style="left:${pos(x.v)}" data-m="${esc(x.m.id)}" data-t="${tip(x, i)}"></i>`).join("")
+    + r.map((x, i) => ({ x, i, k: mk.get(x.m) })).filter(o => o.k).reverse().map(({ x, i, k }) => `<i class="ld rk" style="background:${color(x.m)};left:${pos(x.v)}" data-m="${esc(x.m.id)}" data-t="${tip(x, i)}">${k.t}</i>`).join("");
   const end = v => `<span class="le num">${esc(mt.fmt(v).replace(/ (tok\/s|pt\/\$)|\/1M/, ""))}</span>`;
   const [a, b] = mt.higher ? [r[r.length - 1].v, r[0].v] : [r[0].v, r[r.length - 1].v];
   return `<div class="lanew${opt.ends ? " ends" : ""}" title="${esc(opt.title || "")}">${opt.ends ? end(Math.min(a, b)) : ""}<div class="lane${log ? " log" : ""}">${dots}</div>${opt.ends ? end(Math.max(a, b)) : ""}</div>`;
 }
-/** レーン上で近接する順位点（15px未満）を、まとまりごとに上下交互にずらして重なりを防ぐ（描画後に実寸で判定） */
+/** レーン上で近接する番号バッジ（中心間が16px未満）は、1つの横長バッジ「1|2」にまとめて数字の重なりを防ぐ（描画後に実寸で判定）。
+ *  まとめた中の各番号は元の色・ツールチップ・クリック先を保つ */
 function fixLanes(root) {
   root.querySelectorAll(".lane").forEach(l => {
     const ds = [...l.querySelectorAll(".ld.rk")].sort((a, b) => a.offsetLeft - b.offsetLeft);
-    let grp = [];
-    const flush = () => { if (grp.length > 1) grp.forEach((d, i) => d.classList.add(i % 2 ? "up" : "dn")); grp = []; };
-    ds.forEach(d => { if (grp.length && d.offsetLeft - grp[grp.length - 1].offsetLeft >= 15) flush(); grp.push(d); }); flush();
+    const groups = []; ds.forEach(d => { const g = groups[groups.length - 1]; if (g && d.offsetLeft - g[g.length - 1].offsetLeft < 16) g.push(d); else groups.push([d]); });
+    groups.filter(g => g.length > 1).forEach(g => {
+      const f = g.reduce((t, d) => t + +d.dataset.f, 0) / g.length, pill = document.createElement("i");
+      pill.className = "ld grp";
+      g.sort((a, b) => (+a.textContent || 0) - (+b.textContent || 0)).forEach(d => { const b = document.createElement("b"); b.textContent = d.textContent; b.style.background = d.style.background; ["t", "m"].forEach(k => d.dataset[k] && (b.dataset[k] = d.dataset[k])); pill.append(b); d.remove(); });
+      l.append(pill);
+      // レーンの端からはみ出さないよう、実寸で位置を補正する
+      const W = l.clientWidth, w = pill.offsetWidth, c = 8 + (W - 16) * f; pill.style.transform = "none"; pill.style.left = clamp(c - w / 2, 0, W - w) + "px";
+    });
   });
 }
 
@@ -1171,7 +1181,13 @@ const Chart = {
     const best = rows[0].v;
     let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(o.title || "")}">${o.hatch ? '<defs><pattern id="hb-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="var(--surface)" stroke-width="2.2" opacity=".75"/></pattern></defs>' : ""}`;
     tks.forEach(t => { const x = X(t); s += `<line class="gl" x1="${x}" x2="${x}" y1="0" y2="${nn * rowH + padT}"/><text class="ax" x="${x}" y="${nn * rowH + padT + 12}" text-anchor="middle">${esc(o.tick ? o.tick(t) : fmt.num(t, 0))}</text>`; });
-    refs.forEach(r => { const x = X(r.v); s += `<line x1="${x}" x2="${x}" y1="10" y2="${nn * rowH + padT}" stroke="var(--text-2)" stroke-dasharray="4 3"/><text class="ax" x="${x}" y="9" text-anchor="${x > (x0 + x1) / 2 ? "end" : "start"}" style="fill:var(--text-2)">${esc(r.label)}</text>`; });
+    // 基準線（中央値・人間の水準など）は、値ラベルと重なる行だけ途切れさせる（線が数字を貫かない）
+    const labelSpan = (r, i) => { const top = o.emph ? o.emph(r) : r.v === best, vt = o.short ? o.short(r.v) : o.fmt(r.v), vx = dot ? X(r.v) + 10 : X(r.v) + 6; return [vx - 3, vx + measure(vt, 11.5, top ? 700 : 400) + 3 + (o.note && o.note(r, i) ? measure(o.note(r, i), 10.5) + 10 : 0)]; };
+    const spans = rows.map(labelSpan);
+    refs.forEach(r => { const x = X(r.v); let d = `M${x},10`, cur = 10;
+      spans.forEach(([a, b], i) => { if (x > a && x < b) { const y0 = padT + i * rowH + rowH / 2 - 9, y1 = padT + i * rowH + rowH / 2 + 9; d += `L${x},${y0}M${x},${y1}`; } });
+      d += `L${x},${nn * rowH + padT}`;
+      s += `<path d="${d}" fill="none" stroke="var(--text-2)" stroke-dasharray="4 3"/><text class="ax" x="${x}" y="9" text-anchor="${x > (x0 + x1) / 2 ? "end" : "start"}" style="fill:var(--text-2)">${esc(r.label)}</text>`; });
     s += `<g transform="translate(0 ${padT})">`;
     rows.forEach((r, i) => {
       const y = i * rowH, cy = y + rowH / 2, m = r.m, top = o.emph ? o.emph(r) : r.v === best;
@@ -1210,7 +1226,8 @@ const Chart = {
     const Y = v => T + (1 - (v - yl) / (yh - yl || 1)) * (H - T - Bm);
     let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(o.title || "")}">`;
     const xt = o.xLog ? logTicks(xl, xh, W - L - R) : ticks(xl, xh);
-    xt.forEach(t => { s += `<line class="gl" x1="${X(t)}" x2="${X(t)}" y1="${T}" y2="${H - Bm}"/><text class="ax" x="${X(t)}" y="${H - Bm + 14}" text-anchor="middle">${esc(o.xTick(t))}</text>`; });
+    // 左端の目盛は軸の内側に寄せる（縦軸の目盛と重ならない）
+    xt.forEach(t => { const x = X(t), lw = measure(o.xTick(t), 10.5), edge = x - lw / 2 < L + 2; s += `<line class="gl" x1="${x}" x2="${x}" y1="${T}" y2="${H - Bm}"/><text class="ax" x="${edge ? x + 2 : x}" y="${H - Bm + 14}" text-anchor="${edge ? "start" : "middle"}">${esc(o.xTick(t))}</text>`; });
     ticks(yl, yh, 4).forEach(t => { s += `<line class="gl" x1="${L}" x2="${W - R}" y1="${Y(t)}" y2="${Y(t)}"/><text class="ax" x="${L - 6}" y="${Y(t) + 3.5}" text-anchor="end">${esc(o.yTick ? o.yTick(t) : fmt.num(t, 0))}</text>`; });
     s += `<text class="ax" x="${(L + W - R) / 2}" y="${H - 4}" text-anchor="middle">${esc(o.xLabel)}</text>`;
     s += `<text class="ax" transform="translate(11 ${(T + H - Bm) / 2}) rotate(-90)" text-anchor="middle">${esc(o.yLabel)}</text>`;
@@ -1365,10 +1382,10 @@ function renderOverview(v) {
       ${b ? `<button class="go" data-cmp="${esc(a.m.id)},${esc(b.m.id)}" title="${esc(a.m.name)} と ${esc(b.m.name)} を比較">比較</button>` : "<span></span>"}</div>`;
   }).join("");
   // ③ 根拠：ベンチマーク別の上位3（位置のレーン＋名前）
-  const rows = podiumRows(D.benchmarks, ms);
+  const rows = podiumRows(D.benchmarks, ms, { others: false });   // 概要では上位3の点だけ（主役の推奨より軽く見せる）
   v.innerHTML = `<div class="kpis" style="grid-column:1/-1">${kpi}</div>
     ${card("用途別の推奨", "首位モデルと、全モデル中の位置（①首位 ②次点・灰＝その他）", `<div class="recs" id="recs">${recs}</div>`)}
-    ${card("ベンチマーク別の上位3モデル", `表示中 ${ms.length} モデルの公表値・点の位置＝スコア（右ほど高い）・ベンチ名で解説へ`, podiumTable(rows, "podiumWrap"))}`;
+    ${card("ベンチマーク別の上位3モデル", `表示中 ${ms.length} モデル・点＝上位3の位置（右ほど高い）・名前で解説へ`, podiumTable(rows, "podiumWrap"))}`;
   const recEl = $("#recs"), rh = Math.max(48, (recEl.parentElement.clientHeight - 2) / Math.max(1, D.useCases.length));
   recEl.style.setProperty("--rh", rh + "px"); recEl.classList.toggle("tall", rh >= 84);   // 縦に余裕があれば位置レーンを全幅に広げる
   fitRows($("#podiumWrap"), 30, 56);
@@ -1377,14 +1394,14 @@ function renderOverview(v) {
 }
 
 /** ベンチマーク別の上位3（位置レーン＋上位3の名前と値）。概要・ベンチ・解説で共通の部品 */
-function podiumRows(bs, ms) {
+function podiumRows(bs, ms, opt = {}) {
   return bs.map(bm => {
     const mt = metric("bench:" + bm.id), r = ranked(mt, ms);
     if (!r.length) return "";
     const cat = S.D.cats.find(c => c.id === (bm.category || "other"));
     const nm = (i, cls) => r[i] ? `<span class="pc ${cls}"><span class="rk">${i + 1}</span>${mName(r[i].m)}<span class="v">${esc(mt.fmt(r[i].v))}</span></span>` : "";
     return `<tr><td><span class="bn" data-gb="${esc(bm.id)}" style="cursor:pointer" title="${esc(bm.label)}の解説">${esc(bm.short || bm.label)}</span><span class="cat" title="${esc(cat?.label || "")}">${ico(CAT_ICON[cat?.id] || "bench", "sm")}${r.length}モデル</span></td>
-      <td>${lane(r, mt)}</td><td><div class="p1">${nm(0, "c1")}</div><div class="p23">${nm(1, "")}${nm(2, "")}</div></td></tr>`;
+      <td>${lane(r, mt, { others: opt.others })}</td><td><div class="p1">${nm(0, "c1")}</div><div class="p23">${nm(1, "")}${nm(2, "")}</div></td></tr>`;
   }).join("");
 }
 const podiumTable = (rows, id) => `<div style="position:absolute;inset:0;overflow:hidden" id="${id}"><table class="tbl podium"><colgroup><col style="width:16%"><col style="width:27%"><col style="width:57%"></colgroup><thead><tr><th>ベンチマーク</th><th>全モデル中の位置</th><th>上位3モデル</th></tr></thead><tbody>${rows}</tbody></table></div>`;
@@ -1943,28 +1960,31 @@ Chart.lineage = function (host, models, upcoming, asOf, selId) {
   for (const d = new Date(d0); d <= d1; d.setUTCMonth(d.getUTCMonth() + 1)) {
     const x = X(d.getTime()), m = d.getUTCMonth() + 1, yr = m === 1;
     s += `<line class="gl" x1="${x}" x2="${x}" y1="${T}" y2="${T + laneH * provs.length}"${yr ? ' style="stroke:var(--axis)"' : ""}/>`;
-    if ((m % 2 === 1 || yr) && x + 34 < W - R && Math.abs(x - asX) > 30) s += `<text class="ax" x="${x + 3}" y="${H - 8}">${yr ? d.getUTCFullYear() + "/" : ""}${m}月</text>`;
+    if ((m % 2 === 1 || yr) && x + 34 < W - R && (x < asX - 100 || x > asX + 110)) s += `<text class="ax" x="${x + 3}" y="${H - 8}">${yr ? d.getUTCFullYear() + "/" : ""}${m}月</text>`;
   }
-  s += `<line x1="${asX}" x2="${asX}" y1="${T}" y2="${T + laneH * provs.length}" stroke="var(--text)" stroke-width="1.5"/><text class="ax" x="${asX}" y="${H - 8}" text-anchor="middle" style="fill:var(--text);font-weight:600">今日</text>`;
-  s += `<text class="ax" x="${asX - 6}" y="${T + 11}" text-anchor="end">← 発表済み</text><text class="ax" x="${asX + 6}" y="${T + 11}">今後の見通し →</text>`;
-  const placed = [];
+  s += `<text class="ax" x="${asX}" y="${H - 8}" text-anchor="middle" style="fill:var(--text);font-weight:600">今日</text>`;
+  s += `<text class="ax" x="${asX - 22}" y="${H - 8}" text-anchor="end">← 発表済み</text><text class="ax" x="${asX + 22}" y="${H - 8}">今後の見通し →</text>`;
+  const placed = [], labels = [];   // labels＝今日線を途切れさせる文字の箱
   const free = (x, y, w, h) => !placed.some(b => x < b.x + b.w && x + w > b.x && y < b.y + b.h && y + h > b.y);
+  const offToday = (x, w) => x > asX + 2 || x + w < asX - 2;   // ラベルが今日線をまたがない
   provs.forEach((p, i) => {
     const y0 = T + i * laneH, cy = y0 + laneH / 2;
     s += `<text class="lb2" x="0" y="${cy + 4}" style="fill:var(--text);font-weight:600">${esc(p.label)}</text>${i ? `<line class="gl" x1="0" x2="${W - R}" y1="${y0}" y2="${y0}"/>` : ""}`;
     // 今後の予定（バー）：レーン内で重ならないよう段をずらす
     const ups = upcoming.filter(u => u.provider === p.id), rowH = Math.min(16, (laneH - 8) / Math.max(1, ups.length + 1));
+    // 帯をすべて先に登録し、ラベルは帯や他のラベルと重ならない位置（右→左）にだけ置く。置けない名前は右の一覧とツールチップで読める
+    const geo = ups.map((u, j) => { const x1 = X(ym(u.window[0])), x2 = X(ym(u.window[1]) + 31 * 864e5), by = y0 + 4 + (j + 1) * rowH - rowH * 0.5, bh = Math.max(6, rowH - 5); placed.push({ x: x1, y: by - 1, w: Math.max(6, x2 - x1), h: bh + 2 }); return { x1, x2, by, bh }; });
     ups.forEach((u, j) => {
-      const x1 = X(ym(u.window[0])), x2 = X(ym(u.window[1]) + 31 * 864e5), by = y0 + 4 + (j + 1) * rowH - rowH * 0.5, bh = Math.max(6, rowH - 5), st = CONF_STYLE[u.conf];
+      const { x1, x2, by, bh } = geo[j], st = CONF_STYLE[u.conf];
       const fill = st === "solid" ? provColor(p) : st === "hatch" ? `url(#h-${esc(p.id)})` : "none";
       const sel = u.id === selId, conf = (O.confidence.find(c => c.id === u.conf) || {}).label || "";
       const tip = Tip.add(`<div class="tt"><span class="sw" style="background:${provColor(p)}"></span>${esc(u.name)}</div><div class="tm">${esc(O.statuses[u.status] || u.status)}・確度：${esc(conf)}</div><div class="tm">見通し：${esc(u.window[0].replace("-", "/"))} 〜 ${esc(u.window[1].replace("-", "/"))}</div><div class="tm" style="margin-top:4px">${esc(u.summary)}</div><div class="tm" style="margin-top:4px">クリックで詳細</div>`);
-      const lw = measure(u.name, 11, sel ? 600 : 400);
-      const lx = x2 + 5 + lw < W - R ? x2 + 5 : x1 - 5 - lw;
-      placed.push({ x: Math.min(lx, x1), y: by - 2, w: Math.max(x2, lx + lw) - Math.min(lx, x1), h: bh + 4 });
+      const lw = measure(u.name, 11, sel ? 600 : 400), ly = by + bh / 2 - 6.5;
+      const lx = [x2 + 5, x1 - 5 - lw].find(a => a >= L && a + lw <= W - R && free(a, ly, lw, 13));
+      if (lx != null) { placed.push({ x: lx, y: ly, w: lw, h: 13 }); labels.push({ x: lx, y: ly, w: lw, h: 13 }); }
       s += `<g data-t="${tip}" data-up="${esc(u.id)}" style="cursor:pointer"><rect class="hit" x="${x1}" y="${by - 3}" width="${Math.max(10, x2 - x1)}" height="${bh + 6}"/>
         <rect x="${x1}" y="${by}" width="${Math.max(6, x2 - x1)}" height="${bh}" rx="${Math.min(4, bh / 2)}" fill="${fill}" stroke="${provColor(p)}" stroke-width="${sel ? 2.5 : 1.5}" ${st === "outline" ? 'stroke-dasharray="4 3"' : ""}/>
-        <text class="lb2" x="${lx}" y="${by + bh / 2 + 4}"${sel ? ' style="fill:var(--text);font-weight:600"' : ""}>${esc(u.name)}</text></g>`;
+        ${lx != null ? `<text class="lb2" x="${lx}" y="${by + bh / 2 + 4}"${sel ? ' style="fill:var(--text);font-weight:600"' : ""}>${esc(u.name)}</text>` : ""}</g>`;
     });
     // 発表済みモデル（点）：旧世代は中抜き
     const ms = models.filter(m => m.provider === p.id && m.released).sort((a, b) => ymd(a.released) - ymd(b.released));
@@ -1973,21 +1993,31 @@ Chart.lineage = function (host, models, upcoming, asOf, selId) {
     ms.forEach(m => {
       const x = X(ymd(m.released)), w = measure(m.name, 10.5) + 2, h = 12;
       const cands = [[x - w / 2, dy - 7 - h], [x - w / 2, dy + 7], [x + 7, dy - h / 2], [x - 7 - w, dy - h / 2], [x - w / 2, dy - 9 - 2 * h], [x - w / 2, dy + 9 + h], [x + 4, dy - 7 - h], [x - w - 4, dy + 7], [x + 4, dy + 7], [x - w - 4, dy - 7 - h]].map(([a, b]) => [clamp(a, L, W - R - w), b]);
-      const pos = cands.find(([a, b]) => b > y0 - 2 && b + h < y0 + laneH + 2 && free(a, b, w, h));
-      if (pos) placed.push({ x: pos[0], y: pos[1], w, h });
+      const okBox = ([a, b]) => b > y0 - 2 && b + h < y0 + laneH + 2 && free(a, b, w, h);
+      const pos = cands.find(c => okBox(c) && offToday(c[0], w)) || cands.find(okBox);
+      if (pos) { placed.push({ x: pos[0], y: pos[1], w, h }); labels.push({ x: pos[0], y: pos[1], w, h }); }
       const tip = Tip.add(tipModel(m, m.legacy ? "旧世代" : "現行", fmt.date(m.released), { rank: m.summary }));
       s += `<g data-t="${tip}" data-m="${esc(m.id)}"><circle class="hit" cx="${x}" cy="${dy}" r="9"/><circle cx="${x}" cy="${dy}" r="${m.legacy ? 4 : 5}" fill="${m.legacy ? "var(--surface)" : color(m)}" stroke="${color(m)}" stroke-width="2"/>
         ${pos ? `<text class="lb2" x="${pos[0]}" y="${pos[1] + 9.5}" style="font-size:10.5px;fill:${m.legacy ? "var(--muted)" : "var(--text-2)"}">${esc(m.name)}</text>` : ""}</g>`;
     });
   });
+  s += vline(asX, T, T + laneH * provs.length, labels, 'stroke="var(--text)" stroke-width="1.5"');
   host.innerHTML = s + "</svg>";
 };
 
+/** 縦の強調線（今日線・基準線）を、ラベルの箱 boxes と交わる区間だけ途切れさせて描く（線が文字を貫かない） */
+function vline(x, y0, y1, boxes, attrs) {
+  const cuts = boxes.filter(b => x > b.x - 1 && x < b.x + b.w + 1 && b.y < y1 && b.y + b.h > y0).map(b => [b.y - 1, b.y + b.h + 1]).sort((a, b) => a[0] - b[0]);
+  let d = "", cur = y0; cuts.forEach(([a, b]) => { if (a > cur) d += `M${x},${cur}L${x},${a}`; cur = Math.max(cur, b); }); if (cur < y1) d += `M${x},${cur}L${x},${y1}`;
+  return d ? `<path d="${d}" fill="none" ${attrs}/>` : "";
+}
 /** 汎用ミニチャート（トレンドカード用）：bars＝線形の横棒、log＝対数軸の点・範囲、flow＝手順図 */
 Chart.mini = function (host, c) {
   if (c.type === "flow") { const v = host.clientWidth < 120 * c.steps.length; host.innerHTML = `<div style="position:absolute;inset:0;display:grid;align-content:start;gap:6px">${flowHtml(c.steps, v)}${c.loop ? `<div class="loopback">↻ STEP ${c.steps.length} のあと STEP 1 に戻って繰り返す</div>` : ""}</div>`; return; }
-  const { W, H } = this.size(host), n = c.items.length, rowH = Math.min(92, (H - 18) / n), barH = clamp(rowH * 0.36, 6, 24), R = 64;
-  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(c.title)}">`;
+  const { W: W0, H } = this.size(host), n = c.items.length, rowH = Math.min(92, (H - 18) / n), R = 64;
+  // 行が低い（ラベルを棒の上に置けない）ときは、ラベルを左の列に並べる（値ラベルと次の行のラベルが重ならない）
+  const inl = rowH < 30, lw = inl ? Math.min(W0 * 0.45, Math.max(...c.items.map(it => measure(it[0], 11))) + 10) : 0, W = W0 - lw, barH = inl ? clamp(rowH * 0.6, 6, 14) : clamp(rowH * 0.36, 6, 24);
+  let s = `<svg viewBox="0 0 ${W0} ${H}" role="img" aria-label="${esc(c.title)}"><g transform="translate(${lw} 0)">`;
   const vals = c.items.flatMap(it => it.slice(1).filter(isNum));
   let X, tks = [];
   if (c.type === "log") {
@@ -2000,9 +2030,9 @@ Chart.mini = function (host, c) {
   const vf = v => c.type === "log" ? (c.unit === "$" ? fmt.usd(v) : fmt.big(v, c.unit)) : fmt.num(v, Number.isInteger(v) ? 0 : (v < 1 ? 2 : 1));
   c.items.forEach(([label, a, b], i) => {
     b = isNum(b) ? b : undefined;
-    const y = i * rowH, by = y + 16, val = isNum(b) ? `${vf(a)}〜${vf(b)}` : vf(a), unit = c.unit === "%" ? "%" : c.unit === "$" ? "" : "";
+    const y = i * rowH, by = inl ? y + (rowH - barH) / 2 : y + 16, val = isNum(b) ? `${vf(a)}〜${vf(b)}` : vf(a), unit = c.unit === "%" ? "%" : c.unit === "$" ? "" : "";
     const txt = val + unit, tip = Tip.add(`<div class="tt">${esc(label)}</div><div class="tv">${esc(txt)}${c.unit && !["%", "$"].includes(c.unit) ? " " + esc(c.unit) : ""}</div>`);
-    s += `<g data-t="${tip}"><text class="lb2" x="0" y="${y + 11}">${esc(fitText(label, W - 4, 11))}</text>`;
+    s += `<g data-t="${tip}"><text class="lb2" x="${-lw}" y="${inl ? by + barH / 2 + 4 : y + 11}">${esc(label)}</text>`;
     if (c.type === "log") {
       s += `<line x1="0" x2="${W - R}" y1="${by + barH / 2}" y2="${by + barH / 2}" stroke="var(--border)" stroke-width="1"/>`;
       if (isNum(b)) s += `<rect x="${X(a)}" y="${by}" width="${Math.max(4, X(b) - X(a))}" height="${barH}" rx="${barH / 2}" fill="var(--seq-hi)" opacity=".55"/>`;
@@ -2011,7 +2041,7 @@ Chart.mini = function (host, c) {
     const tw = measure(txt, 11.5), ex = (isNum(b) ? X(b) : X(a)) + 7, inside = ex + tw > W;
     s += `<text class="vl" x="${inside ? X(a) - 7 : ex}" y="${by + barH / 2 + 4}" text-anchor="${inside ? "end" : "start"}">${esc(txt)}</text></g>`;
   });
-  host.innerHTML = s + "</svg>";
+  host.innerHTML = s + "</g></svg>";
 };
 
 /** 時間軸：split 以前を frac の幅に圧縮できる（疎な昔と密な最近を1枚に収める）。目盛りは密度に応じて月・四半期・年・10年を自動選択 */
@@ -2054,9 +2084,11 @@ Chart.events = function (host, events, lanes, opt = {}) {
       <rect x="${a}" y="2" width="${Math.max(1, b - a - 1)}" height="${eraH - 6}" rx="3" fill="${win ? "var(--surface-2)" : "var(--surface-3)"}"/>${lbl ? `<text x="${a + 4}" y="${eraH - 8}" style="font-size:10.5px;font-weight:600;fill:${win ? "var(--muted)" : "var(--text-2)"}">${esc(lbl)}</text>` : ""}</g>`;
   });
   sc.ticks().forEach(k => { const x = X(k.t); s += `<line class="gl" x1="${x}" x2="${x}" y1="${T}" y2="${H - Bm}"${k.major ? ' style="stroke:var(--axis)"' : ""}/>${x + 30 < W - R ? `<text class="ax" x="${x + 3}" y="${H - 6}">${esc(k.label)}</text>` : ""}`; });
-  if (sc.splitX != null) s += `<text class="ax" x="${sc.splitX}" y="${T + 10}" text-anchor="middle" style="fill:var(--text-2)">≈</text><line x1="${sc.splitX}" x2="${sc.splitX}" y1="${T + 14}" y2="${H - Bm}" stroke="var(--text-2)" stroke-dasharray="2 3"/><text class="ax" x="${sc.splitX - 4}" y="${H - Bm - 4}" text-anchor="end">← 圧縮</text>`;
-  if (asOf <= t1) { const ax = X(asOf); s += `<line x1="${ax}" x2="${ax}" y1="${T}" y2="${H - Bm}" stroke="var(--text)" stroke-width="1.5"/><text class="ax" x="${ax - 4}" y="${T + 10}" text-anchor="end" style="fill:var(--text);font-weight:600">今日</text>`; }
-  const placed = [];
+  if (sc.splitX != null) s += `<text class="ax" x="${sc.splitX}" y="${T + 10}" text-anchor="middle" style="fill:var(--text-2)">≈</text><text class="ax" x="${sc.splitX - 4}" y="${H - Bm - 4}" text-anchor="end">← 圧縮</text>`;
+  const ax = asOf <= t1 ? X(asOf) : null;
+  if (ax != null) s += `<text class="ax" x="${ax - 4}" y="${T + 10}" text-anchor="end" style="fill:var(--text);font-weight:600">今日</text>`;
+  const placed = [], labels = ax != null ? [{ x: ax - 34, y: T, w: 34, h: 13 }] : [];
+  const offLine = (a, w) => [ax, sc.splitX].every(x => x == null || a > x + 2 || a + w < x - 2);
   lanes.forEach((ln, i) => {
     const y0 = T + i * laneH, cy = y0 + laneH / 2;
     if (ln.id === "__series") {
@@ -2079,14 +2111,16 @@ Chart.events = function (host, events, lanes, opt = {}) {
       const cands = [...rows.flatMap(k => [[x - w / 2, cy - 7 - k * (h + 2)], [x - w / 2, cy + 9 + (k - 1) * (h + 2)]]), [x + 8, cy - h / 2], [x - 8 - w, cy - h / 2], [x + 2, cy - 7 - (h + 2)], [x - w - 2, cy + 9]]
         .map(([a, b]) => [clamp(a, L, W - R - w), b]).filter(([, b]) => b > y0 && b + h < y0 + laneH);
       const cost = ([a, b]) => placed.reduce((acc, q) => acc + Math.max(0, Math.min(a + w, q.x + q.w) - Math.max(a, q.x)) * Math.max(0, Math.min(b + h, q.y + q.h) - Math.max(b, q.y)), 0);
-      let pos = cands.find(c => cost(c) === 0);
+      let pos = cands.find(c => cost(c) === 0 && offLine(c[0], w)) || cands.find(c => cost(c) === 0);
       if (!pos && !opt.hideOverlap) pos = cands.reduce((m, c) => cost(c) < cost(m) ? c : m, cands[0] || [x, cy - 9 - h]);
-      if (pos) placed.push({ x: pos[0], y: pos[1], w, h });
+      if (pos) { placed.push({ x: pos[0], y: pos[1], w, h }); labels.push({ x: pos[0], y: pos[1], w, h }); }
       const tip = Tip.add(`<div class="tt">${esc(e.title)}</div><div class="tm">${esc(e.when || "")}${fut ? "（予定）" : ""}</div><div class="tm" style="margin-top:4px">${esc(e.detail || "")}</div>`);
       s += `<g data-t="${tip}"><circle class="hit" cx="${x}" cy="${cy}" r="9"/><circle cx="${x}" cy="${cy}" r="${opt.small ? 4 : 5.5}" fill="${fut ? "var(--surface)" : "var(--ink)"}" stroke="var(--ink)" stroke-width="2"/>
         ${pos ? `<line x1="${x}" x2="${x}" y1="${cy}" y2="${pos[1] < cy ? pos[1] + h : pos[1]}" stroke="var(--border-strong)"/><text class="lb2" x="${pos[0]}" y="${pos[1] + 10}">${esc(e.title)}</text>` : ""}</g>`;
     });
   });
+  if (ax != null) s += vline(ax, T, H - Bm, labels, 'stroke="var(--text)" stroke-width="1.5"');
+  if (sc.splitX != null) s += vline(sc.splitX, T + 14, H - Bm, labels, 'stroke="var(--text-2)" stroke-dasharray="2 3"');
   host.innerHTML = s + "</svg>";
 };
 const dateEvents = evs => evs.map(e => ({ ...e, t: ymd(e.date), when: fmt.date(e.date) }));
@@ -2111,7 +2145,8 @@ Chart.growth = function (host, g) {
   (g.refs || []).forEach(r => { s += `<line x1="${L}" x2="${W - R}" y1="${Y(r.v)}" y2="${Y(r.v)}" stroke="var(--text-2)" stroke-dasharray="4 3"/><text class="ax" x="${L + 4}" y="${Y(r.v) - 4}" style="fill:var(--text-2)">${esc(r.label)}</text>`; });
   s += `<path d="${pts.map((p, i) => `${i ? "L" : "M"}${X(p[1])},${Y(p[2])}`).join("")}" fill="none" stroke="var(--seq-hi)" stroke-width="2" opacity=".7"/>`;
   const items = pts.map(p => ({ p: { name: p[0] }, cx: X(p[1]), cy: Y(p[2]), text: p[0], order: ["tl", "top", "left", "br", "bottom", "right", "bl", "tr"] }));
-  const obstacles = (g.refs || []).map(r => { const w = measure(r.label, 10.5) + 6; return { x: L + 2, y: Y(r.v) - 15, w, h: 13 }; });
+  // 基準線の文字と線そのもの（幅いっぱいの細い帯）を障害物にして、点ラベルが線に重ならないようにする
+  const obstacles = (g.refs || []).flatMap(r => { const w = measure(r.label, 10.5) + 6; return [{ x: L + 2, y: Y(r.v) - 15, w, h: 13 }, { x: L, y: Y(r.v) - 2, w: W - L - R, h: 4 }]; });
   placeLabels(items, { L, R: W - R, T: 0, B: H - B }, { obstacles, hide: true });
   pts.forEach((p, i) => {
     const tip = Tip.add(`<div class="tt">${esc(p[0])}</div><div class="tv">${esc(g.unit === "$" ? fmt.usd(p[2]) : p[2] >= 1e4 ? fmt.big(p[2], g.unit) : fmt.num(p[2]))}${g.unit && g.unit !== "$" ? " " + esc(g.unit) : ""}</div><div class="tm">${Math.floor(p[1])}年</div>`);
@@ -2224,7 +2259,7 @@ function renderFuture(v) {
     v.innerHTML = n ? ts.map((t, i) => trendCard(t, i, { wide: true, style: n >= 3 && n % 2 && i === n - 1 ? "grid-column:1/-1" : "" })).join("") : `<div class="card"><div class="empty">このカテゴリの動向データはまだありません</div></div>`;
   }
   // 枠に収まらない場合は背景説明（詳細）を省き、見出しのツールチップへ移す（結論と数値・図を優先）
-  shed(v, [".lead2"]);
+  shed(v, [".lead2", ".srcs"]);
   ts.forEach((t, i) => t.chart && Chart.mini($("#ch-tr-" + i), t.chart));
 }
 
