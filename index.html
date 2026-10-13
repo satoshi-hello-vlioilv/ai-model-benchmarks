@@ -457,9 +457,9 @@ ul.plain{list-style:none;margin:0;padding:0}
 .sbar>i.gray{background:var(--muted)}
 .sbar>i.hatch{background:repeating-linear-gradient(135deg,var(--seq-hi) 0 2.5px,color-mix(in oklab,var(--seq-hi) 45%,var(--surface)) 2.5px 4.5px)}
 .card-h{position:relative}
-.readout{position:absolute;right:0;top:50%;transform:translateY(-50%);display:flex;align-items:baseline;gap:8px;padding:3px 10px;border-radius:7px;background:var(--surface);box-shadow:0 0 0 1.5px var(--border-strong);font-size:12px;white-space:nowrap;overflow:hidden;z-index:3;pointer-events:none}
+.readout{position:absolute;top:50%;transform:translateY(-50%);display:flex;align-items:baseline;gap:8px;padding:3px 10px;border-radius:7px;background:var(--surface);box-shadow:0 0 0 1.5px var(--border-strong);font-size:12px;white-space:nowrap;overflow:hidden;z-index:3;pointer-events:none}
 .readout .rv{font-weight:700;font-variant-numeric:tabular-nums}
-.readout .rm{color:var(--text-2);overflow:hidden;text-overflow:ellipsis;min-width:0}
+.readout .rm{color:var(--text-2)}
 .ck-s{font-size:10.5px;color:var(--text-2)}
 .ck.done .ck-s{color:var(--good-text);font-weight:650}
 .pf{display:grid;grid-auto-rows:1fr;gap:6px}
@@ -763,7 +763,7 @@ button.info:hover{border-color:var(--ink);color:var(--text)}
     {"id": "mimo-v2-6-pro", "name": "MiMo-V2.6-Pro", "provider": "xiaomi", "released": "2026-09-22", "tier": "フラッグシップ", "openWeights": "yes", "license": "MIT", "params": "1.02T（MoE、活性42B）", "context": 1000000, "maxOutput": null, "price": {"input": 0.435, "output": 0.87, "note": "軽量版Flashは$0.14/$0.28"}, "scores": {"aa_index": {"v": 46, "src": "mimo3", "note": "v4.3.2。オープンウェイトで首位"}, "deepswe": {"v": 71.9, "src": "mimo2", "note": "Xiaomi発表値"}, "tb4": {"v": 34.9, "src": "mimo2", "note": "Xiaomi発表値"}}, "notes": "公開日は9/21・9/22と報道が分かれる。強化学習の費用は約262万ドルと報道され、学習環境もあわせて公開。OSWorld-Verified 82.0（Xiaomi発表）。AAの全評価にかかる費用は1タスク約$0.13と安い。", "summary": "オープンウェイトで総合指数首位。MITライセンスで安価", "strengths": ["AA指数46（オープン系の首位）", "MITライセンスで重みと強化学習環境を公開", "$0.435/$0.87と安価"], "cautions": ["ベンチ値の多くはXiaomi発表で、第三者の検証が少ない", "TB 4.0は34.9%（Xiaomi発表）と、上位の非公開モデルに差がある"], "bestFor": ["自社ホスティング", "コスト重視の高性能用途", "強化学習の研究"], "sources": ["mimo", "mimo2", "mimo3"]}
   ],
   "outlook": {
-    "groupModelCharts": {"capability": [["bench:aa_index", "発表日と総合指数（現行モデル）", "破線＝その時点の首位。新しいモデルほど上：能力の伸びを実データで確認"], ["price:blended", "発表日と混合単価（現行モデル・対数）", "同じ時期でも価格は100倍以上の幅：用途で選び分ける余地"]]},
+    "groupModelCharts": {"infra": [["spec:speed", "発表日と出力速度（現行モデル・対数）", "推論の速さは同じ時期でも30倍以上の差：専用チップと拡散型が上限を押し上げる"], ["spec:context", "発表日とコンテキスト長（現行モデル・対数）", "100万トークン級が標準に：長い文脈を扱う計算基盤の拡大を反映"]], "capability": [["bench:aa_index", "発表日と総合指数（現行モデル）", "破線＝その時点の首位。新しいモデルほど上：能力の伸びを実データで確認"], ["price:blended", "発表日と混合単価（現行モデル・対数）", "同じ時期でも価格は100倍以上の幅：用途で選び分ける余地"]]},
     "groupShort": {"capability": "作業時間は倍増、価格は年10倍下落", "infra": "基盤はGW級、需要は推論へ", "frontier": "次の主戦場は物理世界・記憶・端末・自己改善", "safety": "最上位モデルは段階的公開が標準に"},
     "groupSummary": {
       "capability": "自律作業時間は約3.5か月で倍増し、同等性能の価格は年10倍以上のペースで下落している",
@@ -806,7 +806,7 @@ button.info:hover{border-color:var(--ink);color:var(--text)}
       {"id": "ondevice", "group": "frontier", "title": "小型モデル・オンデバイスAI", "lead": "スマートフォンやPCの中で動く小型モデルが実用水準に達し、オフラインでも使える用途が広がっている。", "stats": [{"v": "1GB未満", "l": "Gemma 4 E2B（テキストのみ・量子化）の必要メモリ"}, {"v": "Apache 2.0", "l": "Muse Glimmer 30B（Meta、8月公開）"}, {"v": "25億台", "l": "2027年のエッジAI機器（予測）"}], "chart": {"type": "bars", "title": "Gemma 4 のサイズ（十億パラメータ）", "unit": "B", "items": [["E2B（実効2B）", 2], ["E4B（実効4B）", 4], ["26B MoE", 26], ["31B Dense", 31]]}, "implication": "データを外部に出さずに使えるため、機密情報を扱う業務やオフライン環境での利用が現実的になった。", "srcs": ["gemma", "gemmaqat", "ondev", "museopen"]},
       {"id": "rsi", "group": "frontier", "title": "モデル自身による改善（自己改善ループ）", "lead": "モデルが自分の学習データや手順を改善する反復ループが、実際の製品開発に使われ始めた。", "stats": [{"v": "33回", "l": "Qwen3.8-Maxの反復改善サイクル（Alibaba発表）"}, {"v": "40→45", "l": "その結果のAA指数"}], "chart": {"type": "bars", "title": "Qwen3.8 Max のAA指数", "unit": "pt", "callout": "33回の反復で +5pt", "items": [["初版（8/3）", 40], ["0902版", 45]]}, "implication": "改善の速度がさらに上がる可能性がある一方、何がどう変わったかを検証する重要性も増す。", "srcs": ["apsara", "qwen38"]},
       {"id": "gating", "group": "safety", "title": "高度なサイバー能力と段階的な公開", "lead": "最上位モデルを、まず審査済みの組織だけに提供する「段階的公開」が相次ぐ。評価中のモデルが実在のシステムに到達する事例も報告され、評価環境そのものの管理も課題になった。", "stats": [{"v": "数千件", "l": "Mythos Previewが見つけた未知の脆弱性（Anthropic）"}, {"v": "650超", "l": "Argonを先行提供したFairwindの参加組織（Google）"}, {"v": "公開見送り", "l": "GPT-6.1 Astra：安全基準を満たさず（OpenAI）"}], "chart": null, "chart": {"type": "stages", "title": "最上位モデルの公開段階（2026年10月）", "items": [["社内評価・非公開", "GPT-6.1 Astra（公開見送り）"], ["限定提供（審査済み組織）", "Claude Mythos 5.1・Gemini 4 Argon（650超組織）"], ["一般提供（制限付き）", "GPT-6 Astra（Critical区分）・Claude Opus 5.5"]]}, "implication": "最新・最上位のモデルほど、すぐには一般利用できない時代になった。導入計画では「提供範囲」も確認が必要。", "srcs": ["mythos", "argonfw", "astra", "astra61", "anthinc"]},
-      {"id": "euact", "group": "safety", "title": "EU AI Act の本格適用", "lead": "2026年8月2日にEU AI Actが広く適用され、汎用AIモデルへの監督が本格化した。", "stats": [{"v": "10²⁵ FLOP", "l": "システミックリスクありとされる学習計算量の基準"}, {"v": "8モデル", "l": "月次のリスク評価の提出が必要なモデル"}, {"v": "€1,500万／3%", "l": "汎用AIの義務違反の制裁金上限（高い方）"}], "chart": null, "chart": {"type": "log", "title": "学習計算量と規制の基準（FLOP、対数）", "unit": "FLOP", "refs": [{"v": 1e+25, "label": "EU AI Act の基準 10²⁵"}], "items": [["GPT-4（推定）", 2.1e+25], ["Grok 4（推定）", 5e+26], ["2026年の最先端（推定幅）", 1e+26, 1e+27]]}, "implication": "EUで提供・利用する場合、透明性や著作権への配慮など、提供者側の義務に対応したモデルかを確認する必要がある。", "srcs": ["euai"]}
+      {"id": "euact", "group": "safety", "title": "EU AI Act の本格適用", "lead": "2026年8月2日にEU AI Actが広く適用され、汎用AIモデルへの監督が本格化した。", "stats": [{"v": "10²⁵ FLOP", "l": "システミックリスクありとされる学習計算量の基準"}, {"v": "8モデル", "l": "月次のリスク評価の提出が必要なモデル"}, {"v": "€1,500万／3%", "l": "汎用AIの義務違反の制裁金上限（高い方）"}], "chart": null, "chart": {"type": "log", "title": "学習計算量と規制の基準（FLOP、対数）", "unit": "FLOP", "callout": "基準超え：8モデルが対象", "refs": [{"v": 1e+25, "label": "EU AI Act の基準 10²⁵"}], "items": [["GPT-4（推定）", 2.1e+25], ["Grok 4（推定）", 5e+26], ["2026年の最先端（推定幅）", 1e+26, 1e+27]]}, "implication": "EUで提供・利用する場合、透明性や著作権への配慮など、提供者側の義務に対応したモデルかを確認する必要がある。", "srcs": ["euai"]}
     ],
     "events": [
       {"id": "e1", "date": "2025-08-02", "lane": "regulation", "title": "EU：汎用AIの義務が適用開始", "detail": "下流事業者への透明性、学習データの著作権への配慮、最上位モデルへの安全義務", "srcs": ["euai"]},
@@ -956,7 +956,7 @@ function lineObstacles(pts, r = 3) {
   return out;
 }
 /** 重なりのため名前を省いた点があれば、カードの副題に件数を添える（図の中に書いて重ねない） */
-function hiddenNote(host, n) { const sub = host.closest(".card")?.querySelector(".card-h .sub"); if (!sub) return; sub.querySelector(".hn")?.remove(); if (n) sub.insertAdjacentHTML("beforeend", `<span class="hn">・名前の省略${n}点はカーソルで</span>`); }
+function hiddenNote(host, n) { const sub = host.closest(".card")?.querySelector(".card-h .sub"); if (!sub) return; sub.querySelector(".hn")?.remove(); if (n) sub.insertAdjacentHTML("beforeend", `<span class="hn">・省略${n}点はカーソルで</span>`); }
 /** 点ラベルの衝突回避。候補（右→左→上→下…）から既存ラベル・点と重ならない位置を選び、item.p._l に [x, y] を設定 */
 function placeLabels(items, box, opt = {}) {
   const placed = items.map(it => ({ x: it.cx - 7, y: it.cy - 7, w: 14, h: 14 })).concat(opt.obstacles || []);
@@ -964,7 +964,7 @@ function placeLabels(items, box, opt = {}) {
   items.forEach(it => {
     const w = measure(it.text, 11, it.weight || 400) + 4, h = 14, { cx, cy } = it;
     const pos = { right: [cx + 9, cy - 7], left: [cx - 9 - w, cy - 7], top: [cx - w / 2, cy - 22], bottom: [cx - w / 2, cy + 9], tr: [cx + 9, cy - 19], br: [cx + 9, cy + 5], tl: [cx - 9 - w, cy - 19], bl: [cx - 9 - w, cy + 5],
-      top2: [cx - w / 2, cy - 36], bottom2: [cx - w / 2, cy + 23], tr2: [cx + 4, cy - 33], br2: [cx + 4, cy + 19], tl2: [cx - 4 - w, cy - 33], bl2: [cx - 4 - w, cy + 19] };   // 2段目の候補（少し離れた位置）
+      left2: [cx - 16 - w, cy - 7], right2: [cx + 16, cy - 7], top2: [cx - w / 2, cy - 36], bottom2: [cx - w / 2, cy + 23], tr2: [cx + 4, cy - 33], br2: [cx + 4, cy + 19], tl2: [cx - 4 - w, cy - 33], bl2: [cx - 4 - w, cy + 19] };   // 2段目の候補（少し離れた位置）
     const cands = (it.order || ["right", "left", "top", "bottom", "tr", "br", "tl", "bl"]).map(k => pos[k]).concat(Object.values(pos));
     const ok = ([x, y]) => x > box.L && x + w < box.R && y > box.T && y + h < box.B;
     const c = cands.find(c => ok(c) && !hit({ x: c[0], y: c[1], w, h })) || (opt.hide ? null : cands.find(ok) || cands[0]);
@@ -1150,12 +1150,16 @@ const Tip = {
    *  外側に入らない場合と、行以外の要素ではカーソルの右下（はみ出す方向は反転） */
   /** グラフ上の項目は、浮かぶ吹き出しではなく、そのカードの見出し行に1行の読み取り表示を出す（どのカードの値も隠さない） */
   readout(k, anchor) {
-    const head = anchor?.closest("svg") && anchor.closest(".card")?.querySelector(".card-h"); if (!head) return false;
+    const head = anchor?.closest("#view .card")?.querySelector(":scope > .card-h"); if (!head) return false;   // カード内の項目（グラフ・表）はすべて同じ方式
     const box = document.createElement("div"); box.innerHTML = this.reg.get(k);
     const parts = [box.querySelector(".tt")?.textContent, box.querySelector(".tv")?.textContent, ...[...box.querySelectorAll(".tm")].map(e => e.textContent).filter(t => t && !/クリックで詳細/.test(t)).sort((a, b) => /位/.test(b) - /位/.test(a))].map(t => t?.trim()).filter(Boolean);
     let r = head.querySelector(".readout"); if (!r) { r = document.createElement("div"); r.className = "readout"; head.append(r); }
-    const h2 = head.querySelector("h2"); r.style.left = (h2.offsetLeft + h2.offsetWidth + 12) + "px";
-    r.innerHTML = `<b>${esc(parts[0] || "")}</b>${parts[1] ? `<span class="rv">${esc(parts[1])}</span>` : ""}<span class="rm">${esc(parts.slice(2).join("・"))}</span>`; r.title = parts.join(" ・ ");
+    // 名前・値・順位だけを1行で（提供元や注記は省く＝切らない）。副題の右に置き、入らなければ見出しの右から（副題を一時的に隠す）
+    const rank = parts.slice(2).find(t => /位/.test(t)), sub = head.querySelector(".sub"), h2 = head.querySelector("h2"), right = head.querySelector(".right");
+    r.innerHTML = `<b>${esc(parts[0] || "")}</b>${parts[1] ? `<span class="rv">${esc(parts[1])}</span>` : ""}${rank ? `<span class="rm">${esc(rank.replace(/（.*$/, ""))}</span>` : ""}`; r.title = parts.join(" ・ ");
+    const endR = head.clientWidth - (right ? right.offsetWidth + 8 : 0), afterSub = (sub || h2).offsetLeft + (sub || h2).offsetWidth + 12;
+    r.style.right = (head.clientWidth - endR) + "px"; r.style.left = "auto";
+    if (afterSub + r.offsetWidth > endR) { r.style.right = "auto"; r.style.left = (h2.offsetLeft + h2.offsetWidth + 10) + "px"; }
     this.cur = r; this.el.classList.remove("on"); return true;
   },
   show(k, x, y, anchor) { const h = this.reg.get(k); if (!h) return this.hide(); if (this.cur && !this.cur.isConnected) this.cur = null; if (this.cur && this.cur.closest(".card") !== anchor?.closest(".card")) { this.cur.remove(); this.cur = null; } if (this.readout(k, anchor)) return; const t = this.el; t.innerHTML = h; t.classList.add("on");
@@ -1322,13 +1326,15 @@ const Chart = {
     }
     pts.sort((a, b) => b.y - a.y);
     // 前線上の点は右方向に破線が伸びるため、上・左を優先
-    placeLabels(pts.map(p => ({ p, cx: X(p.x), cy: Y(p.y), text: p.m.name, weight: p.front ? 600 : 400, order: p.front ? ["top", "left", "bottom"] : null })), { L, R: W - 2, T: 0, B: H - Bm }, { obstacles: o._obs || [], hide: !!o.hideLabels });
-    const hidden = pts.filter(p => !p._l).length;
+    const lab = o.labelIf ? pts.filter(p => o.labelIf(p)) : pts;
+    pts.forEach(p => p._l = null);
+    placeLabels(lab.map(p => ({ p, cx: X(p.x), cy: Y(p.y), text: p.m.name, weight: p.front ? 600 : 400, order: p.front ? ["top", "left", "bottom"] : null })), { L, R: W - 2, T: 0, B: H - Bm }, { obstacles: [...(o._obs || []), ...pts.filter(p => !lab.includes(p)).map(p => ({ x: X(p.x) - 6, y: Y(p.y) - 6, w: 12, h: 12 }))], hide: !!o.hideLabels });
+    const hidden = lab.filter(p => !p._l).length;
     pts.forEach(p => {
       const cx = X(p.x), cy = Y(p.y);
       const tip = Tip.add(tipModel(p.m, null, null, { rank: p.tip, note: p.note, src: p.src }));
       s += `<g data-t="${tip}" data-m="${esc(p.m.id)}"><circle class="hit" cx="${cx}" cy="${cy}" r="14"/>
-        <circle class="mk" cx="${cx}" cy="${cy}" r="${p.front ? 7 : 6}" fill="${color(p.m)}" stroke="var(--surface)" stroke-width="2"/>
+        <circle class="mk" cx="${cx}" cy="${cy}" r="${p.front ? 7 : o.labelIf && !o.labelIf(p) ? 4.5 : 6}" fill="${color(p.m)}" stroke="var(--surface)" stroke-width="${o.labelIf && !o.labelIf(p) ? 1 : 2}"/>
         ${p._l ? `<text class="lb2" x="${p._l[0]}" y="${p._l[1] + 11}"${p.front ? ' font-weight="600" style="fill:var(--text)"' : ""}>${esc(p.m.name)}</text>` : ""}</g>`;
     });
     hiddenNote(host, hidden);
@@ -2154,7 +2160,7 @@ Chart.lineage = function (host, models, upcoming, asOf, selId) {
       let pos = null, label = m.name, w = 0;
       for (const nm of pre && m.name.startsWith(pre) && m.name.length > pre.length + 1 ? [m.name, m.name.slice(pre.length)] : [m.name]) {
         w = measure(nm, 10.5) + 8;   // 隣の名前と1語に見えないよう余白を含める
-        const cands = [[x - w / 2, dy - 7 - h], [x - w / 2, dy + 7], [x + 7, dy - h / 2], [x - 7 - w, dy - h / 2], [x - w / 2, dy - 9 - 2 * h], [x - w / 2, dy + 9 + h], [x + 4, dy - 7 - h], [x - w - 4, dy + 7], [x + 4, dy + 7], [x - w - 4, dy - 7 - h], [x - w / 2, dy - 11 - 3 * h], [x - w / 2, dy + 11 + 2 * h]].map(([a, b]) => [clamp(a, L, W - R - w), b]);
+        const cands = [[x - w / 2, dy - 7 - h], [x - w / 2, dy + 7], [x + 9, dy - h / 2], [x - 9 - w, dy - h / 2], [x - w / 2, dy - 9 - 2 * h], [x - w / 2, dy + 9 + h], [x + 4, dy - 7 - h], [x - w - 4, dy + 7], [x + 4, dy + 7], [x - w - 4, dy - 7 - h], [x - w / 2, dy - 11 - 3 * h], [x - w / 2, dy + 11 + 2 * h]].map(([a, b]) => [clamp(a, L, W - R - w), b]);
         const okBox = ([a, b]) => b > y0 - 2 && b + h < y0 + laneH + 2 && free(a, b, w, h);
         pos = cands.find(c => okBox(c) && offToday(c[0], w)) || cands.find(okBox); if (pos) { label = nm; break; }
       }
@@ -2178,7 +2184,7 @@ function vline(x, y0, y1, boxes, attrs) {
 Chart.mini = function (host, c) {
   if (c.type === "stages") { host.innerHTML = `<div class="stages">${c.items.map(([st, who], i) => `<div class="stg s${i}"><b>${esc(st)}</b><span>${esc(who)}</span></div>`).join('<span class="stg-a" aria-hidden="true">↓ 公開範囲が広がる</span>')}</div>`; return; }
   if (c.type === "flow") { const v = host.clientWidth < 120 * c.steps.length; host.innerHTML = `<div style="position:absolute;inset:0;display:grid;align-content:space-evenly;gap:6px">${flowHtml(c.steps, v)}${c.loop ? `<div class="loopback">↻ STEP ${c.steps.length} のあと STEP 1 に戻って繰り返す</div>` : ""}</div>`; return; }
-  const { W: W0, H } = this.size(host), n = c.items.length, top = c.refs || c.callout ? 18 : 0, rowH = Math.min(c.type === "change" ? 90 : 180, (H - 18 - top) / n), R = 64;
+  const { W: W0, H } = this.size(host), n = c.items.length, top = c.refs || c.callout ? 18 : 0, rowH = Math.min(c.type === "change" ? 90 : 64, (H - 18 - top) / n), R = 64;   // 行の間隔は上限64px（項目が少なくても間延びさせない）
   // 行が低い（ラベルを棒の上に置けない）ときは、ラベルを左の列に並べる（値ラベルと次の行のラベルが重ならない）
   // 左列に置くときは、入らないラベルの括弧書き（出典・時期など）を省く（全文はツールチップ）
   const inl = rowH < 30, short = t => !inl || measure(t, 11) + 10 <= W0 * 0.45 ? t : t.replace(/（[^）]*）/g, "");
@@ -2474,12 +2480,14 @@ function renderFuture(v) {
     v.style.gridTemplateColumns = `repeat(${cols},minmax(0,1fr))`;
     v.style.gridTemplateRows = mc.length ? "minmax(0,1.25fr) minmax(0,1fr)" : `repeat(${Math.ceil(Math.max(1, n) / cols)},minmax(0,1fr))`;
     v.innerHTML = n ? ts.map((t, i) => trendCard(t, i, { wide })).join("")
-      + (mc.length ? `<div style="grid-column:1/-1;display:grid;grid-template-columns:repeat(${mc.length},minmax(0,1fr));gap:12px;min-height:0">${mc.map(([spec, title, impl], i) => card(esc(title), "点にカーソルで詳細", `<div style="position:absolute;inset:0;display:flex;flex-direction:column;gap:6px"><div class="impl" style="flex:none;font-weight:600"><span>${esc(impl)}</span></div><div style="position:relative;flex:1;min-height:0">${host("ch-mc" + i)}</div></div>`)).join("")}</div>` : "")
+      + (mc.length ? `<div style="grid-column:1/-1;display:grid;grid-template-columns:repeat(${mc.length},minmax(0,1fr));gap:12px;min-height:0">${mc.map(([spec, title, impl], i) => card(esc(title), "名前は各月の最大・最小", `<div style="position:absolute;inset:0;display:flex;flex-direction:column;gap:6px"><div class="impl" style="flex:none;font-weight:600"><span>${esc(impl)}</span></div><div style="position:relative;flex:1;min-height:0">${host("ch-mc" + i)}</div></div>`)).join("")}</div>` : "")
       : `<div class="card"><div class="empty">このカテゴリの動向データはまだありません</div></div>`;
     const yr = d => { const t = ymd(d), y = new Date(t).getUTCFullYear(); return y + (t - Date.UTC(y, 0, 1)) / (365.25 * 864e5); };
     mc.forEach(([spec, title], i) => { const mt = metric(spec), pts = ms.filter(m => m.released && isNum(mt.get(m))).map(m => ({ m, x: yr(m.released), y: mt.get(m) }));
-      const lg = spec.startsWith("price"); if (lg) pts.forEach(p => { p.yv = p.y; p.y = Math.log10(p.y); p.tip = `${fmt.date(p.m.released)}・${fmt.usd(p.yv)}/1M`; }); else pts.forEach(p => p.tip = `${fmt.date(p.m.released)}・${mt.fmt(p.y)}`);
-      Chart.scatter($("#ch-mc" + i), pts, { title, xFit: true, hideLabels: true, frontier: !lg, xTicks: (a, b) => { for (const st of [12, 6, 3, 2, 1]) { const out = []; for (let k = Math.ceil(a * 12 / st) * st; k <= b * 12 + 1e-6; k += st) out.push(k / 12); if (out.length >= 4 || st === 1) return out.length > 8 ? out.filter((_, i) => i % 2 === 0) : out; } }, xTick: t => { const k = Math.round(t * 12), y = Math.floor(k / 12), mo = k - y * 12 + 1; return `${y}/${String(mo).padStart(2, "0")}`; }, yTick: lg ? t => fmt.usd(Math.pow(10, t)) : t => fmt.num(t, 0), xLabel: "発表日 →", yLabel: lg ? "混合単価（$/1M・対数）" : "AA指数 ↑", emptyMsg: "発表日と値のあるモデルが2つ以上必要です" }); });
+      const lg = /^(price|spec)/.test(spec); pts.forEach(p => { p.yv = p.y; p.tip = `${fmt.date(p.m.released)}・${mt.fmt(p.yv)}`; if (lg) p.y = Math.log10(p.y); });
+      // 名前を出すのは、各月の最大・最小と「その時点の首位」の点だけ（他は名前なしの点＝密集を避ける）
+      const byMo = {}; pts.forEach(p => { const k = Math.floor(p.x * 12); (byMo[k] ||= []).push(p); }); Object.values(byMo).forEach(g => { g.sort((a, b) => a.y - b.y); g[0].key = g[g.length - 1].key = true; });
+      Chart.scatter($("#ch-mc" + i), pts, { title, xFit: true, hideLabels: true, frontier: !lg, xTicks: (a, b) => { for (const st of [12, 6, 3, 2, 1]) { const out = []; for (let k = Math.ceil(a * 12 / st) * st; k <= b * 12 + 1e-6; k += st) out.push(k / 12); if (out.length >= 4 || st === 1) return out.length > 8 ? out.filter((_, i) => i % 2 === 0) : out; } }, xTick: t => { const k = Math.round(t * 12), y = Math.floor(k / 12), mo = k - y * 12 + 1; return `${y}/${String(mo).padStart(2, "0")}`; }, yTick: lg ? t => (spec.startsWith("price") ? fmt.usd : spec === "spec:context" ? fmt.tok : x => fmt.num(x, 0))(Math.pow(10, t)) : t => fmt.num(t, 0), xLabel: "発表日 →", yLabel: lg ? `${mt.name}（対数）` : "AA指数 ↑", labelIf: p => p.key || p.front, emptyMsg: "発表日と値のあるモデルが2つ以上必要です" }); });
   }
   // 枠に収まらない場合は背景説明（詳細）を省き、見出しのツールチップへ移す（結論と数値・図を優先）
   v.querySelectorAll(".tc.tx").forEach(tx => { if (tx.clientHeight - tx.scrollHeight > 0 || [...tx.children].reduce((a, c) => a + c.offsetHeight, 0) < tx.clientHeight - 120) tx.classList.add("roomy"); if (tx.scrollHeight > tx.clientHeight + 1) tx.classList.remove("roomy"); });
