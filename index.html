@@ -432,10 +432,9 @@ ul.plain{list-style:none;margin:0;padding:0}
 .stat span{font-size:11.5px;color:var(--text-2);line-height:1.4}
 .impl{font-size:12px;line-height:1.6;background:var(--surface-2);border-radius:8px;padding:8px 10px;display:grid;grid-template-columns:auto 1fr;gap:8px}
 .impl::before{content:"→";font-weight:700;color:var(--text)}
-.tc .impl{font-weight:600;color:var(--text)}
 .tc.wide{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:20px}
 .loopback{font-size:11.5px;color:var(--text-2);border:1.5px dashed var(--border-strong);border-radius:8px;padding:5px 10px;text-align:center}
-.srcs{font-size:10.5px;color:var(--muted);line-height:1.5}
+.srcs{font-size:10.5px;color:var(--muted);line-height:1.4}
 .srcs a{color:var(--muted)}
 .conf-key{display:inline-flex;align-items:center;gap:5px}
 button.info{padding:0;background:none;cursor:pointer}
@@ -1391,6 +1390,16 @@ function profileGrid(models, specs, ms, id) {
     return x ? `<td><div class="pg">${lane(c.r, c.mt, { marks: [{ m, t: "" }] })}<span class="num">${esc(c.mt.fmt(x.v).replace(/ tok\/s|\/1M/, ""))}</span></div></td>` : `<td class="na">—</td>`; }).join("")}</tr>`).join("");
   return `<div style="position:absolute;inset:0;overflow:hidden" id="${id}"><table class="tbl pgrid" style="table-layout:fixed"><colgroup><col style="width:20%">${cols.map(() => "<col>").join("")}</colgroup>${head}<tbody>${body}</tbody></table></div>`;
 }
+/** 枠に収まらないとき、優先度の低い要素（selectors の順）から省き、省いた文章は見出しのツールチップへ移す（切れたまま見せない） */
+function shed(root, selectors) {
+  root.querySelectorAll(".tc").forEach(tc => {
+    for (const sel of selectors) {
+      if (tc.scrollHeight <= tc.clientHeight + 1) return;
+      const els = [...tc.querySelectorAll(sel)].reverse();
+      for (const el of els) { if (tc.scrollHeight <= tc.clientHeight + 1) return; const h = tc.closest(".card")?.querySelector("h2"); if (h && el.textContent.trim()) h.title = (h.title ? h.title + "\n" : "") + el.textContent.trim(); el.remove(); }
+    }
+  });
+}
 /** 表の行高を、枠の高さに合わせて配分する（スクロールさせない） */
 function fitRows(wrap, lo = 22, hi = 56, more = n => `ほか ${n} モデル（全件はヒートマップ・仕様一覧）`) {
   if (!wrap) return; const n = wrap.querySelectorAll("tbody tr").length, th = wrap.querySelector("thead")?.offsetHeight || 0; wrap.style.setProperty("--rh", clamp((wrap.clientHeight - th - 2) / Math.max(1, n), lo, hi) + "px");
@@ -2134,11 +2143,12 @@ function renderDiffusion(v) {
     + card("応答完了までの時間", "推論込み・秒", `<div class="tc" style="position:absolute;inset:0"><div style="position:relative;flex:1;min-height:80px">${host("ch-dlat")}</div><div class="stats" style="gap:3px">${df.stats.map(x => `<div class="stat"${x.note ? ` data-t="${Tip.add(`<div class="tt">${esc(x.l)}</div><div class="tm">${esc(x.note)}</div>`)}"` : ""}><b>${esc(x.v)}</b><span>${esc(x.l)}</span></div>`).join("")}</div></div>`)
     + card("研究とモデルの年表", "2015〜2020年は圧縮表示", host("ch-dev"), { style: "grid-column:span 2" })
     + card("課題と対策", "カーソルで詳細", `<div class="stack" style="position:absolute;inset:0;gap:7px;overflow:hidden">${df.challenges.map(c => `<div data-t="${Tip.add(`<div class="tt">${esc(c.t)}</div><div class="tm">${esc(c.d)}</div><div class="tm" style="margin-top:4px">対策：${esc(c.fix)}</div>`)}" style="border-bottom:1px solid var(--grid);padding-bottom:6px"><div style="font-size:12px;font-weight:650">${esc(c.t)}</div><div style="font-size:11.5px;color:var(--text-2);line-height:1.45">→ ${esc(c.fix)}</div></div>`).join("")}</div>`)
-    + card("ブレイクスルーになるか", "", `<div class="tc" style="position:absolute;inset:0;gap:7px"><div class="impl" style="font-size:11.5px;line-height:1.55"><span>${esc(df.verdict)}</span></div><div class="sec-h" style="margin:2px 0 0">いま向いている使い方</div><div class="tags">${df.uses.map(u => `<span class="tag">${esc(u)}</span>`).join("")}</div><div style="flex:1"></div>${srcLinks(df.srcs)}</div>`);
+    + card("ブレイクスルーになるか", "", `<div class="tc" style="position:absolute;inset:0;gap:5px"><div class="impl" style="font-size:11.5px;line-height:1.55"><span>${esc(df.verdict)}</span></div><div class="sec-h" style="margin:2px 0 0">いま向いている使い方</div><div class="tags">${df.uses.map(u => `<span class="tag">${esc(u)}</span>`).join("")}</div><div style="flex:1"></div>${srcLinks(df.srcs)}</div>`);
   const mech = $("#mech"); mech.innerHTML = mechanismSvg(mech.clientWidth, mech.clientHeight);
   Chart.mini($("#ch-dspeed"), { type: "bars", title: "出力速度", unit: "tok/s", items: df.speed.items.map(([l, val, g]) => [l, val, null, g]) });
   Chart.mini($("#ch-dlat"), { type: "bars", title: df.latency.title, unit: "秒", items: df.latency.items });
   Chart.events($("#ch-dev"), dateEvents(df.events), df.lanes, { split: Date.UTC(2024, 6, 1), frac: 0.3, pad: 2, title: "拡散型LMの年表" });
+  shed(v, [".tags .tag"]);
 }
 
 /** 歴史の数値カードに添える小さな図：時代の帯（冬＝斜線）／成長の推移（対数の折れ線）。幅は枠に追従（年の注記はHTML） */
@@ -2175,14 +2185,16 @@ function renderHistory(v) {
 
 function srcLinks(ids) {
   const xs = (ids || []).map(id => S.D.src.get(id)).filter(Boolean);
-  return xs.length ? `<div class="srcs" title="${esc(xs.map(x => x.label).join(" / "))}">出典：${xs.map(x => { const u = safeUrl(x.url); return u ? `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(x.label.split(" – ")[0])}</a>` : esc(x.label); }).join("・")}</div>` : "";
+  // 出典は先頭3件を短い名前で示し、残りは件数（全件はツールチップ）。行を増やさず省略記号も出さない
+  const shown = xs.slice(0, 3), rest = xs.length - shown.length;
+  return xs.length ? `<div class="srcs" title="${esc(xs.map(x => x.label).join(" / "))}">出典：${shown.map(x => { const u = safeUrl(x.url); return u ? `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(x.label.split(" – ")[0])}</a>` : esc(x.label.split(" – ")[0]); }).join("・")}${rest > 0 ? `<span> ほか${rest}件</span>` : ""}</div>` : "";
 }
 /** 動向カード：見出し → 示唆（結論）→ 主要な数値 → 図 → 背景の説明 → 出典（結論→根拠→詳細）。
  *  横長の枠では「左＝文章と数値／右＝図」の2列にし、図に十分な面積を与える */
 function trendCard(t, i, opt = {}) {
   const stats = `<div class="stats">${t.stats.map(x => `<div class="stat"${x.note ? ` data-t="${Tip.add(`<div class="tt">${esc(x.l)}</div><div class="tv">${esc(x.v)}</div><div class="tm">${esc(x.note)}</div>`)}"` : ""}><b>${esc(x.v)}</b><span>${esc(x.l)}${x.note ? ' <span class="info">i</span>' : ""}</span></div>`).join("")}</div>`;
   const chart = t.chart ? `<div class="sec-h" style="margin:2px 0 -4px">${esc(t.chart.title)}</div><div style="position:relative;flex:1;min-height:70px">${host("ch-tr-" + i)}</div>` : "";
-  const text = `<div class="impl"><span>${esc(t.implication)}</span></div>${stats}`, foot = `<p class="lead2">${esc(t.lead)}</p>${srcLinks(t.srcs)}`;
+  const text = `<div class="impl" style="font-weight:600;color:var(--text)"><span>${esc(t.implication)}</span></div>${stats}`, foot = `<p class="lead2">${esc(t.lead)}</p>${srcLinks(t.srcs)}`;
   const body = opt.wide && t.chart ? `<div class="tc wide" style="position:absolute;inset:0"><div class="tc">${text}<div style="flex:1"></div>${foot}</div><div class="tc">${chart}</div></div>`
     : `<div class="tc" style="position:absolute;inset:0">${text}${chart || '<div style="flex:1"></div>'}${foot}</div>`;
   return card(esc(t.title), "", body, { style: opt.style || "" });
@@ -2206,7 +2218,7 @@ function renderFuture(v) {
     v.innerHTML = n ? ts.map((t, i) => trendCard(t, i, { wide: true, style: n >= 3 && n % 2 && i === n - 1 ? "grid-column:1/-1" : "" })).join("") : `<div class="card"><div class="empty">このカテゴリの動向データはまだありません</div></div>`;
   }
   // 枠に収まらない場合は背景説明（詳細）を省き、見出しのツールチップへ移す（結論と数値・図を優先）
-  v.querySelectorAll(".tc").forEach(tc => { if (tc.scrollHeight > tc.clientHeight + 1) { const l = tc.querySelector(".lead2"); if (l) { tc.closest(".card").querySelector("h2").title = l.textContent; l.remove(); } } });
+  shed(v, [".lead2"]);
   ts.forEach((t, i) => t.chart && Chart.mini($("#ch-tr-" + i), t.chart));
 }
 
