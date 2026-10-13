@@ -1327,7 +1327,7 @@ const host = id => `<div class="chart" id="${id}"></div>`;
 const VIEWS = [
   { id: "overview", label: "概要", hint: "結論と推奨", lead: "まず結論：用途ごとに何を選ぶべきか", render: renderOverview },
   { id: "models", label: "モデル特徴", hint: "強みと注意点", lead: "モデルごとの得意・不得意と立ち位置", subs: () => [{ id: "matrix", label: "早見表" }, { id: "profile", label: "プロフィール" }], render: renderModels },
-  { id: "compare", label: "比較", hint: "最大4モデル", lead: "モデルを選ぶと、レーダーと差分表で比較", render: renderCompare },
+  { id: "compare", label: "比較", hint: "最大4モデル", lead: "モデルを選ぶと、項目ごとの位置と値を並べて比較", render: renderCompare },
   { id: "bench", label: "ベンチマーク", hint: "分野別の性能", lead: "カテゴリを選ぶと、その全ベンチマークを並べて表示", subs: () => [...S.D.cats.map(c => ({ id: c.id, label: c.label, n: S.D.benchmarks.filter(b => (b.category || "other") === c.id).length })), { id: "heat", label: "全体ヒートマップ" }], render: renderBench },
   { id: "guide", label: "ベンチ解説", hint: "指標の意味", lead: "各ベンチマークが測る能力・採点方法・読み方", subs: () => [{ id: "map", label: "全体像" }, { id: "detail", label: "個別解説" }], render: renderGuide },
   { id: "cost", label: "コスト", hint: "価格性能・試算", lead: "性能あたりの価格と、利用量に応じた月額の目安", render: renderCost },
