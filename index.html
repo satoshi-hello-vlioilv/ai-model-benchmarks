@@ -22,7 +22,7 @@
   --bar:color-mix(in oklab,#1c5cab 17%,transparent);
   --seq-lo:#f0efec; --seq-hi:#1c5cab;          /* 逐次（ヒートマップ）＝青1色相 */
   --c-other:#8a8983;
-  --good:#0ca30c; --warning:#fab219; --critical:#d03b3b;
+  --good:#0ca30c; --good-text:#1d7a2e; --warning:#fab219; --critical:#d03b3b;
   --shadow:0 1px 2px rgba(20,20,18,.05),0 4px 16px rgba(20,20,18,.05);
   --radius:10px;
 }
@@ -31,7 +31,7 @@
     color-scheme: dark;
     --bg:#121211; --surface:#1a1a19; --surface-2:#232321; --surface-3:#2d2d2a;
     --border:#30302c; --border-strong:#44443f;
-    --text:#f2f1ec; --text-2:#cbcac0; --muted:#a3a29a;
+    --text:#f2f1ec; --text-2:#cbcac0; --muted:#a3a29a; --good-text:#5fd17a;
     --ink:#f2f1ec; --ink-text:#1a1a19;
     --grid:#2a2a27; --axis:#4a4a45;
     --c1:#3987e5; --c2:#d95926; --c3:#199e70; --c4:#c98500;
@@ -44,7 +44,7 @@
   color-scheme: dark;
   --bg:#121211; --surface:#1a1a19; --surface-2:#232321; --surface-3:#2d2d2a;
   --border:#30302c; --border-strong:#44443f;
-  --text:#f2f1ec; --text-2:#cbcac0; --muted:#a3a29a;
+  --text:#f2f1ec; --text-2:#cbcac0; --muted:#a3a29a; --good-text:#5fd17a;
   --ink:#f2f1ec; --ink-text:#1a1a19;
   --grid:#2a2a27; --axis:#4a4a45;
   --c1:#3987e5; --c2:#d95926; --c3:#199e70; --c4:#c98500;
@@ -288,7 +288,7 @@ table{border-collapse:collapse;width:100%}
 .drop.over{background:var(--surface-2);border-color:var(--ink)}
 .log{font-size:11.5px;line-height:1.6;max-height:100%;overflow:auto}
 .log li{margin:0 0 2px}
-.log .e{color:var(--critical)} .log .w{color:var(--text-2)} .log .ok{color:var(--good)}
+.log .e{color:var(--critical)} .log .w{color:var(--text-2)} .log .ok{color:var(--good-text)}
 pre.code{margin:0;font:11px/1.5 Consolas,"Cascadia Mono",ui-monospace,monospace;background:var(--surface-2);border-radius:8px;padding:10px;overflow:auto;color:var(--text-2);height:100%}
 .src-list{font-size:11.5px;overflow:auto;height:100%}
 .src-list li{padding:3px 0;border-bottom:1px solid var(--grid);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
@@ -318,6 +318,20 @@ ul.plain{list-style:none;margin:0;padding:0}
 .wb{display:inline-block;width:56px;height:8px;border-radius:4px;background:var(--surface-3);margin-right:8px;vertical-align:1px;overflow:hidden}
 .wb i{display:block;height:100%;border-radius:4px}
 .winbars{display:grid;gap:4px}
+.dtiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.dt{white-space:nowrap}
+.dt{background:var(--surface-2);border-radius:8px;padding:6px 10px;display:flex;align-items:baseline;gap:6px}
+.dt b{font-size:20px;font-weight:700}.dt span{font-size:11.5px;color:var(--text-2)}
+.fresh{position:relative;height:8px;border-radius:4px;background:var(--surface-3);margin:4px 34px 0 0}
+.fresh i{display:block;height:100%;border-radius:4px;background:var(--seq-hi)}.fresh i.old{background:var(--critical)}
+.fresh span{position:absolute;top:-3px;margin-left:6px;font-size:10.5px;color:var(--muted);white-space:nowrap}
+.vres{font-size:12.5px;font-weight:650}.vres.ok{color:var(--good-text)}.vres.ng{color:var(--critical)}
+.covers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3px 16px}
+.cv{display:grid;grid-template-columns:8.8em minmax(0,1fr) 3.2em;gap:8px;align-items:center;font-size:11.5px;white-space:nowrap}
+.cv .num{text-align:right}
+.srct td{font-size:11.5px;line-height:1.3;white-space:normal}
+.srct td.st{padding-top:2px;padding-bottom:2px}
+.cv2{display:grid;grid-template-columns:minmax(0,1fr) 2em;gap:6px;align-items:center}.cv2 .num{text-align:right}
 .abchips{display:flex;flex-wrap:wrap;gap:6px}
 .abc{display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border-radius:999px;font-size:12px;border:1px solid var(--border)}
 .abc.l2{background:var(--surface-3);border-color:var(--border-strong);font-weight:600}
@@ -1377,12 +1391,12 @@ function profileGrid(models, specs, ms, id) {
   return `<div style="position:absolute;inset:0;overflow:hidden" id="${id}"><table class="tbl pgrid" style="table-layout:fixed"><colgroup><col style="width:20%">${cols.map(() => "<col>").join("")}</colgroup>${head}<tbody>${body}</tbody></table></div>`;
 }
 /** 表の行高を、枠の高さに合わせて配分する（スクロールさせない） */
-function fitRows(wrap, lo = 22, hi = 56) {
+function fitRows(wrap, lo = 22, hi = 56, more = n => `ほか ${n} モデル（全件はヒートマップ・仕様一覧）`) {
   if (!wrap) return; const n = wrap.querySelectorAll("tbody tr").length, th = wrap.querySelector("thead")?.offsetHeight || 0; wrap.style.setProperty("--rh", clamp((wrap.clientHeight - th - 2) / Math.max(1, n), lo, hi) + "px");
   // それでも収まらない場合は下位の行を省き、件数を明示する（切れたまま見せない）
   const body = wrap.querySelector("tbody"); let cut = 0;
   while (wrap.scrollHeight > wrap.clientHeight + 1 && body.rows.length > 2) { body.deleteRow(-1); cut++; }
-  if (cut) { body.deleteRow(-1); cut++; const tr = body.insertRow(); const td = tr.insertCell(); td.colSpan = 99; td.className = "muted"; td.style.fontSize = "11px"; td.textContent = `ほか ${cut} モデル（全件はヒートマップ・仕様一覧）`; }
+  if (cut) { body.deleteRow(-1); cut++; const tr = body.insertRow(); const td = tr.insertCell(); td.colSpan = [...(body.rows[0]?.cells || [])].reduce((a, c) => a + c.colSpan, 0) || 1; td.className = "muted"; td.style.fontSize = "11px"; td.textContent = more(cut); }
 }
 
 function renderBench(v) {
@@ -1608,21 +1622,26 @@ function renderTable(v, nb = 8) {
 
 function renderData(v) {
   const D = S.D;
-  v.style.gridTemplateColumns = "minmax(0,1fr) minmax(0,1fr) minmax(0,1.05fr)";
+  v.style.gridTemplateColumns = "minmax(0,0.92fr) minmax(0,1.2fr) minmax(0,0.78fr)";
   v.style.gridTemplateRows = "minmax(0,1fr)";
   const val = Data.validate(D.raw);
   const remote = store.get("remoteUrl", ""), auto = store.get("autoFetch", false), last = store.get("lastFetch", null);
   const srcLabel = { seed: "HTML埋め込みデータ", local: "取り込み済みデータ（このブラウザに保存）", remote: "URLから取得したデータ" }[S.source];
-  const stat = `<ul class="plain log">
-    <li><b>使用中:</b> ${esc(srcLabel)}</li>
-    <li><b>基準日:</b> ${esc(fmt.date(D.meta.asOf))}（${daysSince(D.meta.asOf)}日前）</li>
-    <li><b>件数:</b> モデル ${D.models.length}・ベンチ ${D.benchmarks.length}・提供元 ${D.providers.length}・出典 ${D.src.size}</li>
-    ${last ? `<li><b>最終URL取得:</b> ${esc(new Date(last).toLocaleString("ja-JP"))}</li>` : ""}
-    <li class="${val.errors.length ? "e" : "ok"}"><b>検証:</b> エラー ${val.errors.length}・警告 ${val.warnings.length}</li>
-    ${[...val.errors.map(e => `<li class="e">✕ ${esc(e)}</li>`), ...val.warnings.slice(0, 8).map(w => `<li class="w">△ ${esc(w)}</li>`)].join("")}
-    ${(D.meta.notes || []).map(n => `<li class="t2">・${esc(n)}</li>`).join("")}
-  </ul>`;
+  // 現在のデータ：件数・鮮度・検証結果・ベンチ別の収録率を図で示す
+  const days = daysSince(D.meta.asOf), ms = D.models.filter(m => !m.legacy);
+  const tiles = [["モデル", D.models.length], ["ベンチ", D.benchmarks.length], ["提供元", D.providers.length], ["出典", D.src.size]].map(([l, n]) => `<div class="dt"><b class="num">${n}</b><span>${l}</span></div>`).join("");
+  const cover = D.benchmarks.map(b => { const k = ms.filter(m => score(m, b.id) != null).length; return `<div class="cv"><span class="bn" data-gb="${esc(b.id)}" style="cursor:pointer">${esc(b.short || b.label)}</span><div class="wb wide"><i style="width:${ms.length ? k / ms.length * 100 : 0}%;background:var(--seq-hi)"></i></div><span class="num muted">${k}/${ms.length}</span></div>`; }).join("");
+  const stat = `<div class="stack" style="gap:12px">
+    <div class="dtiles">${tiles}</div>
+    <div><div class="sec-h">鮮度 <b class="num" style="color:var(--text)">${esc(fmt.date(D.meta.asOf))}（${days}日前）</b>・30日を超えると「要更新」</div><div class="fresh"><i style="width:${clamp(days / 30, 0.02, 1) * 100}%" class="${days > 30 ? "old" : ""}"></i><span style="left:100%">30日</span></div></div>
+    <div class="vres ${val.errors.length ? "ng" : "ok"}">${val.errors.length ? "✕" : "✓"} 検証 エラー ${val.errors.length}・警告 ${val.warnings.length}<span class="muted" style="font-weight:400">・使用中：${esc(srcLabel)}${last ? `・最終取得 ${esc(new Date(last).toLocaleString("ja-JP"))}` : ""}</span></div>
+    ${val.errors.length || val.warnings.length ? `<ul class="plain log">${[...val.errors.map(e => `<li class="e">✕ ${esc(e)}</li>`), ...val.warnings.slice(0, 4).map(w => `<li class="w">△ ${esc(w)}</li>`)].join("")}</ul>` : ""}
+    <div><div class="sec-h">ベンチ別の収録率（現行 ${ms.length} モデル中・名前で解説へ）</div><div class="covers">${cover}</div></div>
+    <div class="caveat" style="margin:0"><span>${(D.meta.notes || []).map(esc).join(" ")}</span></div>
+  </div>`;
   const imp = `<div style="display:grid;gap:12px;align-content:start;position:absolute;inset:0;overflow:hidden">
+    ${flowHtml(["JSONを用意", "取り込み", "自動で検証", "全画面に反映"])}
+    <p class="txt t2" style="margin:-4px 0 0;font-size:11.5px">右の書式で差分だけを書いたJSONを、ドロップかURLで取り込みます。誤りがあれば取り込まず、成功するとすべての画面に反映されブラウザに保存されます。</p>
     <div class="drop" id="drop">JSONファイルをここにドロップ<br><span class="muted">または</span> <button class="btn" id="pickBtn" style="height:26px">ファイルを選択</button><input type="file" id="file" accept=".json,application/json" hidden></div>
     <div class="field">取り込み方法
       <div class="row"><label><input type="radio" name="mode" value="merge" checked> 追記・更新（id単位でマージ）</label><label><input type="radio" name="mode" value="replace"> 全置換</label></div></div>
@@ -1632,10 +1651,14 @@ function renderData(v) {
     <div class="caveat"><span>URLパラメータ <code>?data=https://…</code> でも一時的に読み込めます。取り込んだデータはこのブラウザにのみ保存されます。</span></div>
   </div>`;
   const tpl = JSON.stringify({ meta: { asOf: "YYYY-MM-DD" }, models: [{ id: "new-model", name: "New Model", provider: "openai", released: "YYYY-MM-DD", tier: "フラッグシップ", openWeights: "no", context: 1000000, maxOutput: 128000, price: { input: 1, output: 5 }, speed: { v: 100, src: "aa" }, scores: { tb4: { v: 60.0, src: "aa", note: "任意" } }, notes: "", sources: ["aa"] }], benchmarks: [{ id: "new_bench", label: "New Bench", short: "NB", category: "agentic", unit: "%", max: 100, desc: "" }] }, null, 2);
-  const srcs = `<ul class="plain src-list">${[...D.src.values()].map(s => { const u = safeUrl(s.url); return `<li>${u ? `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer" title="${esc(u)}">${esc(s.label)}</a>` : esc(s.label)}<span class="muted num">${D.models.filter(m => Object.values(m.scores).some(x => x.src === s.id) || (m.sources || []).includes(s.id)).length}モデル</span></li>`; }).join("")}</ul>`;
+  // 出典：参照モデル数の多い順。件数は棒で示す（収まらない分は件数を明示）
+  const srcN = s => D.models.filter(m => Object.values(m.scores).some(x => x.src === s.id) || (m.sources || []).includes(s.id) || m.speedObj?.src === s.id).length;
+  const srcArr = [...D.src.values()].map(s => ({ s, n: srcN(s) })).sort((a, b) => b.n - a.n), srcMax = Math.max(1, ...srcArr.map(x => x.n));
+  const srcs = `<div id="srcWrap" style="position:absolute;inset:0;overflow:hidden"><table class="tbl srct" style="table-layout:fixed;width:100%"><colgroup><col><col style="width:30%"></colgroup><tbody>${srcArr.map(({ s, n }) => { const u = safeUrl(s.url); return `<tr><td class="st">${u ? `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer" title="${esc(u)}">${esc(s.label)}</a>` : esc(s.label)}</td><td><div class="cv2"><div class="wb wide"><i style="width:${n / srcMax * 100}%;background:var(--seq-hi)"></i></div><span class="num muted">${n}</span></div></td></tr>`; }).join("")}</tbody></table></div>`;
   v.innerHTML = card("データを最新化", "HTMLを編集せずに差し替え・追記", imp)
-    + `<div style="display:grid;grid-template-rows:minmax(0,1fr) minmax(0,1fr);gap:12px;min-height:0">${card("現在のデータ", "", `<div style="position:absolute;inset:0;overflow:auto">${stat}</div>`)}${card("出典", `${D.src.size}件`, `<div style="position:absolute;inset:0">${srcs}</div>`)}</div>`
+    + `<div style="display:grid;grid-template-rows:auto minmax(0,1fr);gap:12px;min-height:0">${card("現在のデータ", "", stat, { style: "flex:none" })}${card("出典", `${D.src.size}件・参照モデル数の多い順`, srcs)}</div>`
     + card("追記用JSONの書式", "差分だけ書けばよい（id一致で上書き）", `<pre class="code">${esc(tpl)}</pre>`);
+  fitRows($("#srcWrap"), 22, 30, n => `ほか ${n} 件（「現在のデータを書き出し」で全件）`);
   const mode = () => (v.querySelector('input[name="mode"]:checked') || {}).value || "merge";
   const drop = $("#drop");
   $("#pickBtn").onclick = () => $("#file").click();
