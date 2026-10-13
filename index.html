@@ -1505,6 +1505,7 @@ function renderBench(v) {
   const bs = D.benchmarks.filter(b => (b.category || "other") === sub);
   const n = bs.length, cols = n <= 1 ? 1 : n === 2 ? 2 : n === 4 ? 2 : 3, rowsN = Math.ceil((n + (n > 4 && n % 3 ? 1 : 0)) / cols);
   // 1〜2指標のカテゴリはデータ点が少ないため、棒グラフ（行数に合わせた高さ）＋「上位モデルの横顔」＋指標の見方で構成
+  const rel2 = n === 2 ? [...new Set(bs.flatMap(b => relatedBenches(b, ms, 6)))].filter(x => !bs.includes(x)).slice(0, 6) : [];
   const few = n <= 2, kMax = Math.max(1, ...bs.map(b => ranked(metric("bench:" + b.id), ms).length));
   // 棒グラフの段は「行数×約44px＋見出し・軸」の内容の高さ（棒の太さは全画面共通の上限22px）
   const chartH = Math.round(clamp(kMax * 44 + 110, 200, v.clientHeight * (n === 1 ? 0.62 : 0.45)));
@@ -1514,11 +1515,11 @@ function renderBench(v) {
   const nWin = new Set(bs.map(b => ranked(metric("bench:" + b.id), ms)[0]?.m).filter(Boolean)).size;
   const rowFr = Array.from({ length: rowsN }, (_, k) => Math.max(...bs.slice(k * cols, k * cols + cols).map((b, j) => need(b, cnt[k * cols + j])), k === rowsN - 1 && n > 4 && n % 3 ? 70 + nWin * 22 : 0));   // 最後の段は「首位の数」カードも考慮
   // 1指標：左＝グラフ（内容の高さ）＋見方（残り）、右＝横顔表（全高・行を配分）
-  v.style.gridTemplateRows = n === 1 ? "minmax(0,1fr)" : n === 2 ? `${chartH}px minmax(0,1fr) auto` : rowFr.map(f => `minmax(0,${f}fr)`).join(" ");
+  v.style.gridTemplateRows = n === 1 ? "minmax(0,1fr)" : n === 2 ? `${chartH}px auto ${rel2.length ? "minmax(0,1fr) " : ""}auto` : rowFr.map(f => `minmax(0,${f}fr)`).join(" ");
   const r0 = few ? ranked(metric("bench:" + bs[0].id), ms) : [], rk = m => { const i = r0.findIndex(x => x.m === m); return i < 0 ? 99 : i; };
   const pgModels = few ? ms.filter(m => bs.some(b => score(m, b.id) != null)).sort((a, c) => rk(a) - rk(c)) : [];
   const pgSpecs = [...bs.map(b => "bench:" + b.id), ...(bs.some(b => b.id === "aa_index") ? [] : ["bench:aa_index"]), "price:blended", "spec:speed"];
-  const pgCard = few ? card("上位モデルの横顔", "各指標での位置（色の点＝そのモデル・灰＝その他）", profileGrid(pgModels, pgSpecs, ms, "pgWrap", { auto: n === 1 }), { style: n === 2 ? "grid-column:1/-1" : "flex:none" }) : "";
+  const pgCard = few ? card("上位モデルの横顔", "各指標での位置（色の点＝そのモデル・灰＝その他）", profileGrid(pgModels, pgSpecs, ms, "pgWrap", { auto: true }), { style: n === 2 ? "grid-column:1/-1" : "flex:none" }) : "";
   const charts = bs.map(b => card(esc(b.label), `${esc(b.unit === "Elo" ? "Elo（相対評価）" : b.unit === "%" ? "正答・成功率" : b.unit)}`,
     host("ch-" + b.id), { right: `<button class="info" data-gb="${esc(b.id)}" title="${esc(b.desc || "")}（クリックで解説へ）" aria-label="${esc(b.label)}の解説">i</button>`, style: "", foot: b.caveat ? `<div class="caveat">${esc(b.caveat)}</div>` : "" })).join("")
   ;
@@ -1527,7 +1528,8 @@ function renderBench(v) {
   v.innerHTML = n === 1
     ? `<div class="bcol" style="display:grid;grid-template-rows:minmax(${chartH}px,1fr) minmax(0,auto);gap:12px;min-height:0">${charts}${benchInfo(bs[0], ms, "side")}</div>`
       + `<div style="display:grid;grid-template-rows:auto ${rel1.length ? "minmax(0,1fr)" : ""};gap:12px;min-height:0">${pgCard}${rel1.length ? card("同じ能力を測る関連ベンチ", "点の位置＝スコア・番号＝順位・名前で解説へ", podiumTable(podiumRows(rel1, ms), "benchRel")) : ""}</div>`
-    : charts + pgCard + (n > 4 && n % 3 ? benchSummary(bs, ms, cols * rowsN - n) : n === 2 ? bs.map(b => benchInfo(b, ms, "compact")).join("") : "");
+    : charts + pgCard + (n === 2 && rel2.length ? card("同じ能力を測る関連ベンチ", "点の位置＝スコア・番号＝順位・名前で解説へ", podiumTable(podiumRows(rel2, ms), "benchRel"), { style: "grid-column:1/-1" }) : "")
+      + (n > 4 && n % 3 ? benchSummary(bs, ms, cols * rowsN - n) : n === 2 ? bs.map(b => benchInfo(b, ms, "compact")).join("") : "");
   // 横顔表は内容の高さで置き、画面に収まらなければ残りの高さに合わせて行を詰める（それでも入らない行は件数表示）
   const pw = $("#pgWrap");
   // 1指標で右列が収まらない場合：見方カードは内容の高さ（最大で半分）、横顔表は残りの高さに合わせて行を詰める
@@ -1537,6 +1539,11 @@ function renderBench(v) {
     // 右列：横顔表が長すぎるときは上限（列の6割）で行を詰め、関連ベンチは残りの高さ（狭すぎれば省く）
     const col = pw.closest(".card").parentElement, pc = pw.closest(".card"); if (pc.offsetHeight > col.clientHeight * 0.62) { col.style.gridTemplateRows = `${Math.round(col.clientHeight * 0.62)}px minmax(0,1fr)`; pw.style.cssText = "position:absolute;inset:0;overflow:hidden"; }
     const rb = $("#benchRel"); if (rb && rb.clientHeight < 110) { rb.closest(".card").remove(); col.style.gridTemplateRows = "minmax(0,1fr)"; pw.style.cssText = "position:absolute;inset:0;overflow:hidden"; } else fitRows(rb, 30, 76, k => `ほか ${k} ベンチ`); }
+  // 2指標：横顔表と見方は内容の高さ、グラフが残りを使う。収まらなければ横顔表を残りの高さに合わせて行を詰める
+  const over = el => el && el.scrollHeight > el.clientHeight + 1;
+  if (n === 2) { const rb = $("#benchRel");
+    if (rb && rb.clientHeight < 110) { rb.closest(".card").remove(); v.style.gridTemplateRows = `minmax(${chartH}px,1fr) auto auto`; } else if (rb) fitRows(rb, 30, 64, k => `ほか ${k} ベンチ`);
+    if (over(v) || over(pw.closest(".card")) || over(pw.closest(".body")) || [...v.querySelectorAll(".binfo")].some(b => over(b.closest(".card")))) { v.querySelector("#benchRel")?.closest(".card").remove(); v.style.gridTemplateRows = `${Math.min(chartH, 220)}px minmax(0,1fr) auto`; pw.style.cssText = "position:absolute;inset:0;overflow:hidden"; } }
   if (pw && getComputedStyle(pw).position === "absolute") fitRows(pw, 18, n === 2 ? 48 : 64);
   v.querySelectorAll("[data-cmp]").forEach(btn => btn.onclick = () => compareWith(btn.dataset.cmp.split(",")).run());
   if ($("#benchCmp")) $("#benchCmp").onclick = () => { const ids = []; bs.forEach(b => { const r = ranked(metric("bench:" + b.id), ms); if (r[0] && !ids.includes(r[0].m.id)) ids.push(r[0].m.id); }); compareWith(ids).run(); };
@@ -1544,7 +1551,7 @@ function renderBench(v) {
   bs.forEach(b => {
     const mt = metric("bench:" + b.id);
     const rows = ranked(mt, ms).map(r => ({ ...r, src: r.m.scores[b.id]?.src, note: r.m.scores[b.id]?.note }));
-    Chart.hbar($("#ch-" + b.id), rows, { title: b.label, fmt: mt.fmt, max: b.max, zeroBased: b.zeroBased, maxRow: n === 1 ? 64 : n === 2 ? 48 : 40, maxBar: 22, median: true, emptyMsg: "表示中のモデルにこのベンチのデータがありません",
+    Chart.hbar($("#ch-" + b.id), rows, { title: b.label, fmt: mt.fmt, max: b.max, zeroBased: b.zeroBased, maxRow: n === 1 ? 64 : n === 2 ? 56 : 60, maxBar: 22, median: true, emptyMsg: "表示中のモデルにこのベンチのデータがありません",
       diff: (a, c) => b.unit === "%" ? fmt.num(Math.abs(a - c)) + "pt" : fmt.num(Math.abs(a - c)), tick: t => b.unit === "%" ? t + "%" : fmt.num(t, 0), refs: b.refs });
   });
 }
