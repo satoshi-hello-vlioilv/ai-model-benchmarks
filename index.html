@@ -1911,7 +1911,7 @@ function renderProfile(v, ms) {
   v.style.gridTemplateRows = "minmax(0,1fr)";
   // 近い選択肢：総合指数と価格（対数）の距離が近いモデル（「次に何と比べるか」を先回りして示す）
   const aaOf = x => score(x, "aa_index"), near = isNum(aaOf(m)) && m.blended > 0 ? ms.filter(x => x !== m && isNum(aaOf(x)) && x.blended > 0)
-    .map(x => ({ x, d: Math.abs(aaOf(x) - aaOf(m)) / 8 + Math.abs(Math.log10(x.blended / m.blended)) })).sort((a, c) => a.d - c.d).slice(0, 3) : [];
+    .map(x => ({ x, d: Math.abs(aaOf(x) - aaOf(m)) / 8 + Math.abs(Math.log10(x.blended / m.blended)) })).sort((a, c) => a.d - c.d).slice(0, 6) : [];
   const nearHtml = near.length ? `<div class="stack" style="gap:6px">${near.map(({ x }) => `<div class="near">${mName(x)}<span class="muted num">AA ${fmt.num(aaOf(x), 0)}${aaOf(x) > aaOf(m) ? "↑" : aaOf(x) < aaOf(m) ? "↓" : ""}・${fmt.usd(x.blended)}${x.blended > m.blended ? "↑" : x.blended < m.blended ? "↓" : ""}</span><button class="go" data-cmp="${esc(m.id)},${esc(x.id)}">比較</button></div>`).join("")}</div>` : "";
   const sig = x => { const cs = catStrength(x, ms); return `<span class="sig" title="カテゴリ別の相対位置">${D.cats.map(c => cs[c.id] ? `<i style="height:${3 + cs[c.id].p * 11}px" title="${esc(c.short || c.label)} ${Math.round(cs[c.id].p * 100)}"></i>` : `<i class="na" style="height:3px"></i>`).join("")}</span>`; };
   const grpOn = ms.length <= 14;
@@ -1940,15 +1940,16 @@ function renderProfile(v, ms) {
       <div class="mini" style="height:8px;border-radius:4px;margin-top:4px"><i style="width:${x ? Math.max(2, x.p * 100) : 0}%;background:${color(m)};border-radius:4px"></i></div></div>`; }).join("")}</div>`;
   v.innerHTML = card("モデル", `${ms.length}件・棒＝分野別の強さ`, `<div class="list" id="pList">${list}</div>`)
     + card(`<span class="sw" style="display:inline-block;width:11px;height:11px;margin-right:7px;background:${color(m)}"></span>${esc(m.name)}`, esc(m.prov.label), center)
-    + `<div style="display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:12px;min-height:0">${card("カテゴリ別の強さ", "表示中モデル内の相対位置", bars, { style: "flex:none" })}
-      ${card("仕様の立ち位置", "灰色＝他モデル・色＝このモデル", host("ch-strip"))}${nearHtml ? card("近い選択肢", "総合指数と価格が近いモデル（↑↓＝このモデル比）", nearHtml, { style: "flex:none" }) : ""}</div>`;
+    + `<div style="display:grid;grid-template-rows:auto auto minmax(0,1fr);gap:12px;min-height:0">${card("カテゴリ別の強さ", "表示中モデル内の相対位置", bars, { style: "flex:none" })}
+      ${card("仕様の立ち位置", "灰色＝他モデル・色＝このモデル", `<div style="position:relative;height:250px">${host("ch-strip")}</div>`, { style: "flex:none" })}${nearHtml ? card("近い選択肢", "総合指数と価格が近い順（↑↓＝このモデル比）", `<div id="nearBox" style="position:absolute;inset:0;overflow:hidden">${nearHtml}</div>`) : ""}</div>`;
   Chart.strips($("#ch-strip"), [
     { label: "AA指数", get: x => score(x, "aa_index"), fmt: x => fmt.num(x, 0), lo: "", hi: "" },
     { label: "混合単価", get: x => x.blended, fmt: fmt.usd, log: true, lowerBetter: true, lo: "安い", hi: "高い" },
     { label: "出力速度", get: x => x.speed, fmt: x => fmt.num(x, 0) + " tok/s" },
     { label: "コンテキスト", get: x => x.context, fmt: fmt.tok, log: true },
   ], m, ms);
-  fitRows($("#profRanks"), 18, 40); fixLanes(v);
+  fitRows($("#profRanks"), 18, 52); fixLanes(v);
+  const nb = $("#nearBox"); if (nb) { const its = [...nb.querySelectorAll(".near")]; while (nb.scrollHeight > nb.clientHeight + 1 && its.length > 1) its.pop().remove(); const k = nb.querySelectorAll(".near").length; nb.firstElementChild.style.gap = clamp((nb.clientHeight - k * 18) / Math.max(1, k), 6, 16) + "px"; }
   v.querySelectorAll("[data-cmp]").forEach(btn => btn.onclick = () => compareWith(btn.dataset.cmp.split(",")).run());
   const pl = $("#pList"), nli = pl.querySelectorAll(".li").length, ng = pl.querySelectorAll(".li-g").length;
   pl.querySelectorAll(".li").forEach(el => el.style.minHeight = clamp((pl.clientHeight - ng * 24) / Math.max(1, nli) - 1, 19, 28) + "px");
