@@ -136,7 +136,7 @@ main{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto mi
 .empty{display:grid;place-items:center;height:100%;color:var(--muted);font-size:12px;text-align:center;padding:10px}
 
 /* SVG text */
-.ax{font-size:10.5px;fill:var(--muted)}
+.ax{font-size:11px;fill:var(--muted)}
 .lb{font-size:12px;fill:var(--text)}
 .lb2{font-size:11px;fill:var(--text-2)}
 /* 点ラベル・軸ラベルの縁取り（線や点の上でも読める） */
@@ -252,7 +252,7 @@ table{border-collapse:collapse;width:100%}
 .ld.grp b{display:block;min-width:15px;height:15px;border-radius:8px;color:#fff;font-size:10px;font-weight:700;line-height:15px;text-align:center;text-shadow:0 0 2px rgba(0,0,0,.55);cursor:pointer}
 .ld.grp b:hover{outline:2px solid var(--text);outline-offset:1px}
 .ld:hover{outline:2px solid var(--text);outline-offset:1px}
-.le{font-size:10.5px;color:var(--muted);flex:none}
+.le{font-size:11px;color:var(--text-2);flex:none}
 .kpi .k-row{display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px;align-items:end}
 .kpi .k-row .lanew{margin-bottom:4px}
 .kpi .k-row.hist{grid-template-columns:minmax(0,1fr) 38%}
@@ -312,11 +312,12 @@ ul.plain{list-style:none;margin:0;padding:0}
 .tier .tk{font-weight:700;font-size:13px;text-align:right}
 .tier .tb{position:relative;height:16px;display:flex;align-items:center}
 .tier .tb i{position:absolute;left:0;top:3px;bottom:3px;border-radius:3px;background:var(--bar)}
-.tier .tj{position:relative;font-size:11px;color:var(--text-2);padding-left:6px}
+.tier .tj{position:relative;font-size:11.5px;color:var(--text);padding-left:6px}
 .tier .tm{display:flex;flex-wrap:wrap;gap:2px 12px;font-size:11.5px;line-height:16px}
 .tier .tk{line-height:16px}
 .slotn{display:inline-block;width:16px;height:16px;border-radius:50%;color:#fff;font-size:10.5px;font-weight:700;line-height:16px;text-align:center;text-shadow:0 0 2px rgba(0,0,0,.55);margin-right:5px;flex:none}
 .cmp th .slotn{vertical-align:-3px}
+.cmp thead th{white-space:nowrap;vertical-align:middle}
 .cmp .wins td{height:var(--rh,30px)}
 .wb{display:inline-block;width:56px;height:8px;border-radius:4px;background:var(--surface-3);margin-right:8px;vertical-align:1px;overflow:hidden}
 .wb i{display:block;height:100%;border-radius:4px}
@@ -1102,7 +1103,7 @@ const Tip = {
   show(k, x, y, anchor) { const h = this.reg.get(k); if (!h) return this.hide(); const t = this.el; t.innerHTML = h; t.classList.add("on");
     const r = t.getBoundingClientRect(); let px = x + 14, py = y + 14;
     const card = anchor?.closest("svg") && anchor.closest(".card"), c = card?.getBoundingClientRect();
-    if (c && (c.right + 8 + r.width <= innerWidth - 8 || c.left - 8 - r.width >= 8)) { px = c.right + 8 + r.width <= innerWidth - 8 ? c.right + 8 : c.left - 8 - r.width; py = clamp(y - r.height / 2, 8, innerHeight - r.height - 8); }
+    if (c && (c.right + 8 + r.width <= innerWidth - 8 || c.left - 8 - r.width >= 8)) { px = c.right + 8 + r.width <= innerWidth - 8 ? c.right + 8 : c.left - 8 - r.width; py = clamp(y - r.height / 2, Math.max(8, $("#view").getBoundingClientRect().top), innerHeight - r.height - 8); }
     else { if (px + r.width > innerWidth - 8) px = x - r.width - 14; if (py + r.height > innerHeight - 8) py = y - r.height - 14; }
     t.style.left = px + "px"; t.style.top = py + "px"; },
   hide() { this.el.classList.remove("on"); },
@@ -1176,10 +1177,11 @@ const Chart = {
     const { W, H } = this.size(host);
     const dot = o.zeroBased === false, n = rows.length;
     const valW = o.valW || 58, axisH = 16;
-    if (o.median && rows.length >= 4) { const vs = rows.map(r => r.v).sort((a, b) => a - b), md = vs.length % 2 ? vs[(vs.length - 1) / 2] : (vs[vs.length / 2 - 1] + vs[vs.length / 2]) / 2; o = { ...o, refs: [...(o.refs || []), { v: md, label: `中央値 ${o.short ? o.short(md) : o.fmt(md)}`, median: true }] }; }
+    // 中央値の線は、行が詰まるときは省く（行の読みやすさを優先）
+    if (o.median && rows.length >= 4 && (this.size(host).H - 34) / rows.length >= 18) { const vs = rows.map(r => r.v).sort((a, b) => a - b), md = vs.length % 2 ? vs[(vs.length - 1) / 2] : (vs[vs.length / 2 - 1] + vs[vs.length / 2]) / 2; o = { ...o, refs: [...(o.refs || []), { v: md, label: `中央値 ${o.short ? o.short(md) : o.fmt(md)}`, median: true }] }; }
     const padT = (o.refs || []).length ? 16 : 0;
     // 行が詰まりすぎる場合は上位だけ描き、残りは件数で示す（全件はヒートマップで確認できる）
-    const minRow = 16; let more = 0;
+    const minRow = 18; let more = 0;
     if ((H - axisH - 2 - padT) / n < minRow) { const k = Math.max(3, Math.floor((H - axisH - 2 - padT - 14) / minRow)); more = n - k; rows = rows.slice(0, k); }
     const nn = rows.length;
     const fsz = Math.max(...rows.map(r => measure(r.m.name, 12, 600))) + 24 <= W * 0.5 ? 12 : 11;
@@ -1420,12 +1422,12 @@ function podiumRows(bs, ms, opt = {}) {
 }
 const podiumTable = (rows, id) => `<div style="position:absolute;inset:0;overflow:hidden" id="${id}"><table class="tbl podium"><colgroup><col style="width:16%"><col style="width:27%"><col style="width:57%"></colgroup><thead><tr><th>ベンチマーク</th><th>全モデル中の位置</th><th>上位3モデル</th></tr></thead><tbody>${rows}</tbody></table></div>`;
 /** モデルの横顔：行＝モデル、列＝指標。各セルに「全モデル中の位置」のレーン（そのモデルだけ色）と値を並べる */
-function profileGrid(models, specs, ms, id) {
+function profileGrid(models, specs, ms, id, opt = {}) {
   const cols = specs.map(metric).filter(Boolean).map(mt => ({ mt, r: ranked(mt, ms) }));
   const head = `<thead><tr><th>モデル</th>${cols.map(c => `<th title="${esc(c.mt.name)}">${esc(c.mt.short)}<span class="muted" style="font-weight:400">${c.mt.higher ? "（右ほど良い）" : "（左ほど安い）"}</span></th>`).join("")}</tr></thead>`;
   const body = models.map(m => `<tr><td>${mName(m)}</td>${cols.map(c => { const x = c.r.find(o => o.m === m);
     return x ? `<td><div class="pg">${lane(c.r, c.mt, { marks: [{ m, t: "" }] })}<span class="num">${esc(c.mt.fmt(x.v).replace(/ tok\/s|\/1M/, ""))}</span></div></td>` : `<td class="na">—</td>`; }).join("")}</tr>`).join("");
-  return `<div style="position:absolute;inset:0;overflow:hidden" id="${id}"><table class="tbl pgrid" style="table-layout:fixed"><colgroup><col style="width:20%">${cols.map(() => "<col>").join("")}</colgroup>${head}<tbody>${body}</tbody></table></div>`;
+  return `<div style="${opt.auto ? "" : "position:absolute;inset:0;"}overflow:hidden" id="${id}"><table class="tbl pgrid" style="table-layout:fixed"><colgroup><col style="width:20%">${cols.map(() => "<col>").join("")}</colgroup>${head}<tbody>${body}</tbody></table></div>`;
 }
 /** 枠に収まらないとき、優先度の低い要素（selectors の順）から省き、省いた文章は見出しのツールチップへ移す（切れたまま見せない） */
 function shed(root, selectors) {
@@ -1456,22 +1458,32 @@ function renderBench(v) {
   const few = n <= 2, kMax = Math.max(1, ...bs.map(b => ranked(metric("bench:" + b.id), ms).length));
   const chartH = clamp(kMax * 30 + 96, 180, v.clientHeight * 0.4);
   v.style.gridTemplateColumns = n === 1 ? "minmax(0,1fr) minmax(0,1fr)" : `repeat(${cols},minmax(0,1fr))`;
-  v.style.gridTemplateRows = n === 1 ? "minmax(0,1fr) auto" : n === 2 ? `${chartH}px minmax(0,1fr) auto` : `repeat(${rowsN},minmax(0,1fr))`;
+  // 3指標以上：各段の高さを、その段で最も行数の多いグラフに比例させる（行の少ない段を詰め、空白を減らす）
+  const cnt = bs.map(b => ranked(metric("bench:" + b.id), ms).length), need = (b, k) => 96 + (b.caveat ? 34 : 0) + k * 20;   // カード1枚に必要な高さの目安（見出し＋注記＋軸＋行）
+  const nWin = new Set(bs.map(b => ranked(metric("bench:" + b.id), ms)[0]?.m).filter(Boolean)).size;
+  const rowFr = Array.from({ length: rowsN }, (_, k) => Math.max(...bs.slice(k * cols, k * cols + cols).map((b, j) => need(b, cnt[k * cols + j])), k === rowsN - 1 && n > 4 && n % 3 ? 70 + nWin * 22 : 0));   // 最後の段は「首位の数」カードも考慮
+  v.style.gridTemplateRows = n === 1 ? "minmax(0,1fr) auto" : n === 2 ? `${chartH}px auto auto` : rowFr.map(f => `minmax(0,${f}fr)`).join(" ");
   const r0 = few ? ranked(metric("bench:" + bs[0].id), ms) : [], rk = m => { const i = r0.findIndex(x => x.m === m); return i < 0 ? 99 : i; };
   const pgModels = few ? ms.filter(m => bs.some(b => score(m, b.id) != null)).sort((a, c) => rk(a) - rk(c)) : [];
   const pgSpecs = [...bs.map(b => "bench:" + b.id), ...(bs.some(b => b.id === "aa_index") ? [] : ["bench:aa_index"]), "price:blended", "spec:speed"];
-  const pgCard = few ? card("上位モデルの横顔", "各指標での位置（色の点＝そのモデル・灰＝その他）", profileGrid(pgModels, pgSpecs, ms, "pgWrap"), { style: n === 2 ? "grid-column:1/-1" : "" }) : "";
+  const pgCard = few ? card("上位モデルの横顔", "各指標での位置（色の点＝そのモデル・灰＝その他）", profileGrid(pgModels, pgSpecs, ms, "pgWrap", { auto: n === 2 }), { style: n === 2 ? "grid-column:1/-1" : "" }) : "";
   v.innerHTML = bs.map(b => card(esc(b.label), `${esc(b.unit === "Elo" ? "Elo（相対評価）" : b.unit === "%" ? "正答・成功率" : b.unit)}`,
     host("ch-" + b.id), { right: `<button class="info" data-gb="${esc(b.id)}" title="${esc(b.desc || "")}（クリックで解説へ）" aria-label="${esc(b.label)}の解説">i</button>`, foot: b.caveat ? `<div class="caveat">${esc(b.caveat)}</div>` : "" })).join("")
     + pgCard + (n === 1 ? benchInfo(bs[0], ms, "wide") : n > 4 && n % 3 ? benchSummary(bs, ms, cols * rowsN - n) : n === 2 ? bs.map(b => benchInfo(b, ms, "compact")).join("") : "");
-  fitRows($("#pgWrap"), 18, 72);
+  // 横顔表は内容の高さで置き、画面に収まらなければ残りの高さに合わせて行を詰める（それでも入らない行は件数表示）
+  const pw = $("#pgWrap");
+  if (pw && n === 2) { const pc = pw.closest(".card"), info = v.querySelector(".binfo")?.closest(".card")?.offsetHeight || 0, gap = parseFloat(getComputedStyle(v).rowGap) || 12;
+    // 横顔表は内容の高さ（上限＝残りの高さ）、余った高さはグラフの段へ回す
+    const natural = pw.getBoundingClientRect().top - pc.getBoundingClientRect().top + pw.querySelector("table").offsetHeight + parseFloat(getComputedStyle(pc).paddingBottom) + 6, h = Math.min(natural, v.clientHeight - chartH - info - 2 * gap);
+    v.style.gridTemplateRows = `minmax(${chartH}px,1fr) ${h}px auto`; pw.style.cssText = "position:absolute;inset:0;overflow:hidden"; }
+  fitRows(pw, 18, n === 2 ? 34 : 56);
   v.querySelectorAll("[data-cmp]").forEach(btn => btn.onclick = () => compareWith(btn.dataset.cmp.split(",")).run());
   if ($("#benchCmp")) $("#benchCmp").onclick = () => { const ids = []; bs.forEach(b => { const r = ranked(metric("bench:" + b.id), ms); if (r[0] && !ids.includes(r[0].m.id)) ids.push(r[0].m.id); }); compareWith(ids).run(); };
   fixLanes(v);
   bs.forEach(b => {
     const mt = metric("bench:" + b.id);
     const rows = ranked(mt, ms).map(r => ({ ...r, src: r.m.scores[b.id]?.src, note: r.m.scores[b.id]?.note }));
-    Chart.hbar($("#ch-" + b.id), rows, { title: b.label, fmt: mt.fmt, max: b.max, zeroBased: b.zeroBased, maxRow: n <= 2 ? 84 : 40, maxBar: n <= 2 ? 26 : 18, median: true, emptyMsg: "表示中のモデルにこのベンチのデータがありません",
+    Chart.hbar($("#ch-" + b.id), rows, { title: b.label, fmt: mt.fmt, max: b.max, zeroBased: b.zeroBased, maxRow: n <= 2 ? 150 : 40, maxBar: n <= 2 ? 34 : 18, median: true, emptyMsg: "表示中のモデルにこのベンチのデータがありません",
       diff: (a, c) => b.unit === "%" ? fmt.num(Math.abs(a - c)) + "pt" : fmt.num(Math.abs(a - c)), tick: t => b.unit === "%" ? t + "%" : fmt.num(t, 0), refs: b.refs });
   });
 }
@@ -1974,7 +1986,7 @@ Chart.lineage = function (host, models, upcoming, asOf, selId) {
   for (const d = new Date(d0); d <= d1; d.setUTCMonth(d.getUTCMonth() + 1)) {
     const x = X(d.getTime()), m = d.getUTCMonth() + 1, yr = m === 1;
     s += `<line class="gl" x1="${x}" x2="${x}" y1="${T}" y2="${T + laneH * provs.length}"${yr ? ' style="stroke:var(--axis)"' : ""}/>`;
-    if ((m % 2 === 1 || yr) && x + 34 < W - R && (x < asX - 100 || x > asX + 110)) s += `<text class="ax" x="${x + 3}" y="${H - 8}">${yr ? d.getUTCFullYear() + "/" : ""}${m}月</text>`;
+    if ((m % 2 === 1 || yr) && x + 3 + measure((yr ? d.getUTCFullYear() + "/" : "") + m + "月", 11) < W - R && (x < asX - 100 || x > asX + 110)) s += `<text class="ax" x="${x + 3}" y="${H - 8}">${yr ? d.getUTCFullYear() + "/" : ""}${m}月</text>`;
   }
   s += `<text class="ax" x="${asX}" y="${H - 8}" text-anchor="middle" style="fill:var(--text);font-weight:600">今日</text>`;
   s += `<text class="ax" x="${asX - 22}" y="${H - 8}" text-anchor="end">← 発表済み</text><text class="ax" x="${asX + 22}" y="${H - 8}">今後の見通し →</text>`;
