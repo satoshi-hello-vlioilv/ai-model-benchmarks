@@ -277,11 +277,16 @@ pre.code{margin:0;font:11px/1.5 Consolas,"Cascadia Mono",ui-monospace,monospace;
 ul.plain{list-style:none;margin:0;padding:0}
 
 .pick{display:flex;flex-direction:column;gap:2px;overflow:auto;height:100%}
-.pick label{display:grid;grid-template-columns:16px 1fr auto;align-items:center;gap:8px;padding:5px 6px;border-radius:7px;cursor:pointer;font-size:12px}
+.pick label{display:grid;grid-template-columns:16px minmax(0,1fr) 16px;align-items:center;gap:8px;padding:5px 6px;border-radius:7px;cursor:pointer;font-size:12px}
 .pick label:hover{background:var(--surface-2)}
 .pick input{margin:0;accent-color:var(--ink)}
 .pick .slot{font-size:10.5px;color:var(--muted)}
-.pick label.dis{opacity:.45;cursor:not-allowed}
+.pick label.dis{opacity:.72;cursor:not-allowed}
+.slotn{display:inline-block;width:16px;height:16px;border-radius:50%;color:#fff;font-size:10.5px;font-weight:700;line-height:16px;text-align:center;text-shadow:0 0 2px rgba(0,0,0,.55);margin-right:5px;flex:none}
+.cmp th .slotn{vertical-align:-3px}
+.cmp .wins td{height:var(--rh,30px)}
+.wb{display:inline-block;width:56px;height:8px;border-radius:4px;background:var(--surface-3);margin-right:8px;vertical-align:1px;overflow:hidden}
+.wb i{display:block;height:100%;border-radius:4px}
 
 .legend{display:flex;gap:12px;flex-wrap:wrap;font-size:11.5px;color:var(--text-2)}
 .legend span{display:inline-flex;align-items:center;gap:5px}
@@ -1032,12 +1037,14 @@ function mName(m) { return `<span class="mname" data-m="${esc(m.id)}"><span clas
  *  「全体の中での位置」と「首位と次点の差」を、文字を読まずに把握できるようにする（概要・KPI・ベンチ上位で共通） */
 function lane(r, mt, opt = {}) {
   if (!r.length) return "";
-  const top = opt.top ?? 3, log = ["$/1M", "tok/s", "pt/$", "tok"].includes(mt.unit) && r.every(x => x.v > 0);
+  // marks＝強調する点（既定は上位 top 件に順位番号）。比較画面では選択モデルにスロット番号を付ける
+  const marks = opt.marks || r.slice(0, opt.top ?? 3).map((x, i) => ({ m: x.m, t: i + 1 })), mk = new Map(marks.map(k => [k.m, k]));
+  const log = ["$/1M", "tok/s", "pt/$", "tok"].includes(mt.unit) && r.every(x => x.v > 0);
   const f = v => log ? Math.log10(v) : v, fs = r.map(x => f(x.v)), lo = Math.min(...fs), hi = Math.max(...fs);
   const pos = v => hi > lo ? 3 + (f(v) - lo) / (hi - lo) * 94 : 50;
   const tip = (x, i) => Tip.add(tipModel(x.m, mt.name, mt.fmt(x.v), { rank: `${i + 1}位 / ${r.length}モデル` }));
-  const dots = r.map((x, i) => i < top ? "" : `<i class="ld" style="left:${pos(x.v).toFixed(2)}%" data-m="${esc(x.m.id)}" data-t="${tip(x, i)}"></i>`).join("")
-    + r.slice(0, top).map((x, i) => ({ x, i })).reverse().map(({ x, i }) => `<i class="ld rk" style="left:${pos(x.v).toFixed(2)}%;background:${color(x.m)}" data-m="${esc(x.m.id)}" data-t="${tip(x, i)}">${i + 1}</i>`).join("");
+  const dots = r.map((x, i) => mk.has(x.m) ? "" : `<i class="ld" style="left:${pos(x.v).toFixed(2)}%" data-m="${esc(x.m.id)}" data-t="${tip(x, i)}"></i>`).join("")
+    + r.map((x, i) => ({ x, i, k: mk.get(x.m) })).filter(o => o.k).reverse().map(({ x, i, k }) => `<i class="ld rk" style="left:${pos(x.v).toFixed(2)}%;background:${color(x.m)}" data-m="${esc(x.m.id)}" data-t="${tip(x, i)}">${k.t}</i>`).join("");
   const end = v => `<span class="le num">${esc(mt.fmt(v).replace(/ (tok\/s|pt\/\$)|\/1M/, ""))}</span>`;
   const [a, b] = mt.higher ? [r[r.length - 1].v, r[0].v] : [r[0].v, r[r.length - 1].v];
   return `<div class="lanew${opt.ends ? " ends" : ""}" title="${esc(opt.title || "")}">${opt.ends ? end(Math.min(a, b)) : ""}<div class="lane${log ? " log" : ""}">${dots}</div>${opt.ends ? end(Math.max(a, b)) : ""}</div>`;
@@ -1408,41 +1415,45 @@ function renderSpeed(v) {
 }
 
 function renderCompare(v) {
-  const D = S.D, ms = visible();
-  if (!Array.isArray(S.compare) || !S.compare.length) S.compare = ranked(metric("bench:aa_index") || metric("spec:speed"), ms).slice(0, 4).map(r => r.m.id);
-  const sel = S.compare.map(id => D.models.find(m => m.id === id)).filter(m => m && ms.includes(m));
-  v.style.gridTemplateColumns = "212px minmax(0,1fr) minmax(0,1.15fr)";
+  const D = S.D, ms = visible(), sel = compareSel(ms);
+  v.style.gridTemplateColumns = "258px minmax(0,1fr)";
   v.style.gridTemplateRows = "minmax(0,1fr)";
-  const picker = ms.map(m => { const on = sel.includes(m), i = sel.indexOf(m); const dis = !on && sel.length >= 4;
-    return `<label class="${dis ? "dis" : ""}"><input type="checkbox" data-pick="${esc(m.id)}"${on ? " checked" : ""}${dis ? " disabled" : ""}>${mName(m)}<span class="slot">${on ? "#" + (i + 1) : ""}</span></label>`; }).join("");
-  // 同一提供元が複数ある場合は線種で識別（色は提供元に固定）
-  const seen = {}; const series = sel.map(m => { const k = seen[m.provider] = (seen[m.provider] || 0) + 1; return { m, dash: k === 2 ? "6 4" : k === 3 ? "2 3" : k >= 4 ? "10 3 2 3" : "", hollow: k > 1 }; });
-  const axes = D.benchmarks.filter(b => sel.length && sel.every(m => score(m, b.id) != null)).map(b => {
-    const vs = ms.map(m => score(m, b.id)).filter(isNum), mx = Math.max(...vs), mn = Math.min(...vs);
-    const norm = m => b.norm === "minmax" ? (mx > mn ? 0.3 + 0.7 * (score(m, b.id) - mn) / (mx - mn) : 1) : (b.higherIsBetter === false ? mn / score(m, b.id) : score(m, b.id) / mx);
-    return { ...b, norm };
-  });
-  const legend = `<div class="legend">${series.map(s => `<span><svg width="22" height="10"><line x1="1" x2="21" y1="5" y2="5" stroke="${color(s.m)}" stroke-width="2" ${s.dash ? `stroke-dasharray="${s.dash}"` : ""}/></svg>${esc(s.m.name)}</span>`).join("")}</div>`;
-  // 差分表
-  const best = (vals, higher = true) => { const n = vals.filter(isNum); if (n.length < 2) return null; return higher ? Math.max(...n) : Math.min(...n); };
-  const line = (label, vals, f, higher) => { const b = higher == null ? null : best(vals, higher); return `<tr><td class="t2">${esc(label)}</td>${vals.map(x => `<td class="r num${b != null && x === b ? " best" : ""}${x == null ? " na" : ""}">${esc(x == null ? "—" : f(x))}</td>`).join("")}</tr>`; };
-  const benchRows = D.benchmarks.filter(b => sel.some(m => score(m, b.id) != null)).map(b => line(b.short || b.label, sel.map(m => score(m, b.id)), x => fmt.unit(x, b.unit), b.higherIsBetter !== false)).join("");
-  const tbl = sel.length ? `<div id="cmpWrap" style="position:absolute;inset:0;overflow:hidden"><table class="tbl fit" style="table-layout:fixed"><colgroup><col style="width:24%">${sel.map(() => "<col>").join("")}</colgroup><thead><tr><th></th>${sel.map(m => `<th class="r" data-m="${esc(m.id)}"><span class="sw" style="display:inline-block;background:${color(m)};margin-right:5px"></span>${esc(m.name)}</th>`).join("")}</tr></thead><tbody>
-    <tr class="grp"><td colspan="${sel.length + 1}">仕様・価格</td></tr>
-    ${line("発表日", sel.map(m => m.released), fmt.date)}
-    ${line("入力 $/1M", sel.map(m => m.price?.input ?? null), fmt.usd, false)}
-    ${line("出力 $/1M", sel.map(m => m.price?.output ?? null), fmt.usd, false)}
-    ${line("出力速度 tok/s", sel.map(m => m.speed), x => fmt.num(x, 0), true)}
-    ${line("コンテキスト", sel.map(m => m.context ?? null), fmt.tok, true)}
-    <tr class="grp"><td colspan="${sel.length + 1}">ベンチマーク（★＝選択中の最高）</td></tr>${benchRows}</tbody></table></div>` : `<div class="empty">左のリストからモデルを選んでください</div>`;
-  v.innerHTML = card("モデルを選択", `${sel.length}/4`, `<div class="pick">${picker}</div>`)
-    + card("レーダー比較", `共通ベンチ ${axes.length} 軸・表示中モデルの首位＝100`, host("ch-rd"), { foot: `<div style="margin-top:6px">${legend}</div>` })
-    + card("差分表", "—＝未公表", tbl);
-  Chart.radar($("#ch-rd"), series, axes);
+  const slot = new Map(sel.map((m, i) => [m, i + 1]));
+  const picker = ms.map(m => { const on = slot.has(m), dis = !on && sel.length >= 4;
+    return `<label class="${dis ? "dis" : ""}" ${dis ? 'title="比較は4モデルまで。どれかを外すと選べます"' : ""}><input type="checkbox" data-pick="${esc(m.id)}"${on ? " checked" : ""}${dis ? " disabled" : ""}>${mName(m)}${on ? `<span class="slotn" style="background:${color(m)}">${slot.get(m)}</span>` : "<span></span>"}</label>`; }).join("");
+  // 1行＝1項目：位置レーン（灰＝その他の表示中モデル、番号＝選択モデル）＋選択モデルの値（★＝選択中の最高）
+  const marks = mt => sel.filter(m => isNum(mt.get(m))).map(m => ({ m, t: slot.get(m) }));
+  const row = (label, mt, opt = {}) => {
+    const vals = sel.map(m => mt.get(m)), n = vals.filter(isNum);
+    const b = mt.higher == null || n.length < 2 ? null : mt.higher ? Math.max(...n) : Math.min(...n);
+    const r = mt.higher == null ? [] : ranked(mt, ms);
+    return `<tr><td class="t2">${opt.gb ? `<span class="bn" data-gb="${esc(opt.gb)}" title="${esc(mt.name)}（クリックで解説へ）" style="cursor:pointer">${esc(label)}</span>` : esc(label)}</td>
+      <td>${r.length ? lane(r, mt, { marks: marks(mt) }) : ""}</td>${vals.map(x => `<td class="r num${b != null && x === b ? " best" : ""}${x == null ? " na" : ""}">${esc(x == null ? "—" : mt.fmt(x))}</td>`).join("")}</tr>`;
+  };
+  const priceMt = (k, name) => ({ name, unit: "$/1M", higher: false, get: m => m.price?.[k] ?? null, fmt: fmt.usd });
+  const benches = D.benchmarks.filter(b => sel.some(m => score(m, b.id) != null));
+  // 各モデルが「選択中で最高」を取った項目数（ベンチのみ・2モデル以上に値がある項目）
+  const wins = new Map(sel.map(m => [m, 0])); let nW = 0;
+  benches.forEach(b => { const r = ranked(metric("bench:" + b.id), sel); if (r.length >= 2) { nW++; r.filter(x => x.v === r[0].v).forEach(x => wins.set(x.m, wins.get(x.m) + 1)); } });
+  const winRow = `<tr class="wins"><td class="t2" style="font-weight:600">最高を取った項目数</td><td class="muted" style="font-size:11px">ベンチ ${nW} 項目のうち（2モデル以上に値がある項目）</td>${sel.map(m => `<td class="r"><div class="wb"><i style="width:${nW ? wins.get(m) / nW * 100 : 0}%;background:${color(m)}"></i></div><b class="num">${wins.get(m)}</b><span class="muted">/${nW}</span></td>`).join("")}</tr>`;
+  const head = `<thead><tr><th>項目</th><th>全 ${ms.length} モデル中の位置（右ほど大・灰＝他）</th>${sel.map(m => `<th class="r" data-m="${esc(m.id)}" style="cursor:pointer"><span class="slotn" style="background:${color(m)}">${slot.get(m)}</span>${esc(m.name)}</th>`).join("")}</tr></thead>`;
+  const tbl = sel.length ? `<div id="cmpWrap" style="position:absolute;inset:0;overflow:hidden"><table class="tbl fit cmp" style="table-layout:fixed"><colgroup><col style="width:15%"><col style="width:${sel.length > 2 ? 33 : 45}%">${sel.map(() => "<col>").join("")}</colgroup>${head}<tbody>
+    ${winRow}
+    <tr class="grp"><td colspan="${sel.length + 2}">仕様・価格（★＝選択中で最良：価格は安いほど良い）</td></tr>
+    ${row("発表日", { name: "発表日", get: m => m.released, fmt: fmt.date })}
+    ${row("入力 $/1M", priceMt("input", "入力単価"))}
+    ${row("出力 $/1M", priceMt("output", "出力単価"))}
+    ${row("出力速度", metric("spec:speed"))}
+    ${row("コンテキスト", metric("spec:context"))}
+    <tr class="grp"><td colspan="${sel.length + 2}">ベンチマーク（★＝選択中の最高・名前で解説へ）</td></tr>
+    ${benches.map(b => row(b.short || b.label, metric("bench:" + b.id), { gb: b.id })).join("")}</tbody></table></div>` : `<div class="empty">左のリストからモデルを選んでください</div>`;
+  v.innerHTML = card("モデルを選択", `${sel.length}/4 選択中`, `<div class="pick">${picker}</div>`)
+    + card("項目ごとの比較", "—＝未公表", tbl);
   // 選択リストは件数に応じて行を詰め、スクロールさせない
   const pk = v.querySelector(".pick"), labs = pk.querySelectorAll("label");
   if (pk.scrollHeight > pk.clientHeight) labs.forEach(l => { l.style.padding = "1px 6px"; l.style.fontSize = "11.5px"; l.style.minHeight = Math.max(18, (pk.clientHeight - 4) / labs.length - 2) + "px"; });
-  const cw = $("#cmpWrap"); if (cw) { const th = cw.querySelector("thead").offsetHeight; cw.style.setProperty("--rh", clamp((cw.clientHeight - th - 52) / Math.max(1, cw.querySelectorAll("tbody tr:not(.grp)").length), 22, 34) + "px"); }
+  const cw = $("#cmpWrap"); if (cw) { const th = cw.querySelector("thead").offsetHeight, ng = cw.querySelectorAll("tbody tr.grp").length; cw.style.setProperty("--rh", clamp((cw.clientHeight - th - ng * 24 - 6) / Math.max(1, cw.querySelectorAll("tbody tr:not(.grp)").length), 20, 44) + "px"); }
+  fixLanes(v);
   v.querySelectorAll("[data-pick]").forEach(cb => cb.onchange = () => {
     const id = cb.dataset.pick; S.compare = cb.checked ? [...S.compare.filter(x => sel.some(m => m.id === x)), id].slice(0, 4) : S.compare.filter(x => x !== id);
     store.set("compare", S.compare); render();
@@ -2121,6 +2132,12 @@ function renderShell() {
   if (ld.scrollWidth > ld.clientWidth + 1 && $("#leadGo")) { $("#leadGo").remove(); if (cc.short) ld.innerHTML = cc.short; }
 }
 /* ---------- 結論の帯：各画面の要点をデータから1文で生成し、次の行動を添える ---------- */
+/** 比較対象（未選択なら総合指数の上位4）。描画と結論文で同じ選択を使う */
+function compareSel(ms = visible()) {
+  const D = S.D;
+  if (!Array.isArray(S.compare) || !S.compare.length) S.compare = ranked(metric("bench:aa_index") || metric("spec:speed"), ms).slice(0, 4).map(r => r.m.id);
+  return S.compare.map(id => D.models.find(m => m.id === id)).filter(m => m && ms.includes(m));
+}
 function compareWith(ids, label = "比較する") { return { label, run: () => { S.compare = [...new Set(ids)].slice(0, 4); store.set("compare", S.compare); go("compare"); } }; }
 function conclusion(view, sub) {
   const D = S.D, ms = visible(), b = s => `<b>${esc(s)}</b>`;
@@ -2131,7 +2148,7 @@ function conclusion(view, sub) {
   const C = (html, short, action) => ({ html, short, action });
   if (view === "overview" && aa.r[0]) return C(`総合首位は ${b(aa.r[0].m.name)}（AA指数 ${aa.r[0].v}）。用途ごとの最適解は左の推奨から`, `総合首位は ${b(aa.r[0].m.name)}（AA指数 ${aa.r[0].v}）`, compareWith(ids(aa.r), "上位3を比較"));
   if (view === "models") return sub === "profile" ? C(`左でモデルを選ぶと、強み・注意点と立ち位置を表示`, null, null) : C(`総合首位は ${b(aa.r[0]?.m.name || "—")}、最安は ${b(price.r[0]?.m.name || "—")}（混合 ${fmt.usd(price.r[0]?.v)}/1M）`, `総合首位 ${b(aa.r[0]?.m.name || "—")}・最安 ${b(price.r[0]?.m.name || "—")}`, compareWith([aa.r[0]?.m.id, price.r[0]?.m.id].filter(Boolean), "2つを比較"));
-  if (view === "compare") { const sel = (S.compare || []).map(id => D.models.find(m => m.id === id)).filter(m => m && ms.includes(m)); const w = compareWins(sel); return w ? C(`${b(w.m.name)} が ${w.k}/${w.n} 項目で最高（選択中 ${sel.length} モデル）`, `${b(w.m.name)} が ${w.k}/${w.n} 項目で最高`, null) : C("左のリストで2〜4モデルを選んでください", null, null); }
+  if (view === "compare") { const sel = compareSel(ms); const w = compareWins(sel); return w ? C(`${b(w.m.name)} が ${w.k}/${w.n} 項目で最高（選択中 ${sel.length} モデル）`, `${b(w.m.name)} が ${w.k}/${w.n} 項目で最高`, null) : C("左のリストで2〜4モデルを選んでください", null, null); }
   if (view === "bench") {
     if (sub === "heat") { const w = compareWins(ms); return C(`最も多くの指標で首位なのは ${b(w?.m.name || "—")}（${w?.k || 0} 指標）`, null, w ? compareWith(ids(ranked(metric("bench:aa_index"), ms)), "上位3を比較") : null); }
     const bs = D.benchmarks.filter(x => (x.category || "other") === sub), bm = bs[0], r = bm ? ranked(metric("bench:" + bm.id), ms) : [];
