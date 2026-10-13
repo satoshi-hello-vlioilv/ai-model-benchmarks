@@ -436,6 +436,17 @@ ul.plain{list-style:none;margin:0;padding:0}
 .impl{font-size:12px;line-height:1.6;background:var(--surface-2);border-radius:8px;padding:8px 10px;display:grid;grid-template-columns:auto 1fr;gap:8px}
 .impl::before{content:"→";font-weight:700;color:var(--text)}
 .tc.wide{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:20px}
+.pf{display:grid;grid-auto-rows:1fr;gap:6px}
+.pf-r{display:grid;grid-template-columns:minmax(0,0.85fr) 16px minmax(0,1.15fr);gap:6px;align-items:stretch;font-size:11.5px}
+.pf-p{background:color-mix(in oklab,var(--critical) 9%,var(--surface));border:1px solid color-mix(in oklab,var(--critical) 35%,transparent);border-radius:7px;padding:6px 8px;font-weight:650;display:flex;gap:6px;align-items:center}
+.pf-i{flex:none;width:16px;height:16px;border-radius:50%;background:var(--critical);color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center}
+.pf.narrow{grid-auto-rows:auto;align-content:space-between}
+.pf.narrow .pf-r{grid-template-columns:1fr;gap:0}
+.pf.narrow .pf-a{display:none}
+.pf.narrow .pf-p{background:none;border:0;padding:0 0 2px}
+.pf.narrow .pf-f{padding:3px 8px}
+.pf-a{align-self:center;color:var(--text-2);font-weight:700;text-align:center}
+.pf-f{background:color-mix(in oklab,var(--seq-hi) 10%,var(--surface));border:1px solid color-mix(in oklab,var(--seq-hi) 35%,transparent);border-radius:7px;padding:6px 8px;color:var(--text);display:flex;align-items:center;line-height:1.4}
 .stages{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;gap:2px}
 .stg{border-radius:8px;padding:7px 10px;display:grid;grid-template-columns:minmax(0,11em) minmax(0,1fr);gap:10px;align-items:center;font-size:11.5px;color:var(--text-2);border:1.5px solid var(--seq-hi);min-width:0}
 .stg b{font-size:12px;color:var(--text)}
@@ -727,6 +738,7 @@ button.info:hover{border-color:var(--ink);color:var(--text)}
   ],
   "outlook": {
     "groupGrowth": {"capability": ["horizon", "price", "mmlu"], "infra": ["compute", "params", "context"]},
+    "groupShort": {"capability": "作業時間は倍増、価格は年10倍下落", "infra": "基盤はGW級、需要は推論へ", "frontier": "次の主戦場は物理世界・記憶・端末・自己改善", "safety": "最上位モデルは段階的公開が標準に"},
     "groupSummary": {
       "capability": "自律作業時間は約3.5か月で倍増し、同等性能の価格は年10倍以上のペースで下落している",
       "infra": "計算基盤はギガワット級へ。需要の中心は学習から推論に移り、エージェント接続の標準化が進む",
@@ -1109,8 +1121,14 @@ const Tip = {
    *  外側に入らない場合と、行以外の要素ではカーソルの右下（はみ出す方向は反転） */
   show(k, x, y, anchor) { const h = this.reg.get(k); if (!h) return this.hide(); const t = this.el; t.innerHTML = h; t.classList.add("on");
     const r = t.getBoundingClientRect(); let px = x + 14, py = y + 14;
-    const card = anchor?.closest("svg") && anchor.closest(".card"), c = card?.getBoundingClientRect();
-    if (c && (c.right + 8 + r.width <= innerWidth - 8 || c.left - 8 - r.width >= 8)) { px = c.right + 8 + r.width <= innerWidth - 8 ? c.right + 8 : c.left - 8 - r.width; py = clamp(y - r.height / 2, Math.max(8, $("#view").getBoundingClientRect().top), innerHeight - r.height - 8); }
+    const card = anchor?.closest("svg") && anchor.closest(".card"), c = card?.getBoundingClientRect(), vtop = Math.max(8, $("#view").getBoundingClientRect().top);
+    const end = anchor?.querySelector?.(".vl") || anchor?.querySelector?.(".mk"), er = end?.getBoundingClientRect();
+    // ① 棒グラフの行：値ラベルの右の余白（同じカード内）に出す＝読んでいる行も隣のカードも覆わない
+    if (c && er && er.right + 10 + r.width <= c.right - 6 && r.height <= c.height - 12) { px = er.right + 10; py = clamp(y - r.height / 2, Math.max(c.top + 6, vtop), c.bottom - r.height - 6); }
+    // ② 入らなければ、同じカード内で読んでいる行の下（下に入らなければ上）に出す
+    else if (c && er && r.width <= c.width - 12 && (er.bottom + 8 + r.height <= c.bottom - 6 || er.top - 8 - r.height >= Math.max(c.top + 6, vtop))) { px = clamp(x - r.width / 2, c.left + 6, c.right - r.width - 6); py = er.bottom + 8 + r.height <= c.bottom - 6 ? er.bottom + 8 : er.top - 8 - r.height; }
+    // ③ それ以外のグラフ：カードの外側の左右（見出し行より下）
+    else if (c && (c.right + 8 + r.width <= innerWidth - 8 || c.left - 8 - r.width >= 8)) { px = c.right + 8 + r.width <= innerWidth - 8 ? c.right + 8 : c.left - 8 - r.width; py = clamp(y - r.height / 2, Math.max(8, $("#view").getBoundingClientRect().top), innerHeight - r.height - 8); }
     else { if (px + r.width > innerWidth - 8) px = x - r.width - 14; if (py + r.height > innerHeight - 8) py = y - r.height - 14; }
     t.style.left = px + "px"; t.style.top = py + "px"; },
   hide() { this.el.classList.remove("on"); },
@@ -1505,7 +1523,7 @@ function benchSummary(bs, ms, span) {
       <div><button class="go" id="benchCmp">首位のモデルを比較</button></div></div>`, { style: span > 1 ? `grid-column:span ${span}` : "" });
 }
 
-/** 指標の見方カード：説明・評価の流れ・構成・収録率・未計測モデル・次の行動。
+/** 指標の見方カード：説明・評価の流れ・構成・公表数・未計測モデル・次の行動。
  *  mode="wide"（1指標のカテゴリ：全幅を左右2列で使う）／"compact"（2指標のカテゴリ：指標ごとに1枚） */
 function benchInfo(b, ms, mode) {
   const mt = metric("bench:" + b.id), r = ranked(mt, ms);
@@ -1514,7 +1532,7 @@ function benchInfo(b, ms, mode) {
   const what = `<div class="note">${esc(b.desc || "説明は未登録です")}</div>
     ${b.flow ? `<div><div class="sec-h">評価の流れ</div>${flowHtml(b.flow)}</div>` : ""}
     ${b.composition ? `<div>${compHtml(b.composition)}</div>` : ""}`;
-  const who = `${mode === "wide" ? `<div><div class="sec-h">収録 ${r.length} / ${ms.length} モデル</div><div class="wb wide" style="display:block"><i style="width:${ms.length ? r.length / ms.length * 100 : 0}%;background:var(--seq-hi)"></i></div></div>` : ""}
+  const who = `${mode === "wide" ? `<div><div class="sec-h">公表 ${r.length} / ${ms.length} モデル</div><div class="wb wide" style="display:block"><i style="width:${ms.length ? r.length / ms.length * 100 : 0}%;background:var(--seq-hi)"></i></div></div>` : ""}
     ${mode === "wide" ? `<div><h4 style="margin:0 0 6px;font-size:11.5px;color:var(--text-2)">未公表・未計測のモデル（${missing.length}）</h4><div class="legend">${missing.length ? missing.map(m => mName(m)).join("") : '<span class="muted">なし</span>'}</div></div>` : ""}
     <div style="display:flex;gap:16px"><button class="go" data-gb="${esc(b.id)}">個別解説で詳しく</button>${r.length > 1 ? `<button class="go" data-cmp="${esc(r.slice(0, 3).map(x => x.m.id).join(","))}">上位3を比較</button>` : ""}</div>`;
   const body = mode === "wide" ? `<div class="stack">${what}</div><div class="stack">${who}</div>` : what + who;
@@ -1674,7 +1692,7 @@ function renderTable(v, nb = 8) {
     const bar = c.bar && isNum(val) && e ? barBg(barT(val, e, c.log)) : "";
     return `<td class="${c.num ? "r num" : ""}${isBest ? " best" : ""}${val == null ? " na" : ""}"${bar ? ` style="${bar}"` : ""}>${c.cell(m)}</td>`; }).join("")}</tr>`).join("");
   const hidden = benchAll.length - benchCols.length;
-  v.innerHTML = card("仕様一覧", `${ms.length}モデル・★＝列の最良値・$は100万トークン当たり・混合$は入力3:出力1${hidden > 0 ? `・幅の都合で${hidden}ベンチを省略（ヒートマップで全表示）` : ""}`, `<div id="tblWrap" style="position:absolute;inset:0;overflow:hidden"><table class="tbl${rows.length > 18 ? " dense" : ""}"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`,
+  v.innerHTML = card("仕様一覧", `${ms.length}モデル・★＝列の最良値・背景の帯＝列内の大小（価格は短いほど安い）・$は100万トークン当たり・混合$は入力3:出力1${hidden > 0 ? `・幅の都合で${hidden}ベンチを省略（ヒートマップで全表示）` : ""}`, `<div id="tblWrap" style="position:absolute;inset:0;overflow:hidden"><table class="tbl${rows.length > 18 ? " dense" : ""}"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`,
     { right: `<button class="btn" id="csvBtn">CSVで書き出し</button>` });
   const w = $("#tblWrap");
   if (w.scrollWidth > w.clientWidth + 1 && nb > 0) { Tip.reset(); return renderTable(v, nb - 1); }
@@ -1694,7 +1712,7 @@ function renderData(v) {
   const val = Data.validate(D.raw);
   const remote = store.get("remoteUrl", ""), auto = store.get("autoFetch", false), last = store.get("lastFetch", null);
   const srcLabel = { seed: "HTML埋め込みデータ", local: "取り込み済みデータ（このブラウザに保存）", remote: "URLから取得したデータ" }[S.source];
-  // 現在のデータ：件数・鮮度・検証結果・ベンチ別の収録率を図で示す
+  // 現在のデータ：件数・鮮度・検証結果・ベンチ別の公表数を図で示す
   const days = daysSince(D.meta.asOf), ms = D.models.filter(m => !m.legacy);
   const tiles = [["モデル", D.models.length], ["ベンチ", D.benchmarks.length], ["提供元", D.providers.length], ["出典", D.src.size]].map(([l, n]) => `<div class="dt"><b class="num">${n}</b><span>${l}</span></div>`).join("");
   const cover = D.benchmarks.map(b => { const k = ms.filter(m => score(m, b.id) != null).length; return `<div class="cv"><span class="bn" data-gb="${esc(b.id)}" style="cursor:pointer">${esc(b.short || b.label)}</span><div class="wb wide"><i style="width:${ms.length ? k / ms.length * 100 : 0}%;background:var(--seq-hi)"></i></div><span class="num muted">${k}/${ms.length}</span></div>`; }).join("");
@@ -1703,7 +1721,7 @@ function renderData(v) {
     <div><div class="sec-h">鮮度 <b class="num" style="color:var(--text)">${esc(fmt.date(D.meta.asOf))}（${days}日前）</b>・30日を超えると「要更新」</div><div class="fresh"><i style="width:${clamp(days / 30, 0.02, 1) * 100}%" class="${days > 30 ? "old" : ""}"></i><span style="left:100%">30日</span></div></div>
     <div class="vres ${val.errors.length ? "ng" : "ok"}">${val.errors.length ? "✕" : "✓"} 検証 エラー ${val.errors.length}・警告 ${val.warnings.length}<span class="muted" style="font-weight:400">・使用中：${esc(srcLabel)}${last ? `・最終取得 ${esc(new Date(last).toLocaleString("ja-JP"))}` : ""}</span></div>
     ${val.errors.length || val.warnings.length ? `<ul class="plain log">${[...val.errors.map(e => `<li class="e">✕ ${esc(e)}</li>`), ...val.warnings.slice(0, 4).map(w => `<li class="w">△ ${esc(w)}</li>`)].join("")}</ul>` : ""}
-    <div><div class="sec-h">ベンチ別の収録率（現行 ${ms.length} モデル中・名前で解説へ）</div><div class="covers">${cover}</div></div>
+    <div><div class="sec-h">ベンチ別の公表数（現行 ${ms.length} モデル中・名前で解説へ）</div><div class="covers">${cover}</div></div>
     <div class="caveat" style="margin:0"><span>${(D.meta.notes || []).map(esc).join(" ")}</span></div>
   </div>`;
   const imp = `<div style="display:grid;gap:12px;align-content:start;position:absolute;inset:0;overflow:hidden">
@@ -1758,6 +1776,13 @@ const KIND_GLYPH = { exam: "?", agent: "▶", pairwise: "⇄", composite: "Σ" }
 function kindBadge(b) { const k = S.D.kinds.get(b.kind); return k ? `<span class="kb" title="${esc(k.desc)}"><i>${KIND_GLYPH[b.kind] || "・"}</i>${esc(k.label)}</span>` : ""; }
 function flowHtml(steps, vertical) { return `<div class="flow${vertical ? " v" : ""}">${steps.map((t, i) => `<div class="st"><b>STEP ${i + 1}</b>${esc(t)}</div>`).join(ARROW)}</div>`; }
 /** 構成の帯グラフ。系列色（提供元）と混同しないよう無彩色の段階で塗り、直接ラベルを付ける */
+/** 「どんな課題か」：「A、B、C … のn評価」のような列挙はチップの並びで見せ、残りの説明は1行に（文章の羅列を避ける） */
+function formatHtml(b) {
+  const m = b.format.match(/^(.+?)の(\d+)(評価|種|分野|カテゴリ)(.*)$/), items = m ? m[1].split(/、/).map(t => t.trim()).filter(Boolean) : [];
+  const ex = b.example ? `<div class="t2" style="font-size:11.5px;margin-top:4px">例：${esc(b.example)}</div>` : "";
+  if (items.length >= 4) return `<div class="tags">${items.map(t => `<span class="tag">${esc(t)}</span>`).join("")}</div><div class="t2" style="font-size:11.5px;margin-top:4px">${esc(m[2] + m[3] + m[4])}</div>${ex}`;
+  return `<p class="txt">${esc(b.format)}</p>${ex}`;
+}
 function compHtml(c) {
   if (!c) return "";
   if (c.unknownCounts) return `<div class="sec-h">${esc(c.title)}</div><div class="tags">${c.parts.map(([l]) => `<span class="tag">${esc(l)}</span>`).join("")}</div><div class="caveat"><span>内訳の件数は公表されていないため、項目のみ表示。</span></div>`;
@@ -1871,10 +1896,10 @@ function renderGuideDetail(v, ms) {
   const center = `<div style="position:absolute;inset:0;display:flex;flex-direction:column;gap:12px"><div class="stack" style="flex:none">
       <p class="lead-q">${esc(b.desc || "")}</p>
       <dl class="kv" style="grid-template-columns:repeat(${Math.min(4, kv.length)},minmax(0,1fr))">${kv.map(([k, x]) => `<div><dt>${esc(k)}</dt><dd style="font-weight:600;font-size:12px">${esc(x)}</dd></div>`).join("")}</dl>
-      ${b.format ? `<div><div class="sec-h">どんな課題か</div><p class="txt">${esc(b.format)}${b.example ? `<br><span class="t2">例：${esc(b.example)}</span>` : ""}</p></div>` : ""}
+      ${b.format ? `<div><div class="sec-h">どんな課題か</div>${formatHtml(b)}</div>` : ""}
       ${b.flow ? `<div><div class="sec-h">評価の流れ</div>${flowHtml(b.flow)}</div>` : ""}
       ${b.composition ? `<div>${compHtml(b.composition)}</div>` : ""}
-      ${b.scoring ? `<div><div class="sec-h">採点方法</div><p class="txt">${esc(b.scoring)}</p></div>` : ""}
+      ${b.scoring && !(b.composition && /重み/.test(b.scoring)) ? `<div><div class="sec-h">採点方法</div><p class="txt">${esc(b.scoring)}</p></div>` : ""}
       ${b.why ? `<div><div class="sec-h">結果の読み方</div><div class="note">${esc(b.why)}</div></div>` : ""}
       ${b.caveat ? `<div class="caveat" style="margin:0"><span>${esc(b.caveat)}</span></div>` : ""}
       ${src ? `<div class="muted" style="font-size:11px">出典：${url ? `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(src.label)}</a>` : esc(src.label)}</div>` : ""}
@@ -2171,8 +2196,9 @@ Chart.events = function (host, events, lanes, opt = {}) {
     evs.forEach(e => placed.push({ x: X(e.t) - 6, y: cy - 6, w: 12, h: 12 }));
     evs.forEach(e => {
       const x = X(e.t), w = measure(e.title, 11) + 4, h = 13, fut = e.t > asOf;
-      const rows = [1, 2, 3].filter(k => 9 + k * (h + 2) <= laneH / 2 + 2);
-      const cands = [...rows.flatMap(k => [[x - w / 2, cy - 7 - k * (h + 2)], [x - w / 2, cy + 9 + (k - 1) * (h + 2)]]), [x + 8, cy - h / 2], [x - 8 - w, cy - h / 2], [x + 2, cy - 7 - (h + 2)], [x - w - 2, cy + 9]]
+      // 候補：上下の段（中央・左端揃え・右端揃え）→ 左右。引き出し線は点から段まで縦に伸び、ラベルの中央または端に接する
+      const rows = [1, 2, 3, 4, 5, 6].filter(k => 9 + k * (h + 2) <= laneH / 2 + 2);
+      const cands = [...rows.flatMap(k => [-w / 2, -2, -w + 2].flatMap(dx => [[x + dx, cy - 7 - k * (h + 2)], [x + dx, cy + 9 + (k - 1) * (h + 2)]])), [x + 8, cy - h / 2], [x - 8 - w, cy - h / 2], [x + 2, cy - 7 - (h + 2)], [x - w - 2, cy + 9]]
         .map(([a, b]) => [clamp(a, L, W - R - w), b]).filter(([, b]) => b > y0 && b + h < y0 + laneH);
       const cost = ([a, b]) => placed.reduce((acc, q) => acc + Math.max(0, Math.min(a + w, q.x + q.w) - Math.max(a, q.x)) * Math.max(0, Math.min(b + h, q.y + q.h) - Math.max(b, q.y)), 0);
       let pos = cands.find(c => cost(c) === 0 && offLine(c[0], w)) || cands.find(c => cost(c) === 0);
@@ -2253,12 +2279,14 @@ function renderDiffusion(v) {
     + card("出力速度の比較", "tok/s", host("ch-dspeed"), { right: legend, style: "grid-column:span 2", foot: `<div class="caveat"><span>${esc(df.speed.title)}。計測環境（GPU・条件）が異なるため、目安として比較してください。</span></div>` })
     + card("応答完了までの時間", "推論込み・秒", `<div class="tc" style="position:absolute;inset:0"><div style="position:relative;flex:1;min-height:80px">${host("ch-dlat")}</div><div class="stats" style="gap:3px">${df.stats.map(x => `<div class="stat"${x.note ? ` data-t="${Tip.add(`<div class="tt">${esc(x.l)}</div><div class="tm">${esc(x.note)}</div>`)}"` : ""}><b>${esc(x.v)}</b><span>${esc(x.l)}</span></div>`).join("")}</div></div>`)
     + card("研究とモデルの年表", "2015〜2020年は圧縮表示", host("ch-dev"), { style: "grid-column:span 2" })
-    + card("課題と対策", "カーソルで詳細", `<div class="stack" style="position:absolute;inset:0;gap:7px;overflow:hidden">${df.challenges.map(c => `<div data-t="${Tip.add(`<div class="tt">${esc(c.t)}</div><div class="tm">${esc(c.d)}</div><div class="tm" style="margin-top:4px">対策：${esc(c.fix)}</div>`)}" style="border-bottom:1px solid var(--grid);padding-bottom:6px"><div style="font-size:12px;font-weight:650">${esc(c.t)}</div><div style="font-size:11.5px;color:var(--text-2);line-height:1.45">→ ${esc(c.fix)}</div></div>`).join("")}</div>`)
+    + card("課題と対策", "課題 → 対策（カーソルで詳細）", `<div class="pf" style="position:absolute;inset:0;overflow:hidden">${df.challenges.map(c => `<div class="pf-r" data-t="${Tip.add(`<div class="tt">${esc(c.t)}</div><div class="tm">${esc(c.d)}</div><div class="tm" style="margin-top:4px">対策：${esc(c.fix)}</div>`)}"><div class="pf-p"><span class="pf-i">!</span>${esc(c.t)}</div><span class="pf-a" aria-hidden="true">→</span><div class="pf-f">${esc(c.fix)}</div></div>`).join("")}</div>`)
     + card("ブレイクスルーになるか", "", `<div class="tc" style="position:absolute;inset:0;gap:5px"><div class="impl" style="font-size:11.5px;line-height:1.55"><span>${esc(df.verdict)}</span></div><div class="sec-h" style="margin:2px 0 0">いま向いている使い方</div><div class="tags">${df.uses.map(u => `<span class="tag">${esc(u)}</span>`).join("")}</div><div style="flex:1"></div>${srcLinks(df.srcs)}</div>`);
   const mech = $("#mech"); mech.innerHTML = mechanismSvg(mech.clientWidth, mech.clientHeight);
   Chart.mini($("#ch-dspeed"), { type: "bars", title: "出力速度", unit: "tok/s", items: df.speed.items.map(([l, val, g]) => [l, val, null, g]) });
   Chart.mini($("#ch-dlat"), { type: "bars", title: df.latency.title, unit: "秒", items: df.latency.items });
   Chart.events($("#ch-dev"), dateEvents(df.events), df.lanes, { split: Date.UTC(2024, 6, 1), frac: 0.3, pad: 2, title: "拡散型LMの年表" });
+  // 課題→対策は、幅が狭く収まらないときは上下2段（課題の下に対策）に切り替える
+  const pf = v.querySelector(".pf"); if (pf && pf.scrollHeight > pf.clientHeight + 1) pf.classList.add("narrow");
   shed(v, [".tags .tag"]);
 }
 
@@ -2477,7 +2505,8 @@ function conclusion(view, sub) {
     return r[0] ? C(`${esc(bm.short || bm.label)} の首位は ${b(r[0].m.name)}（${esc(metric("bench:" + bm.id).fmt(r[0].v))}）${r[1] ? `、次点 ${esc(r[1].m.name)}` : ""}`, `${esc(bm.short || bm.label)} の首位は ${b(r[0].m.name)}`, compareWith(ids(r), "上位3を比較")) : C("このカテゴリのデータはまだありません", null, null);
   }
   if (view === "guide") {
-    if (sub === "detail") { const bm = D.bm.get(S.guideBench) || D.benchmarks[0], r = ranked(metric("bench:" + bm.id), ms); return C(`${esc(bm.short || bm.label)}：${esc(bm.desc || "")}`, `${esc(bm.short || bm.label)} の首位は ${b(r[0]?.m.name || "—")}`, r.length > 1 ? compareWith(ids(r), "上位3を比較") : null); }
+    if (sub === "detail") { const bm = D.bm.get(S.guideBench) || D.benchmarks[0], mt = metric("bench:" + bm.id), r = ranked(mt, ms), k = Math.min(5, r.length), gap = k > 1 ? Math.abs(r[0].v - r[k - 1].v) : 0, u = bm.unit === "%" ? "pt" : "";
+      return C(r[0] ? `${esc(bm.short || bm.label)}：首位 ${b(r[0].m.name)}（${esc(mt.fmt(r[0].v))}）${k > 1 ? `・上位${k}モデルの差は ${fmt.num(gap)}${u}${gap <= (bm.unit === "%" ? 5 : 30) ? "（僅差）" : ""}` : ""}` : `${esc(bm.short || bm.label)}：表示中のモデルにデータなし`, `${esc(bm.short || bm.label)}：首位 ${b(r[0]?.m.name || "—")}`, r.length > 1 ? compareWith(ids(r), "上位3を比較") : null); }
     const pts = D.benchmarks.filter(x => x.unit === "%").map(x => { const vs = ms.map(m => score(m, x.id)).filter(isNum); return vs.length >= 3 ? { x, top: Math.max(...vs), gap: Math.max(...vs) - Math.min(...vs) } : null; }).filter(Boolean);
     const g = [...pts].sort((a, c) => c.gap - a.gap)[0], sat = [...pts].sort((a, c) => c.top - a.top)[0];
     return C(`差がつきやすいのは ${b(g?.x.short || "—")}、飽和気味なのは ${b(sat?.x.short || "—")}（首位 ${fmt.num(sat?.top)}%）`, null, { label: "個別解説を見る", run: () => go("guide", "detail") });
@@ -2492,7 +2521,7 @@ function conclusion(view, sub) {
     // 動向タブ：データの groupSummary（結論文）を優先し、関連する画面への導線を添える
     const ts = O.trends.filter(t => t.group === sub), gs = O.groupSummary?.[sub];
     const next = { capability: ["コスト・価格性能を見る", "cost"], infra: ["系譜と投入予定を見る", "future", "roadmap"], frontier: ["拡散型LMを見る", "future", "diffusion"], safety: ["系譜と投入予定を見る", "future", "roadmap"] }[sub];
-    return C(gs ? esc(gs) : ts.map(t => esc(t.title)).slice(0, 2).join("／"), ts[0] ? esc(ts[0].title) : null, next ? { label: next[0], run: () => go(next[1], next[2]) } : null);
+    return C(gs ? esc(gs) : ts.map(t => esc(t.title)).slice(0, 2).join("／"), O.groupShort?.[sub] ? esc(O.groupShort[sub]) : ts[0] ? esc(ts[0].title) : null, next ? { label: next[0], run: () => go(next[1], next[2]) } : null);
   }
   if (view === "history") return sub === "growth" ? C(`学習計算量は12年で約9桁、価格は5年で約1,000分の1。伸びは今も加速中`, `学習計算量は12年で約9桁増加`, null) : C(`1956年の誕生から約70年。2度の冬の時代を経て、2012年の深層学習から急成長`, `誕生から約70年、2012年から急成長`, { label: "性能の伸びを見る", run: () => go("history", "growth") });
   if (view === "data") { const v = Data.validate(D.raw); return C(`基準日 ${fmt.date(D.meta.asOf)}（${daysSince(D.meta.asOf)}日前）・モデル ${D.models.length} 件・検証エラー ${v.errors.length} 件`, null, null); }
