@@ -14,7 +14,7 @@
   color-scheme: light;
   --bg:#f3f2ef; --surface:#fcfcfb; --surface-2:#f0efec; --surface-3:#e7e5e0;
   --border:#e1dfd9; --border-strong:#cfccc4;
-  --text:#1a1a19; --text-2:#52514e; --muted:#7c7b75;
+  --text:#1a1a19; --text-2:#4a4945; --muted:#68675f;
   --ink:#1a1a19; --ink-text:#fcfcfb;           /* 選択状態（系列色と衝突しない無彩色） */
   --grid:#e9e7e2; --axis:#bdbab2;
   --c1:#2a78d6; --c2:#eb6834; --c3:#1baf7a; --c4:#eda100;
@@ -30,7 +30,7 @@
     color-scheme: dark;
     --bg:#121211; --surface:#1a1a19; --surface-2:#232321; --surface-3:#2d2d2a;
     --border:#30302c; --border-strong:#44443f;
-    --text:#f2f1ec; --text-2:#c3c2b7; --muted:#8f8e86;
+    --text:#f2f1ec; --text-2:#cbcac0; --muted:#a3a29a;
     --ink:#f2f1ec; --ink-text:#1a1a19;
     --grid:#2a2a27; --axis:#4a4a45;
     --c1:#3987e5; --c2:#d95926; --c3:#199e70; --c4:#c98500;
@@ -43,7 +43,7 @@
   color-scheme: dark;
   --bg:#121211; --surface:#1a1a19; --surface-2:#232321; --surface-3:#2d2d2a;
   --border:#30302c; --border-strong:#44443f;
-  --text:#f2f1ec; --text-2:#c3c2b7; --muted:#8f8e86;
+  --text:#f2f1ec; --text-2:#cbcac0; --muted:#a3a29a;
   --ink:#f2f1ec; --ink-text:#1a1a19;
   --grid:#2a2a27; --axis:#4a4a45;
   --c1:#3987e5; --c2:#d95926; --c3:#199e70; --c4:#c98500;
@@ -80,6 +80,10 @@ a{color:inherit;text-underline-offset:2px}
 .chip[aria-pressed="true"]{background:var(--surface-2);border-color:var(--border-strong);color:var(--text)}
 .chip[aria-pressed="false"] .sw{opacity:.25}
 .chip.toggle[aria-pressed="true"]{background:var(--ink);color:var(--ink-text);border-color:var(--ink)}
+.chip.toggle::before{content:"";width:12px;height:12px;border-radius:3px;border:1.5px solid currentColor;flex:none;box-sizing:border-box}
+.chip.toggle[aria-pressed="true"]::before{content:"✓";border:0;font-size:12px;line-height:12px;text-align:center;font-weight:700}
+.chip[data-prov][aria-pressed="false"]{color:var(--muted);text-decoration:line-through;border-style:dashed}
+.reset{border:0;background:none;color:var(--text);font-size:11.5px;text-decoration:underline;text-underline-offset:3px;white-space:nowrap;padding:0 2px;cursor:pointer}
 .sw{width:9px;height:9px;border-radius:50%;flex:none}
 .sep{width:1px;height:20px;background:var(--border);margin:0 4px;flex:none}
 .top-right{display:flex;align-items:center;gap:8px;margin-left:auto}
@@ -97,16 +101,19 @@ a{color:inherit;text-underline-offset:2px}
 .nav-item[aria-current="page"]{background:var(--surface-2);color:var(--text);font-weight:600}
 .nav-item[aria-current="page"]::before{content:"";position:absolute;left:-8px;top:8px;bottom:8px;width:3px;border-radius:0 3px 3px 0;background:var(--ink)}
 .nav-item svg{width:18px;height:18px}
-.nav-item small{display:block;font-weight:400;color:var(--muted);font-size:11px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nav-item small{display:block;font-weight:400;color:var(--muted);font-size:11px;line-height:1.3;white-space:nowrap}
+.nav-sep{height:1px;background:var(--border);margin:5px 10px;flex:none}
 .nav-item > span{min-width:0}
 .nav-item kbd{font:11px/1 inherit;color:var(--muted);border:1px solid var(--border);border-radius:4px;padding:2px 5px}
 .rail-foot{margin-top:auto;padding:10px;border-top:1px solid var(--border);font-size:11.5px;color:var(--muted);line-height:1.6}
 .rail-foot b{color:var(--text-2);font-weight:600}
 
-main{display:grid;grid-template-rows:auto minmax(0,1fr);gap:10px;padding:12px 16px 14px;min-height:0;min-width:0}
-.subbar{display:flex;align-items:center;gap:12px;min-height:34px}
+main{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);gap:10px;padding:12px 16px 14px;min-height:0;min-width:0}
+.subbar{display:flex;align-items:center;gap:12px;min-height:34px;min-width:0}
 .subbar h1{font-size:17px;margin:0;font-weight:650;letter-spacing:.01em;white-space:nowrap}
-.subbar .lead{color:var(--text-2);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.subbar .lead{color:var(--text);font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;min-width:0}
+.subbar .lead b{font-weight:700}
+.subbar .concl{display:flex;align-items:center;gap:12px;min-width:0;flex:1;padding-left:12px;border-left:2px solid var(--ink)}
 .tabs{display:flex;gap:2px;padding:3px;background:var(--surface-2);border-radius:9px;margin-left:auto;flex:none}
 .tab{border:0;background:none;padding:5px 12px;border-radius:7px;color:var(--text-2);font-size:12.5px;white-space:nowrap}
 .tab:hover{color:var(--text)}
@@ -123,8 +130,8 @@ main{display:grid;grid-template-rows:auto minmax(0,1fr);gap:10px;padding:12px 16
 .chart{position:absolute;inset:0}
 .chart svg{display:block;width:100%;height:100%;overflow:visible}
 .caveat{font-size:11px;color:var(--muted);margin-top:6px;display:flex;gap:6px;align-items:flex-start;line-height:1.45}
-.caveat::before{content:"!";flex:none;width:14px;height:14px;border-radius:50%;border:1px solid var(--border-strong);font-size:9.5px;font-weight:700;display:grid;place-items:center;margin-top:1px}
-.info{display:inline-grid;place-items:center;width:15px;height:15px;border-radius:50%;border:1px solid var(--border-strong);font-size:10px;color:var(--muted);cursor:help;flex:none}
+.caveat::before{content:"!";flex:none;width:15px;height:15px;border-radius:50%;border:1px solid var(--border-strong);font-size:10.5px;font-weight:700;display:grid;place-items:center;margin-top:1px}
+.info{display:inline-grid;place-items:center;width:16px;height:16px;border-radius:50%;border:1px solid var(--border-strong);font-size:10.5px;color:var(--muted);cursor:help;flex:none}
 .empty{display:grid;place-items:center;height:100%;color:var(--muted);font-size:12px;text-align:center;padding:10px}
 
 /* SVG text */
@@ -154,7 +161,15 @@ g.r:hover .row-hover{opacity:1}
 .mname{display:inline-flex;align-items:center;gap:6px;min-width:0;white-space:nowrap}
 .mname .sw{width:8px;height:8px}
 .mname span{overflow:hidden;text-overflow:ellipsis}
-.mname:hover span{text-decoration:underline;text-underline-offset:2px}
+.mname > span:first-of-type + span, .mname > span:nth-child(2){text-decoration:underline dotted;text-decoration-color:var(--border-strong);text-underline-offset:3px}
+.mname:hover > span:nth-child(2){text-decoration:underline solid;text-decoration-color:currentColor}
+svg .ul{stroke:var(--axis);stroke-dasharray:1.5 2.5;stroke-width:1.2}
+g[data-m]:hover .ul{stroke:var(--text);stroke-dasharray:none}
+.go{border:0;background:none;padding:0;color:var(--text);font-weight:600;font-size:12px;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--border-strong);white-space:nowrap;cursor:pointer}
+.go::after{content:" ›"}
+.go:hover{text-decoration-color:currentColor}
+.chev{color:var(--muted);text-align:right;width:18px}
+tr[data-prof]:hover .chev, .li:hover .chev{color:var(--text)}
 
 table{border-collapse:collapse;width:100%}
 .tbl{font-size:12px}
@@ -167,20 +182,22 @@ table{border-collapse:collapse;width:100%}
 .tbl.dense{font-size:11.5px}
 .tbl.dense th{padding:4px 6px;font-size:11px}
 .tbl.dense td{padding:0 6px;line-height:1.2}
-.tbl.dense .lim{padding:1px 3px;font-size:9px}
+.tbl.dense .lim{padding:1px 3px;font-size:10.5px}
 .ulist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px 6px}
 .ulist .li{min-height:22px;padding:2px 6px;font-size:11.5px}
 .tbl th.sortable{cursor:pointer;user-select:none}
 .tbl th.sortable:hover{color:var(--text)}
-.tbl th .arr{color:var(--muted);font-size:10px;margin-left:3px}
+.tbl th .arr{color:var(--muted);font-size:10.5px;margin-left:3px}
 .tbl .grp td{background:var(--surface-2);color:var(--text-2);font-weight:600;font-size:11px;height:24px;letter-spacing:.04em}
 .best{font-weight:700}
-.best::after{content:"★";font-size:9.5px;margin-left:3px;color:var(--text-2);vertical-align:1px}
+.best::after{content:"★";font-size:10.5px;margin-left:3px;color:var(--text-2);vertical-align:1px}
 .na{color:var(--muted)}
 .bar-cell{position:relative}
 .bar-cell i{position:absolute;left:8px;bottom:5px;height:3px;border-radius:2px;background:var(--axis);opacity:.7}
 
 .podium{table-layout:fixed}
+.podium .lim{display:none}
+.podium td{font-size:11.5px}
 .podium td{height:var(--rh,30px);overflow:hidden}
 .pc{display:flex;align-items:center;min-width:0}
 .pc .mname{flex:0 1 auto}
@@ -192,12 +209,17 @@ table{border-collapse:collapse;width:100%}
 .podium .cat{display:block;color:var(--muted);font-size:10.5px;font-weight:400;line-height:1.2}
 
 .recs{display:grid;gap:0;align-content:start}
-.rec{display:grid;grid-template-columns:minmax(0,150px) minmax(0,1fr) auto;gap:10px;align-items:center;height:var(--rh,32px);padding:0 2px;border-bottom:1px solid var(--grid)}
+.rec{display:grid;grid-template-columns:minmax(0,10.5em) minmax(0,1fr) auto;gap:12px;align-items:center;height:var(--rh,48px);padding:0 4px;border-bottom:1px solid var(--grid)}
+.rec .u{font-size:12.5px;color:var(--text);font-weight:600;line-height:1.35}
+.rec .u small{display:block;font-weight:400;color:var(--muted);font-size:11px}
+.rec .why{font-size:11.5px;color:var(--text-2);margin-top:2px}
+.kpi[data-m]{cursor:pointer}
+.kpi[data-m]:hover{border-color:var(--border-strong)}
+.kpi .k-l{display:flex}
 .rec .val{font-variant-numeric:tabular-nums;font-size:12px;color:var(--text-2)}
-.rec .u{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
 .rec:last-child{border-bottom:0}
-.rec .u{font-size:12px;color:var(--text-2)}
-.rec .w{min-width:0;display:flex}
+.rec .w{min-width:0}
 
 /* ============================== Forms ============================== */
 .field{display:flex;flex-direction:column;gap:4px;font-size:11.5px;color:var(--text-2)}
@@ -264,7 +286,7 @@ ul.plain{list-style:none;margin:0;padding:0}
 .kb i{font-style:normal;font-weight:700;color:var(--text)}
 .flow{display:flex;align-items:stretch}
 .flow .st{flex:1;min-width:0;background:var(--surface-2);border-radius:8px;padding:7px 9px;font-size:11.5px;line-height:1.45}
-.flow .st b{display:block;font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.05em;margin-bottom:1px}
+.flow .st b{display:block;font-size:10.5px;color:var(--muted);font-weight:600;letter-spacing:.05em;margin-bottom:1px}
 .flow .ar{flex:none;width:16px;display:grid;place-items:center;color:var(--muted)}
 .flow .ar svg{width:10px;height:10px}
 .flow.v{flex-direction:column;gap:0}
@@ -302,7 +324,7 @@ ul.plain{list-style:none;margin:0;padding:0}
 .mat td.cat{text-align:center;font-variant-numeric:tabular-nums;font-size:11.5px;padding:0 4px}
 .mat tr[data-prof]{cursor:pointer}
 .mat .sum{color:var(--text-2);overflow:hidden;text-overflow:ellipsis;max-width:0;width:34%}
-.lim{font-size:9.5px;line-height:1;padding:2px 4px;border-radius:4px;border:1px solid var(--border-strong);color:var(--text-2);margin-left:2px;flex:none}
+.lim{font-size:10.5px;line-height:1;padding:2px 4px;border-radius:4px;border:1px solid var(--border-strong);color:var(--text-2);margin-left:2px;flex:none}
 .tc{display:flex;flex-direction:column;gap:10px;min-height:0}
 .tc .lead2{font-size:12px;color:var(--text-2);line-height:1.6;margin:0}
 .stats{display:grid;gap:6px}
@@ -954,9 +976,14 @@ const Chart = {
     const { W, H } = this.size(host);
     const dot = o.zeroBased === false, n = rows.length;
     const valW = o.valW || 58, axisH = 16;
-    const labelW = clamp(Math.max(...rows.map(r => measure(r.m.name, 12, 600))) + 24, 80, W * 0.46);
     const padT = (o.refs || []).length ? 16 : 0;
-    const rowH = Math.min(o.maxRow || 40, (H - axisH - 2 - padT) / n);
+    // 行が詰まりすぎる場合は上位だけ描き、残りは件数で示す（全件はヒートマップで確認できる）
+    const minRow = 16; let more = 0;
+    if ((H - axisH - 2 - padT) / n < minRow) { const k = Math.max(3, Math.floor((H - axisH - 2 - padT - 14) / minRow)); more = n - k; rows = rows.slice(0, k); }
+    const nn = rows.length;
+    const fsz = Math.max(...rows.map(r => measure(r.m.name, 12, 600))) + 24 <= W * 0.5 ? 12 : 11;
+    const labelW = clamp(Math.max(...rows.map(r => measure(r.m.name, fsz, 600))) + 24, 80, W * 0.5);
+    const rowH = Math.min(o.maxRow || 40, (H - axisH - 2 - padT - (more ? 14 : 0)) / nn);
     const barH = clamp(rowH * 0.5, 5, 18);
     const refs = o.refs || [], vals = rows.map(r => r.v).concat(dot ? refs.map(r => r.v) : []);
     let lo = 0, hi = o.max ?? niceMax(Math.max(...vals));
@@ -966,16 +993,16 @@ const Chart = {
     const tks = ticks(lo, hi, Math.max(2, Math.floor((x1 - x0) / 70)));
     const best = rows[0].v;
     let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(o.title || "")}">`;
-    tks.forEach(t => { const x = X(t); s += `<line class="gl" x1="${x}" x2="${x}" y1="0" y2="${n * rowH + padT}"/><text class="ax" x="${x}" y="${n * rowH + padT + 12}" text-anchor="middle">${esc(o.tick ? o.tick(t) : fmt.num(t, 0))}</text>`; });
-    refs.forEach(r => { const x = X(r.v); s += `<line x1="${x}" x2="${x}" y1="10" y2="${n * rowH + padT}" stroke="var(--text-2)" stroke-dasharray="4 3"/><text class="ax" x="${x}" y="9" text-anchor="${x > (x0 + x1) / 2 ? "end" : "start"}" style="fill:var(--text-2)">${esc(r.label)}</text>`; });
+    tks.forEach(t => { const x = X(t); s += `<line class="gl" x1="${x}" x2="${x}" y1="0" y2="${nn * rowH + padT}"/><text class="ax" x="${x}" y="${nn * rowH + padT + 12}" text-anchor="middle">${esc(o.tick ? o.tick(t) : fmt.num(t, 0))}</text>`; });
+    refs.forEach(r => { const x = X(r.v); s += `<line x1="${x}" x2="${x}" y1="10" y2="${nn * rowH + padT}" stroke="var(--text-2)" stroke-dasharray="4 3"/><text class="ax" x="${x}" y="9" text-anchor="${x > (x0 + x1) / 2 ? "end" : "start"}" style="fill:var(--text-2)">${esc(r.label)}</text>`; });
     s += `<g transform="translate(0 ${padT})">`;
     rows.forEach((r, i) => {
       const y = i * rowH, cy = y + rowH / 2, m = r.m, top = r.v === best;
       const tip = Tip.add(tipModel(m, o.title, o.fmt(r.v), { rank: `${i + 1}位 / ${n}` + (i ? `（首位との差 ${o.diff ? o.diff(rows[0].v, r.v) : fmt.num(Math.abs(rows[0].v - r.v))}）` : ""), note: r.note, src: r.src }));
-      const name = fitName(m, labelW - 22, 12, top ? 600 : 400);
+      const name = fitText(m.name, labelW - 22, fsz, top ? 600 : 400);
       s += `<g class="r" data-t="${tip}" data-m="${esc(m.id)}"><rect class="row-hover" x="0" y="${y}" width="${W}" height="${rowH}" rx="5"/>
         <circle cx="7" cy="${cy}" r="4" fill="${color(m)}"/>
-        <text class="lb" x="16" y="${cy + 4}"${top ? ' font-weight="600"' : ""}>${esc(name)}</text>`;
+        <line class="ul" x1="16" x2="${16 + measure(name, fsz, top ? 600 : 400)}" y1="${cy + 7.5}" y2="${cy + 7.5}"/><text class="lb" x="16" y="${cy + 4}" style="font-size:${fsz}px"${top ? ' font-weight="600"' : ""}>${esc(name)}</text>`;
       if (dot) {
         s += `<line class="gl" x1="${x0}" x2="${X(r.v)}" y1="${cy}" y2="${cy}" stroke-dasharray="2 3"/>
           <circle class="mk" cx="${X(r.v)}" cy="${cy}" r="${clamp(barH / 2 + 1, 4, 7)}" fill="${color(m)}" stroke="var(--surface)" stroke-width="2"/>`;
@@ -985,7 +1012,7 @@ const Chart = {
       }
       s += `<text class="vl${top ? " top" : ""}" x="${dot ? X(r.v) + 10 : X(r.v) + 6}" y="${cy + 4}">${esc(o.short ? o.short(r.v) : o.fmt(r.v))}</text></g>`;
     });
-    s += `<line class="base" x1="${x0}" x2="${x0}" y1="0" y2="${n * rowH}"/></g></svg>`;
+    s += `<line class="base" x1="${x0}" x2="${x0}" y1="0" y2="${nn * rowH}"/></g>${more ? `<text class="ax" x="16" y="${H - 2}" style="fill:var(--text-2)">ほか ${more} モデル（全件はヒートマップ・仕様一覧）</text>` : ""}</svg>`;
     host.innerHTML = s;
   },
 
@@ -1040,7 +1067,7 @@ const Chart = {
       const cy = i * rowH + rowH / 2, m = r.m;
       const tip = Tip.add(tipModel(m, "API単価（100万トークン当たり）", `${fmt.usd(r.a)} → ${fmt.usd(r.b)}`, { rank: `入力 ${fmt.usd(r.a)} / 出力 ${fmt.usd(r.b)}` + (isNum(m.price?.cachedInput) ? ` / キャッシュ入力 ${fmt.usd(m.price.cachedInput)}` : ""), note: m.price?.note }));
       s += `<g class="r" data-t="${tip}" data-m="${esc(m.id)}"><rect class="row-hover" x="0" y="${i * rowH}" width="${W}" height="${rowH}" rx="5"/>
-        <circle cx="7" cy="${cy}" r="4" fill="${color(m)}"/><text class="lb" x="16" y="${cy + 4}">${esc(fitName(m, labelW - 22))}</text>
+        <circle cx="7" cy="${cy}" r="4" fill="${color(m)}"/><text class="lb" x="16" y="${cy + 4}">${esc(fitText(m.name, labelW - 22))}</text>
         <line x1="${X(r.a)}" x2="${X(r.b)}" y1="${cy}" y2="${cy}" stroke="${color(m)}" stroke-width="2" opacity=".55"/>
         <circle class="mk" cx="${X(r.a)}" cy="${cy}" r="4.5" fill="var(--surface)" stroke="${color(m)}" stroke-width="2"/>
         <circle class="mk" cx="${X(r.b)}" cy="${cy}" r="5" fill="${color(m)}" stroke="var(--surface)" stroke-width="1.5"/>
@@ -1114,62 +1141,58 @@ const card = (title, sub, body, opt = {}) => `<section class="card" style="${opt
 const host = id => `<div class="chart" id="${id}"></div>`;
 
 const VIEWS = [
-  { id: "overview", label: "概要", hint: "結論と用途別の推奨", lead: "まず結論：用途ごとに何を選ぶべきか", render: renderOverview },
-  { id: "models", label: "モデル特徴", hint: "各モデルの強みと注意点", lead: "モデルごとの得意・不得意と立ち位置", subs: () => [{ id: "matrix", label: "早見表" }, { id: "profile", label: "プロフィール" }], render: renderModels },
-  { id: "bench", label: "ベンチマーク", hint: "カテゴリ別の性能", lead: "カテゴリを選ぶと、その全ベンチマークを並べて表示", subs: () => [...S.D.cats.map(c => ({ id: c.id, label: c.label, n: S.D.benchmarks.filter(b => (b.category || "other") === c.id).length })), { id: "heat", label: "全体ヒートマップ" }], render: renderBench },
-  { id: "guide", label: "ベンチ解説", hint: "何を測る指標か", lead: "各ベンチマークが測る能力・採点方法・読み方", subs: () => [{ id: "map", label: "全体像" }, { id: "detail", label: "個別解説" }], render: renderGuide },
-  { id: "future", label: "次世代・動向", hint: "今後のモデルと技術", lead: "旧世代 → 現行 → 次世代の流れと、技術・規制の動向", subs: () => [{ id: "roadmap", label: "系譜と投入予定" }, { id: "diffusion", label: "拡散型LM" }, { id: "capability", label: "能力とコスト" }, { id: "infra", label: "基盤と普及" }, { id: "frontier", label: "新領域" }, { id: "safety", label: "安全・規制" }], render: renderFuture },
-  { id: "history", label: "AIの歴史", hint: "誕生から現在までの伸び", lead: "1943年の形式ニューロンから現在まで。年表と性能の伸び", subs: () => [{ id: "timeline", label: "年表" }, { id: "growth", label: "性能の伸び" }], render: renderHistory },
-  { id: "cost", label: "コスト", hint: "価格性能と月額試算", lead: "性能あたりの価格と、利用量に応じた月額の目安", render: renderCost },
-  { id: "speed", label: "速度・容量", hint: "速度とコンテキスト長", lead: "応答の速さと、一度に扱える情報量", render: renderSpeed },
-  { id: "compare", label: "比較", hint: "最大4モデルを比較", lead: "モデルを選ぶと、レーダーと差分表で比較", render: renderCompare },
-  { id: "table", label: "仕様一覧", hint: "全項目・並べ替え", lead: "列見出しクリックで並べ替え", render: renderTable },
-  { id: "data", label: "データ管理", hint: "最新化・出典", lead: "JSONの読込／URL自動取得でHTMLを編集せずに最新化", render: renderData },
+  { id: "overview", label: "概要", hint: "結論と推奨", lead: "まず結論：用途ごとに何を選ぶべきか", render: renderOverview },
+  { id: "models", label: "モデル特徴", hint: "強みと注意点", lead: "モデルごとの得意・不得意と立ち位置", subs: () => [{ id: "matrix", label: "早見表" }, { id: "profile", label: "プロフィール" }], render: renderModels },
+  { id: "compare", label: "比較", hint: "最大4モデル", lead: "モデルを選ぶと、レーダーと差分表で比較", render: renderCompare },
+  { id: "bench", label: "ベンチマーク", hint: "分野別の性能", lead: "カテゴリを選ぶと、その全ベンチマークを並べて表示", subs: () => [...S.D.cats.map(c => ({ id: c.id, label: c.label, n: S.D.benchmarks.filter(b => (b.category || "other") === c.id).length })), { id: "heat", label: "全体ヒートマップ" }], render: renderBench },
+  { id: "guide", label: "ベンチ解説", hint: "指標の意味", lead: "各ベンチマークが測る能力・採点方法・読み方", subs: () => [{ id: "map", label: "全体像" }, { id: "detail", label: "個別解説" }], render: renderGuide },
+  { id: "cost", label: "コスト", hint: "価格性能・試算", lead: "性能あたりの価格と、利用量に応じた月額の目安", render: renderCost },
+  { id: "speed", label: "速度・容量", hint: "速さと文脈長", lead: "応答の速さと、一度に扱える情報量", render: renderSpeed },
+  { id: "table", label: "仕様一覧", hint: "全項目の表", lead: "列見出しクリックで並べ替え", render: renderTable },
+  { id: "future", label: "次世代・動向", hint: "今後と技術", lead: "旧世代 → 現行 → 次世代の流れと、技術・規制の動向", subs: () => [{ id: "roadmap", label: "系譜と投入予定" }, { id: "diffusion", label: "拡散型LM" }, { id: "capability", label: "能力とコスト" }, { id: "infra", label: "基盤と普及" }, { id: "frontier", label: "新領域" }, { id: "safety", label: "安全・規制" }], render: renderFuture },
+  { id: "history", label: "AIの歴史", hint: "誕生から現在", lead: "1943年の形式ニューロンから現在まで。年表と性能の伸び", subs: () => [{ id: "timeline", label: "年表" }, { id: "growth", label: "性能の伸び" }], render: renderHistory },
+  { id: "data", label: "データ管理", hint: "最新化と出典", lead: "JSONの読込／URL自動取得でHTMLを編集せずに最新化", render: renderData },
 ];
 
 function renderOverview(v) {
   const ms = visible(), D = S.D;
-  v.style.gridTemplateColumns = "minmax(0,1.55fr) minmax(0,1fr)";
-  v.style.gridTemplateRows = "auto minmax(0,1fr) auto";
-  // KPI
+  v.style.gridTemplateColumns = "minmax(0,0.85fr) minmax(0,1.4fr)";
+  v.style.gridTemplateRows = "auto minmax(0,1fr)";
+  // ① 結論：KPI（各指標の首位と次点との差）
   const kpi = D.kpis.map(k => {
     const mt = metric(k.metric); if (!mt) return "";
     const r = ranked(mt, ms, k.filter); const a = r[0], b = r[1];
     if (!a) return `<div class="card kpi"><div class="k-l">${esc(k.label)}</div><div class="k-d">データなし</div></div>`;
-    const diff = b && Math.abs(a.v - b.v) < 1e-9 ? `次点 ${esc(b.m.name)} と同${mt.unit === "$/1M" ? "額" : "値"}` : b ? (mt.unit === "$/1M" ? `次点 ${esc(b.m.name)} の ${fmt.num(b.v / a.v, 1)}分の1` : `次点 ${esc(b.m.name)} に ${mt.higher ? "+" : "−"}${fmt.num(Math.abs(a.v - b.v))}${mt.unit === "%" ? "pt" : ""}`) : "比較対象なし";
-    return `<div class="card kpi"><div class="k-l">${esc(k.label)}<span class="info" title="${esc(mt.name)}">i</span></div>
-      <div class="k-m" data-m="${esc(a.m.id)}"><span class="sw" style="background:${color(a.m)}"></span>${esc(a.m.name)}</div>
+    const diff = b && Math.abs(a.v - b.v) < 1e-9 ? `次点 ${esc(b.m.name)} と同${mt.unit === "$/1M" ? "額" : "値"}` : b ? (mt.unit === "$/1M" ? `次点 ${esc(b.m.name)} は ${fmt.num(b.v / a.v, 1)} 倍` : `次点 ${esc(b.m.name)} に ${mt.higher ? "+" : "−"}${fmt.num(Math.abs(a.v - b.v))}${mt.unit === "%" ? "pt" : ""}`) : "比較対象なし";
+    return `<div class="card kpi" data-m="${esc(a.m.id)}" title="${esc(mt.name)}"><div class="k-l">${esc(k.label)}<span class="go" style="margin-left:auto;font-size:11.5px">詳細</span></div>
+      <div class="k-m"><span class="sw" style="background:${color(a.m)}"></span>${esc(a.m.name)}</div>
       <div class="k-v"><b class="num">${esc(mt.fmt(a.v).replace(/ tok\/s|\/1M/, ""))}</b><span>${esc(mt.unit === "%" ? "" : mt.unit)}</span></div>
       <div class="k-d">${diff}</div></div>`;
   }).join("");
-  // 表彰台（ベンチ×上位3）
-  const rows = D.benchmarks.map(b => {
-    const mt = metric("bench:" + b.id), r = ranked(mt, ms);
-    if (!r.length) return "";
-    const cat = D.cats.find(c => c.id === (b.category || "other"));
-    return `<tr><td><span class="bn">${esc(b.short || b.label)}</span><span class="cat">${esc(cat?.label || "")}・${r.length}モデル</span></td>
-      ${[0, 1, 2].map(i => r[i] ? `<td class="c${i + 1}"><div class="pc"><span class="rk">${i + 1}</span>${mName(r[i].m)}<span class="v">${esc(mt.fmt(r[i].v))}</span></div></td>` : `<td class="na">—</td>`).join("")}</tr>`;
-  }).join("");
-  const podium = `<div style="position:absolute;inset:0;overflow:hidden" id="podiumWrap"><table class="tbl podium"><thead><tr><th style="width:22%">ベンチマーク</th><th>1位</th><th>2位</th><th>3位</th></tr></thead><tbody>${rows}</tbody></table></div>`;
-  // 用途別推奨
+  // ② 用途別の推奨（主役）：推奨・根拠の数値・次点・比較への導線
   const recs = D.useCases.map(u => {
     const mt = metric(u.metric); if (!mt) return "";
     const r = ranked(mt, ms, u.filter); const a = r[0], b = r[1];
-    if (!a) return `<div class="rec"><div class="u">${esc(u.label)}</div><div class="w na">該当データなし</div></div>`;
-    const tip = Tip.add(tipModel(a.m, u.label, mt.fmt(a.v), { rank: `指標: ${mt.name}` + (b ? `／次点 ${b.m.name}（${mt.fmt(b.v)}）` : "") }));
-    return `<div class="rec" data-t="${tip}"><div class="u" title="${esc(u.label)}">${esc(u.label)}</div><div class="w">${mName(a.m)}</div><div class="val">${esc(mt.short)} ${esc(mt.fmt(a.v))}</div></div>`;
+    if (!a) return `<div class="rec"><div class="u">${esc(u.label)}</div><div class="w na">該当データなし</div><span></span></div>`;
+    return `<div class="rec"><div class="u">${esc(u.label)}<small>${esc(mt.short)}</small></div>
+      <div class="w"><div>${mName(a.m)}<b class="num" style="margin-left:8px">${esc(mt.fmt(a.v))}</b></div><div class="why">${b ? `次点 ${esc(b.m.name)}（${esc(mt.fmt(b.v))}）` : "比較対象なし"}</div></div>
+      ${b ? `<button class="go" data-cmp="${esc(a.m.id)},${esc(b.m.id)}" title="${esc(a.m.name)} と ${esc(b.m.name)} を比較">比較</button>` : "<span></span>"}</div>`;
+  }).join("");
+  // ③ 根拠：ベンチマーク別の上位3
+  const rows = D.benchmarks.map(bm => {
+    const mt = metric("bench:" + bm.id), r = ranked(mt, ms);
+    if (!r.length) return "";
+    const cat = D.cats.find(c => c.id === (bm.category || "other"));
+    return `<tr><td><span class="bn" data-gb="${esc(bm.id)}" style="cursor:pointer" title="${esc(bm.label)}の解説">${esc(bm.short || bm.label)}</span><span class="cat">${esc(cat?.short || cat?.label || "")}・${r.length}モデル</span></td>
+      ${[0, 1, 2].map(i => r[i] ? `<td class="c${i + 1}"><div class="pc"><span class="rk">${i + 1}</span>${mName(r[i].m)}<span class="v">${esc(mt.fmt(r[i].v))}</span></div></td>` : `<td class="na">—</td>`).join("")}</tr>`;
   }).join("");
   v.innerHTML = `<div class="kpis" style="grid-column:1/-1">${kpi}</div>
-    ${card("ベンチマーク別 上位3モデル", `表示中 ${ms.length} モデルの公表値から算出`, podium, { style: "grid-row:2/4" })}
-    ${card("発表タイムライン", "提供元ごとの投入時期", host("ch-tl"))}
-    ${card("用途別の推奨", "各指標の首位（データのあるモデルのみ）", `<div class="recs">${recs}</div>`, { style: "flex:none" })}`;
-  // 行高を高さに合わせて自動調整（スクロールレス）
-  // 右列：タイムラインと推奨リストで高さをおよそ半分ずつ分け合う
-  const recEl = v.querySelector(".recs"), rest = v.clientHeight - v.querySelector(".kpis").offsetHeight - 24;
-  recEl.style.setProperty("--rh", clamp((rest * 0.52 - 56) / Math.max(1, D.useCases.length), 24, 36) + "px");
-  const wrap = $("#podiumWrap"), tb = wrap.querySelector("tbody");
-  const n = tb.rows.length; wrap.style.setProperty("--rh", clamp((wrap.clientHeight - 32) / Math.max(1, n), 26, 44) + "px");
-  Chart.timeline($("#ch-tl"), ms);
+    ${card("用途別の推奨", "目的に合う首位モデルと、その根拠", `<div class="recs" id="recs">${recs}</div>`)}
+    ${card("ベンチマーク別の上位3モデル", `表示中 ${ms.length} モデルの公表値から算出・ベンチ名で解説へ`, `<div style="position:absolute;inset:0;overflow:hidden" id="podiumWrap"><table class="tbl podium"><colgroup><col style="width:19%"><col style="width:29%"><col style="width:26%"><col style="width:26%"></colgroup><thead><tr><th>ベンチマーク</th><th>1位</th><th>2位</th><th>3位</th></tr></thead><tbody>${rows}</tbody></table></div>`)}`;
+  const recEl = $("#recs"); recEl.style.setProperty("--rh", Math.max(44, (recEl.parentElement.clientHeight - 2) / Math.max(1, D.useCases.length)) + "px");
+  const wrap = $("#podiumWrap"), n = wrap.querySelectorAll("tbody tr").length;
+  wrap.style.setProperty("--rh", clamp((wrap.clientHeight - wrap.querySelector("thead").offsetHeight - 2) / Math.max(1, n), 26, 48) + "px");
+  v.querySelectorAll("[data-cmp]").forEach(btn => btn.onclick = () => compareWith(btn.dataset.cmp.split(",")).run());
 }
 
 function renderBench(v) {
@@ -1177,18 +1200,31 @@ function renderBench(v) {
   const sub = S.sub.bench || D.cats[0]?.id;
   if (sub === "heat") return renderHeat(v, ms);
   const bs = D.benchmarks.filter(b => (b.category || "other") === sub);
-  const n = bs.length, cols = n <= 1 ? 1 : n === 2 ? 2 : n === 4 ? 2 : n >= 7 ? 4 : 3, rowsN = Math.ceil(n / cols);
+  const n = bs.length, cols = n <= 1 ? 1 : n === 2 ? 2 : n === 4 ? 2 : 3, rowsN = Math.ceil((n + (n > 4 && n % 3 ? 1 : 0)) / cols);
   v.style.gridTemplateColumns = n === 1 ? "minmax(0,1.5fr) minmax(0,1fr)" : `repeat(${cols},minmax(0,1fr))`;
   v.style.gridTemplateRows = `repeat(${rowsN},minmax(0,1fr))`;
   v.innerHTML = bs.map(b => card(esc(b.label), `${esc(b.unit === "Elo" ? "Elo（相対評価）" : b.unit === "%" ? "正答・成功率" : b.unit)}`,
     host("ch-" + b.id), { right: `<button class="info" data-gb="${esc(b.id)}" title="${esc(b.desc || "")}（クリックで解説へ）" aria-label="${esc(b.label)}の解説">i</button>`, foot: b.caveat ? `<div class="caveat">${esc(b.caveat)}</div>` : "" })).join("")
-    + (n === 1 ? benchInfo(bs[0], ms) : "");
+    + (n === 1 ? benchInfo(bs[0], ms) : n > 4 && n % 3 ? benchSummary(bs, ms, cols * rowsN - n) : "");
+  const bst = $("#benchSumT"); if (bst) { const box = bst.parentElement, other = box.scrollHeight - bst.offsetHeight; bst.style.setProperty("--rh", clamp((box.clientHeight - other - 4) / Math.max(1, bst.rows.length), 18, 30) + "px"); }
+  if ($("#benchCmp")) $("#benchCmp").onclick = () => { const ids = []; bs.forEach(b => { const r = ranked(metric("bench:" + b.id), ms); if (r[0] && !ids.includes(r[0].m.id)) ids.push(r[0].m.id); }); compareWith(ids).run(); };
   bs.forEach(b => {
     const mt = metric("bench:" + b.id);
     const rows = ranked(mt, ms).map(r => ({ ...r, src: r.m.scores[b.id]?.src, note: r.m.scores[b.id]?.note }));
     Chart.hbar($("#ch-" + b.id), rows, { title: b.label, fmt: mt.fmt, max: b.max, zeroBased: b.zeroBased, maxRow: n === 1 ? 52 : 40, emptyMsg: "表示中のモデルにこのベンチのデータがありません",
       diff: (a, c) => b.unit === "%" ? fmt.num(Math.abs(a - c)) + "pt" : fmt.num(Math.abs(a - c)), tick: t => b.unit === "%" ? t + "%" : fmt.num(t, 0), refs: b.refs });
   });
+}
+
+/** カテゴリ内の各ベンチの首位一覧（グリッドの空き枠を要約と次の行動に使う） */
+function benchSummary(bs, ms, span) {
+  const rows = bs.map(b => { const mt = metric("bench:" + b.id), r = ranked(mt, ms); return r[0] ? `<tr><td><span class="bn" data-gb="${esc(b.id)}" style="cursor:pointer;font-weight:600">${esc(b.short || b.label)}</span></td><td>${mName(r[0].m)}</td><td class="r num" style="font-weight:600">${esc(mt.fmt(r[0].v))}</td></tr>` : ""; }).join("");
+  const wins = new Map(); bs.forEach(b => { const r = ranked(metric("bench:" + b.id), ms); if (r[0]) wins.set(r[0].m, (wins.get(r[0].m) || 0) + 1); });
+  const lead = [...wins.entries()].sort((a, c) => c[1] - a[1]);
+  return card("このカテゴリの首位一覧", `${bs.length}指標`, `<div class="stack" style="position:absolute;inset:0;gap:8px;overflow:hidden">
+      <p class="txt" style="margin:0"><b>${esc(lead[0]?.[0].name || "—")}</b> が ${lead[0]?.[1] || 0}/${bs.length} 指標で首位${lead[1] ? `、${esc(lead[1][0].name)} が ${lead[1][1]} 指標` : ""}</p>
+      <table class="tbl" id="benchSumT"><tbody>${rows}</tbody></table>
+      <div><button class="go" id="benchCmp">首位のモデルを比較</button></div></div>`, { style: span > 1 ? `grid-column:span ${span}` : "" });
 }
 
 /** ベンチ単体表示時の解説パネル：何を測るか・分布・未公表モデル（「推測させない」ための補助情報） */
@@ -1872,7 +1908,7 @@ function srcLinks(ids) {
 function trendCard(t, i) {
   return card(esc(t.title), "", `<div class="tc" style="position:absolute;inset:0">
       <p class="lead2">${esc(t.lead)}</p>
-      <div class="stats">${t.stats.map(x => `<div class="stat"${x.note ? ` data-t="${Tip.add(`<div class="tt">${esc(x.l)}</div><div class="tv">${esc(x.v)}</div><div class="tm">${esc(x.note)}</div>`)}"` : ""}><b>${esc(x.v)}</b><span>${esc(x.l)}${x.note ? ' <span class="info" style="display:inline-grid;width:13px;height:13px;font-size:9px">i</span>' : ""}</span></div>`).join("")}</div>
+      <div class="stats">${t.stats.map(x => `<div class="stat"${x.note ? ` data-t="${Tip.add(`<div class="tt">${esc(x.l)}</div><div class="tv">${esc(x.v)}</div><div class="tm">${esc(x.note)}</div>`)}"` : ""}><b>${esc(x.v)}</b><span>${esc(x.l)}${x.note ? ' <span class="info">i</span>' : ""}</span></div>`).join("")}</div>
       ${t.chart ? `<div><div class="sec-h" style="margin-bottom:2px">${esc(t.chart.title)}</div></div><div style="position:relative;flex:1;min-height:70px">${host("ch-tr-" + i)}</div>` : '<div style="flex:1"></div>'}
       <div class="impl"><span>${esc(t.implication)}</span></div>
       ${srcLinks(t.srcs)}
@@ -1908,7 +1944,7 @@ function renderRoadmap(v) {
   v.style.gridTemplateRows = "minmax(0,1fr)";
   const legend = `<span class="legend"><span><svg width="12" height="12"><circle cx="6" cy="6" r="4" fill="var(--surface)" stroke="var(--text-2)" stroke-width="2"/></svg>旧世代</span><span><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="var(--text-2)"/></svg>現行</span>${O.confidence.map(c => `<span class="conf-key" title="${esc(c.desc)}">${confKey(c.id)}${esc(c.label)}</span>`).join("")}</span>`;
   const p = u && D.pv.get(u.provider), conf = u && O.confidence.find(c => c.id === u.conf);
-  const others = ups.map(x => `<button class="li" data-up="${esc(x.id)}" aria-current="${x.id === u?.id}"><span><span class="sw" style="background:${provColor(D.pv.get(x.provider))}"></span>${esc(x.name)}</span><span class="muted" style="font-size:10px">${esc(x.window[0].slice(2).replace("-", "/"))}〜</span></button>`).join("");
+  const others = ups.map(x => `<button class="li" data-up="${esc(x.id)}" aria-current="${x.id === u?.id}"><span><span class="sw" style="background:${provColor(D.pv.get(x.provider))}"></span>${esc(x.name)}</span><span class="muted num" style="font-size:11px">${esc(x.window[0].replace("-", "/"))}〜</span></button>`).join("");
   const detail = u ? `<div class="stack" style="position:absolute;inset:0;overflow:auto;gap:10px">
       <div style="display:flex;gap:6px;flex-wrap:wrap"><span class="kb"><span class="sw" style="background:${provColor(p)}"></span>${esc(p?.label || u.provider)}</span><span class="kb">${esc(O.statuses[u.status] || u.status)}</span><span class="kb" title="${esc(conf?.desc || "")}">${confKey(u.conf, provColor(p))}確度：${esc(conf?.label || "")}</span></div>
       <dl class="kv" style="grid-template-columns:1fr"><div><dt>見通しの時期（このページでの目安の幅）</dt><dd>${esc(u.window[0].replace("-", "年") + "月")} 〜 ${esc(u.window[1].replace("-", "年") + "月")}</dd></div></dl>
@@ -1957,13 +1993,14 @@ function renderShell() {
   $("#filters").innerHTML = `<span class="lbl">提供元</span>${colored.map(p => `<button class="chip" data-prov="${esc(p.id)}" aria-pressed="${!S.f.off.has(p.id)}" title="クリックで表示切替／ダブルクリックでこの提供元のみ"><span class="sw" style="background:${provColor(p)}"></span>${esc(p.label)}</button>`).join("")}${others.length ? `<button class="chip" data-prov="${esc(others.map(p => p.id).join(","))}" aria-pressed="${othOn}" title="その他：${esc(others.map(p => p.label).join("・"))}（クリックで表示切替／ダブルクリックでその他のみ）"><span class="sw" style="background:var(--c-other)"></span>その他 ${others.length}社</button>` : ""}
     <span class="sep"></span><button class="chip toggle" id="fOpen" aria-pressed="${S.f.open}" title="オープンウェイト（一部公開含む）のみ表示">オープンのみ</button>
     <button class="chip toggle" id="fLegacy" aria-pressed="${S.f.legacy}" title="旧世代モデルも表示">旧世代も表示</button>
-    <span class="muted num" style="font-size:11.5px;white-space:nowrap;margin-left:4px">${shown}/${all}モデル</span>`;
+    <span class="t2 num" style="font-size:11.5px;white-space:nowrap;margin-left:4px">${shown}/${all}モデル</span>${S.f.off.size || S.f.open ? `<button class="reset" id="fReset" title="提供元・オープンのみの絞り込みを解除">絞り込み中・解除</button>` : ""}`;
   $("#filters").querySelectorAll("[data-prov]").forEach(b => {
     const ids = b.dataset.prov.split(",");
     b.onclick = () => { const on = ids.some(id => !S.f.off.has(id)); ids.forEach(id => on ? S.f.off.add(id) : S.f.off.delete(id)); persistF(); render(); };
     b.ondblclick = () => { S.f.off = new Set(D.providers.map(p => p.id).filter(x => !ids.includes(x))); persistF(); render(); };
   });
   $("#fOpen").onclick = () => { S.f.open = !S.f.open; persistF(); render(); };
+  if ($("#fReset")) $("#fReset").onclick = () => { S.f.off = new Set(); S.f.open = false; persistF(); render(); };
   $("#fLegacy").onclick = () => { S.f.legacy = !S.f.legacy; persistF(); render(); };
   // 鮮度バッジ
   const days = daysSince(D.meta.asOf), stale = days > 30;
@@ -1971,17 +2008,67 @@ function renderShell() {
   fr.lastElementChild.textContent = `データ基準日 ${fmt.date(D.meta.asOf)}${stale ? `（${days}日経過・要更新）` : ""}`;
   fr.title = stale ? "データ管理タブから最新データを取り込んでください" : "データ基準日";
   // ナビ
-  $("#rail").innerHTML = VIEWS.map((vw, i) => `<button class="nav-item" data-view="${vw.id}"${S.view === vw.id ? ' aria-current="page"' : ""}>${ICON[vw.id] || ""}<span>${esc(vw.label)}<small>${esc(vw.hint)}</small></span>${i < 10 ? `<kbd>${i < 9 ? i + 1 : 0}</kbd>` : "<span></span>"}</button>`).join("")
-    + `<div class="rail-foot"><b>操作</b><br>項目にカーソル＝詳細<br>モデル名クリック＝個別ページ<br>数字キー＝画面切替</div>`;
+  // 目的別のまとまり（結論／性能／動向／コストと仕様／管理）を区切り線で示す
+  const GROUP_END = new Set(["compare", "guide", "table", "history"]);
+  $("#rail").innerHTML = VIEWS.map((vw, i) => `<button class="nav-item" data-view="${vw.id}"${S.view === vw.id ? ' aria-current="page"' : ""} title="${esc(vw.label)}：${esc(vw.hint)}${i < 10 ? `（キー ${i < 9 ? i + 1 : 0}）` : ""}">${ICON[vw.id] || ""}<span>${esc(vw.label)}<small>${esc(vw.hint)}</small></span>${i < 10 ? `<kbd>${i < 9 ? i + 1 : 0}</kbd>` : "<span></span>"}</button>${GROUP_END.has(vw.id) ? '<div class="nav-sep" aria-hidden="true"></div>' : ""}`).join("");
   $("#rail").querySelectorAll("[data-view]").forEach(b => b.onclick = () => go(b.dataset.view));
   // サブバー
   const vw = VIEWS.find(x => x.id === S.view);
   const subs = vw.subs ? vw.subs() : null;
   const cur = subs ? (subs.some(s => s.id === S.sub[vw.id]) ? S.sub[vw.id] : subs[0].id) : null;
   if (subs) S.sub[vw.id] = cur;
-  $("#subbar").innerHTML = `<h1>${esc(vw.label)}</h1><span class="lead">${esc(vw.lead)}</span>
+  const cc = conclusion(vw.id, cur);
+  $("#subbar").innerHTML = `<h1>${esc(vw.label)}</h1><div class="concl" title="${esc(vw.lead)}"><span class="lead" id="lead">${cc.html}</span>${cc.action ? `<button class="go" id="leadGo">${esc(cc.action.label)}</button>` : ""}</div>
     ${subs ? `<div class="tabs" role="tablist">${subs.map(s => `<button class="tab" role="tab" data-sub="${esc(s.id)}" aria-selected="${s.id === cur}">${esc(s.label)}${s.n ? `<span class="n">${s.n}</span>` : ""}</button>`).join("")}</div>` : ""}`;
   $("#subbar").querySelectorAll("[data-sub]").forEach(b => b.onclick = () => { S.sub[vw.id] = b.dataset.sub; syncHash(); render(); });
+  if (cc.action) $("#leadGo").onclick = cc.action.run;
+  // 結論が1行に収まらなければ短い版に切り替え、それでも収まらなければ行動ボタンを外す（省略記号は使わない）
+  const ld = $("#lead"); if (ld.scrollWidth > ld.clientWidth + 1 && cc.short) ld.innerHTML = cc.short;
+  if (ld.scrollWidth > ld.clientWidth + 1 && $("#leadGo")) { $("#leadGo").remove(); if (cc.short) ld.innerHTML = cc.short; }
+}
+/* ---------- 結論の帯：各画面の要点をデータから1文で生成し、次の行動を添える ---------- */
+function compareWith(ids, label = "比較する") { return { label, run: () => { S.compare = [...new Set(ids)].slice(0, 4); store.set("compare", S.compare); go("compare"); } }; }
+function conclusion(view, sub) {
+  const D = S.D, ms = visible(), b = s => `<b>${esc(s)}</b>`;
+  const top = (spec, filter) => { const mt = metric(spec); return mt ? { mt, r: ranked(mt, ms, filter) } : { r: [] }; };
+  const aa = top("bench:aa_index"), price = top("price:blended"), sp = top("spec:speed");
+  const spAr = sp.r.filter(x => x.m.arch !== "diffusion"), spDf = sp.r.filter(x => x.m.arch === "diffusion");
+  const ids = r => r.slice(0, 3).map(x => x.m.id);
+  const C = (html, short, action) => ({ html, short, action });
+  if (view === "overview" && aa.r[0]) return C(`総合首位は ${b(aa.r[0].m.name)}（AA指数 ${aa.r[0].v}）。用途ごとの最適解は左の推奨から`, `総合首位は ${b(aa.r[0].m.name)}（AA指数 ${aa.r[0].v}）`, compareWith(ids(aa.r), "上位3を比較"));
+  if (view === "models") return sub === "profile" ? C(`左でモデルを選ぶと、強み・注意点と立ち位置を表示`, null, null) : C(`総合首位は ${b(aa.r[0]?.m.name || "—")}、最安は ${b(price.r[0]?.m.name || "—")}（混合 ${fmt.usd(price.r[0]?.v)}/1M）`, `総合首位 ${b(aa.r[0]?.m.name || "—")}・最安 ${b(price.r[0]?.m.name || "—")}`, compareWith([aa.r[0]?.m.id, price.r[0]?.m.id].filter(Boolean), "2つを比較"));
+  if (view === "compare") { const sel = (S.compare || []).map(id => D.models.find(m => m.id === id)).filter(m => m && ms.includes(m)); const w = compareWins(sel); return w ? C(`${b(w.m.name)} が ${w.k}/${w.n} 項目で最高（選択中 ${sel.length} モデル）`, `${b(w.m.name)} が ${w.k}/${w.n} 項目で最高`, null) : C("左のリストで2〜4モデルを選んでください", null, null); }
+  if (view === "bench") {
+    if (sub === "heat") { const w = compareWins(ms); return C(`最も多くの指標で首位なのは ${b(w?.m.name || "—")}（${w?.k || 0} 指標）`, null, w ? compareWith(ids(ranked(metric("bench:aa_index"), ms)), "上位3を比較") : null); }
+    const bs = D.benchmarks.filter(x => (x.category || "other") === sub), bm = bs[0], r = bm ? ranked(metric("bench:" + bm.id), ms) : [];
+    return r[0] ? C(`${esc(bm.short || bm.label)} の首位は ${b(r[0].m.name)}（${esc(metric("bench:" + bm.id).fmt(r[0].v))}）${r[1] ? `、次点 ${esc(r[1].m.name)}` : ""}`, `${esc(bm.short || bm.label)} の首位は ${b(r[0].m.name)}`, compareWith(ids(r), "上位3を比較")) : C("このカテゴリのデータはまだありません", null, null);
+  }
+  if (view === "guide") {
+    if (sub === "detail") { const bm = D.bm.get(S.guideBench) || D.benchmarks[0], r = ranked(metric("bench:" + bm.id), ms); return C(`${esc(bm.short || bm.label)}：${esc(bm.desc || "")}`, `${esc(bm.short || bm.label)} の首位は ${b(r[0]?.m.name || "—")}`, r.length > 1 ? compareWith(ids(r), "上位3を比較") : null); }
+    const pts = D.benchmarks.filter(x => x.unit === "%").map(x => { const vs = ms.map(m => score(m, x.id)).filter(isNum); return vs.length >= 3 ? { x, top: Math.max(...vs), gap: Math.max(...vs) - Math.min(...vs) } : null; }).filter(Boolean);
+    const g = [...pts].sort((a, c) => c.gap - a.gap)[0], sat = [...pts].sort((a, c) => c.top - a.top)[0];
+    return C(`差がつきやすいのは ${b(g?.x.short || "—")}、飽和気味なのは ${b(sat?.x.short || "—")}（首位 ${fmt.num(sat?.top)}%）`, null, { label: "個別解説を見る", run: () => go("guide", "detail") });
+  }
+  if (view === "cost") { const val = top("value:aa_index"); return C(`性能あたり最も安いのは ${b(val.r[0]?.m.name || "—")}、単価の最安は ${b(price.r[0]?.m.name || "—")}（${fmt.usd(price.r[0]?.v)}/1M）`, `最安は ${b(price.r[0]?.m.name || "—")}（${fmt.usd(price.r[0]?.v)}/1M）`, compareWith([val.r[0]?.m.id, price.r[0]?.m.id, aa.r[0]?.m.id].filter(Boolean), "比較する")); }
+  if (view === "speed") return C(`自己回帰型の最速は ${b(spAr[0]?.m.name || "—")}（${fmt.num(spAr[0]?.v, 0)} tok/s）${spDf[0] ? `、拡散型は最大 ${fmt.num(spDf[0].v, 0)} tok/s（公表値）` : ""}`, `最速は ${b(spAr[0]?.m.name || "—")}（${fmt.num(spAr[0]?.v, 0)} tok/s）`, compareWith(ids(spAr), "上位3を比較"));
+  if (view === "table") { const ctx = top("spec:context"); return C(`最安 ${b(price.r[0]?.m.name || "—")}・最速 ${b(spAr[0]?.m.name || "—")}・最長文脈 ${b(ctx.r[0]?.m.name || "—")}。列見出しで並べ替え`, `最安 ${b(price.r[0]?.m.name || "—")}・最速 ${b(spAr[0]?.m.name || "—")}`, null); }
+  if (view === "future") {
+    const O = D.outlook;
+    if (sub === "roadmap") { const n = O.upcoming.length, c = k => O.upcoming.filter(u => u.conf === k).length, near = [...O.upcoming].sort((a, b2) => a.window[0].localeCompare(b2.window[0]))[0]; return C(`今後の予定 ${n} 件（公式 ${c("official")}・報道 ${c("report")}・予測 ${c("forecast")}）。最も近いのは ${b(near?.name || "—")}`, `今後の予定 ${n} 件。最も近いのは ${b(near?.name || "—")}`, null); }
+    if (sub === "diffusion") { const df = O.diffusion, mx = Math.max(...df.speed.items.filter(i => i[2] === "diff").map(i => i[1])), ar = Math.max(...df.speed.items.filter(i => i[2] === "ar").map(i => i[1])); return C(`拡散型は最大 ${b(fmt.num(mx, 0) + " tok/s")}（公表値）で、自己回帰型の首位の約 ${Math.round(mx / ar)} 倍。品質はまだ軽量モデル並み`, `拡散型は自己回帰型の約 ${Math.round(mx / ar)} 倍の速さ`, { label: "速度・容量へ", run: () => go("speed") }); }
+    const ts = O.trends.filter(t => t.group === sub); return C(ts.map(t => esc(t.title)).slice(0, 2).join("／"), ts[0] ? esc(ts[0].title) : null, null);
+  }
+  if (view === "history") return sub === "growth" ? C(`学習計算量は12年で約9桁、価格は5年で約1,000分の1。伸びは今も加速中`, `学習計算量は12年で約9桁増加`, null) : C(`1956年の誕生から約70年。2度の冬の時代を経て、2012年の深層学習から急成長`, `誕生から約70年、2012年から急成長`, { label: "性能の伸びを見る", run: () => go("history", "growth") });
+  if (view === "data") { const v = Data.validate(D.raw); return C(`基準日 ${fmt.date(D.meta.asOf)}（${daysSince(D.meta.asOf)}日前）・モデル ${D.models.length} 件・検証エラー ${v.errors.length} 件`, null, null); }
+  return C(esc(VIEWS.find(x => x.id === view)?.lead || ""), null, null);
+}
+/** 選択したモデル群のうち、最も多くの指標で首位のモデル */
+function compareWins(sel) {
+  if (!sel || sel.length < 2) return null;
+  const D = S.D, cnt = new Map(); let n = 0;
+  D.benchmarks.forEach(bm => { const r = ranked(metric("bench:" + bm.id), sel); if (r.length >= 2) { n++; cnt.set(r[0].m, (cnt.get(r[0].m) || 0) + 1); } });
+  const best = [...cnt.entries()].sort((a, c) => c[1] - a[1])[0];
+  return best ? { m: best[0], k: best[1], n } : null;
 }
 function persistF() { store.set("provOff", [...S.f.off]); store.set("legacy", S.f.legacy); store.set("openOnly", S.f.open); }
 function render() {
