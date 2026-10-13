@@ -344,6 +344,9 @@ ul.plain{list-style:none;margin:0;padding:0}
 .binfo{display:grid;gap:12px;align-content:start}
 .pgrid td{padding-top:0;padding-bottom:0}
 .pgrid .lim{display:none}
+.pgrid th{white-space:normal;vertical-align:bottom;line-height:1.25}
+.pgrid .pgh{display:block;font-weight:400;font-size:10.5px}
+.pgrid td:first-child{padding-right:12px}
 .pgrid .lane{height:16px}
 .pg{display:grid;grid-template-columns:minmax(0,1fr) 4.2em;gap:8px;align-items:center}
 .pg .num{text-align:right;font-size:11.5px}
@@ -447,6 +450,16 @@ ul.plain{list-style:none;margin:0;padding:0}
 .ck.done .ck-i{background:var(--good-text);border-color:var(--good-text);color:#fff}
 .ck.doing .ck-i{border-color:var(--seq-hi);color:var(--seq-hi)}
 .sbar{display:block;height:6px;border-radius:3px;background:var(--surface-3);margin-top:3px}.sbar>i{display:block;height:100%;border-radius:3px;background:var(--seq-hi)}
+.sw-hatch{display:inline-block;width:12px;height:10px;border-radius:2px;background:repeating-linear-gradient(135deg,var(--seq-hi) 0 2.5px,color-mix(in oklab,var(--seq-hi) 45%,var(--surface)) 2.5px 4.5px)}
+.scmp{display:grid;gap:2px;margin-top:4px}
+.sc-r{display:grid;grid-template-columns:5.5em minmax(0,1fr) 3em;gap:6px;align-items:center;font-size:11px}
+.sc-r .sbar{margin:0}.sc-r .num{text-align:right;color:var(--text)}
+.sbar>i.gray{background:var(--muted)}
+.sbar>i.hatch{background:repeating-linear-gradient(135deg,var(--seq-hi) 0 2.5px,color-mix(in oklab,var(--seq-hi) 45%,var(--surface)) 2.5px 4.5px)}
+.card-h{position:relative}
+.readout{position:absolute;right:0;top:50%;transform:translateY(-50%);display:flex;align-items:baseline;gap:8px;padding:3px 10px;border-radius:7px;background:var(--surface);box-shadow:0 0 0 1.5px var(--border-strong);font-size:12px;white-space:nowrap;overflow:hidden;z-index:3;pointer-events:none}
+.readout .rv{font-weight:700;font-variant-numeric:tabular-nums}
+.readout .rm{color:var(--text-2);overflow:hidden;text-overflow:ellipsis;min-width:0}
 .ck-s{font-size:10.5px;color:var(--text-2)}
 .ck.done .ck-s{color:var(--good-text);font-weight:650}
 .pf{display:grid;grid-auto-rows:1fr;gap:6px}
@@ -460,7 +473,7 @@ ul.plain{list-style:none;margin:0;padding:0}
 .pf.narrow .pf-f{padding:3px 8px}
 .pf-a{align-self:center;color:var(--text-2);font-weight:700;text-align:center}
 .pf-f{background:color-mix(in oklab,var(--seq-hi) 10%,var(--surface));border:1px solid color-mix(in oklab,var(--seq-hi) 35%,transparent);border-radius:7px;padding:6px 8px;color:var(--text);display:flex;align-items:center;line-height:1.4}
-.stages{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;gap:2px}
+.stages{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-evenly;gap:2px}
 .stg{border-radius:8px;padding:7px 10px;display:grid;grid-template-columns:minmax(0,11em) minmax(0,1fr);gap:10px;align-items:center;font-size:11.5px;color:var(--text-2);border:1.5px solid var(--seq-hi);min-width:0}
 .stg b{font-size:12px;color:var(--text)}
 .stg.s0{border-style:dashed}
@@ -750,7 +763,7 @@ button.info:hover{border-color:var(--ink);color:var(--text)}
     {"id": "mimo-v2-6-pro", "name": "MiMo-V2.6-Pro", "provider": "xiaomi", "released": "2026-09-22", "tier": "フラッグシップ", "openWeights": "yes", "license": "MIT", "params": "1.02T（MoE、活性42B）", "context": 1000000, "maxOutput": null, "price": {"input": 0.435, "output": 0.87, "note": "軽量版Flashは$0.14/$0.28"}, "scores": {"aa_index": {"v": 46, "src": "mimo3", "note": "v4.3.2。オープンウェイトで首位"}, "deepswe": {"v": 71.9, "src": "mimo2", "note": "Xiaomi発表値"}, "tb4": {"v": 34.9, "src": "mimo2", "note": "Xiaomi発表値"}}, "notes": "公開日は9/21・9/22と報道が分かれる。強化学習の費用は約262万ドルと報道され、学習環境もあわせて公開。OSWorld-Verified 82.0（Xiaomi発表）。AAの全評価にかかる費用は1タスク約$0.13と安い。", "summary": "オープンウェイトで総合指数首位。MITライセンスで安価", "strengths": ["AA指数46（オープン系の首位）", "MITライセンスで重みと強化学習環境を公開", "$0.435/$0.87と安価"], "cautions": ["ベンチ値の多くはXiaomi発表で、第三者の検証が少ない", "TB 4.0は34.9%（Xiaomi発表）と、上位の非公開モデルに差がある"], "bestFor": ["自社ホスティング", "コスト重視の高性能用途", "強化学習の研究"], "sources": ["mimo", "mimo2", "mimo3"]}
   ],
   "outlook": {
-    "groupGrowth": {"capability": ["horizon", "price", "mmlu"], "infra": ["compute", "params", "context"]},
+    "groupModelCharts": {"capability": [["bench:aa_index", "発表日と総合指数（現行モデル）", "破線＝その時点の首位。新しいモデルほど上：能力の伸びを実データで確認"], ["price:blended", "発表日と混合単価（現行モデル・対数）", "同じ時期でも価格は100倍以上の幅：用途で選び分ける余地"]]},
     "groupShort": {"capability": "作業時間は倍増、価格は年10倍下落", "infra": "基盤はGW級、需要は推論へ", "frontier": "次の主戦場は物理世界・記憶・端末・自己改善", "safety": "最上位モデルは段階的公開が標準に"},
     "groupSummary": {
       "capability": "自律作業時間は約3.5か月で倍増し、同等性能の価格は年10倍以上のペースで下落している",
@@ -816,7 +829,7 @@ button.info:hover{border-color:var(--ink);color:var(--text)}
       {"id": "gating", "label": "段階的公開"},
       {"id": "safety", "label": "安全目標"}
     ],
-    "diffusion": {"title": "拡散型言語モデル（dLLM）", "lead": "文章を1トークンずつ順番に書く代わりに、全体の下書きを並列に推敲して仕上げる方式。画像生成で主流の「拡散」をテキストに応用した。", "speed": {"title": "出力速度（tok/s）：拡散型はメーカー公表値、自己回帰型は第三者計測", "items": [["Seed Diffusion Preview（ByteDance・H20）", 2146, "diff", "seeddiff"], ["Gemini Diffusion（実験版）", 1479, "diff", "geminidiff2"], ["Mercury Coder Mini（H100）", 1109, "diff", "mercury"], ["Mercury 2.5", 1107, "diff", "mercury25"], ["DiffusionGemma（H100 1基）", 1100, "diff", "diffgemma2"], ["Mercury 2（Blackwell）", 1009, "diff", "mercury2b"], ["DeepSeek V4.1 Flash（自己回帰で最速）", 209, "ar", "speed"], ["Claude Sonnet 5.5", 139, "ar", "speed"], ["Claude Opus 5.5", 97, "ar", "aaspeed"], ["GPT-6 Astra", 56, "ar", "aaspeed"]]}, "latency": {"title": "推論込みの応答完了までの時間（秒、Inception発表）", "items": [["Mercury 2", 1.7], ["Gemini 3 Flash（推論モード）", 14.4], ["Claude Haiku 4.5（推論モード）", 23.4]], "src": "mercury2b"}, "stats": [{"v": "約5〜10倍", "l": "同程度の品質の速度重視モデルに対する速度（各社発表）"}, {"v": "89.6%", "l": "Gemini DiffusionのHumanEval（同規模の自己回帰型84.8%）", "note": "比較対象はSeed-Coder-8B-Instruct"}, {"v": "100B", "l": "拡散型で初の1,000億パラメータ級（LLaDA2.0、MoE）"}], "challenges": [{"t": "KVキャッシュが効きにくい", "d": "生成中のブロック全体が毎回書き換わるため、計算結果を再利用しにくい。長い文脈ほど再計算が重くなる。", "fix": "ブロック単位で順に生成するブロック拡散（Block Diffusion）で、確定済み部分をキャッシュ"}, {"t": "最上位の品質にはまだ届かない", "d": "Gemini Diffusionは軽量のFlash-Lite並み、DiffusionGemmaは元の自己回帰モデルより低い。", "fix": "学習済みの自己回帰モデルを拡散型に変換する手法（LLaDA2.0）で、大規模化と品質の両立を図る"}, {"t": "「考え直す」推論と相性が悪い", "d": "途中で「待って、間違えた」と方針を変える推論の流れが、ブロックの並列推敲に乗りにくい。", "fix": "Mercury 2で推論に対応。推敲の手順そのものを推論に使う研究が進む"}, {"t": "長さが固定されがち", "d": "あらかじめ決めた長さの枠を埋める方式のため、可変長の出力が苦手。", "fix": "枠を伸縮させる手法（DreamOn、CARVE など）"}], "verdictShort": "中小規模では実用段階。最上位の品質はまだ自己回帰型が優位で、大規模化の成否が鍵", "checks": [["中小規模で品質を保ち5〜10倍速", "done"], ["コード補完・編集予測で実用", "done"], ["高速なエージェント・ループで採用", "done"], ["100B級への大規模化（LLaDA2.0）", "doing"], ["最上位モデル並みの品質", "todo"]], "verdict": "中小規模のモデルでは、品質を保ったまま5〜10倍の高速化が実用段階に入った。コード補完・次の編集の予測・高速なエージェント・ループでは、すでに有力な選択肢になっている。一方、最上位モデルの品質ではまだ自己回帰型が優位で、「最上位かつ超高速」というブレイクスルーには、拡散型の大規模化（LLaDA2.0の100B級など）の成否が鍵になる。", "uses": ["コード補完・次の編集の予測（Mercury Edit）", "高速なエージェント・ループ", "音声対話など低遅延が必要な用途", "手元のGPUでの高速生成（DiffusionGemma）"], "lanes": [{"id": "research", "label": "研究"}, {"id": "model", "label": "モデル"}], "events": [{"id": "d1", "date": "2015-03-12", "lane": "research", "title": "拡散モデルの提案", "detail": "Sohl-Dicksteinらが、非平衡熱力学に基づく拡散モデルを提案", "srcs": ["sohl"]}, {"id": "d2", "date": "2020-06-19", "lane": "research", "title": "DDPM", "detail": "Hoらのノイズ除去拡散モデル。画像生成で拡散が主流になる転機", "srcs": ["ddpm"]}, {"id": "d3", "date": "2021-07-07", "lane": "research", "title": "離散拡散（D3PM）", "detail": "テキストのような離散データへの拡散の拡張", "srcs": ["d3pm"]}, {"id": "d4", "date": "2025-02-14", "lane": "model", "title": "LLaDA 8B", "detail": "ゼロから学習した拡散型LLMが、同規模の自己回帰型（LLaMA3 8B）に匹敵", "srcs": ["llada"]}, {"id": "d5", "date": "2025-02-26", "lane": "model", "title": "Mercury Coder", "detail": "初の商用規模の拡散型LLM。H100で毎秒1,000トークン超", "srcs": ["mercury"]}, {"id": "d6", "date": "2025-03-12", "lane": "research", "title": "ブロック拡散", "detail": "ブロック単位で順に生成し、ブロック内は並列に推敲。キャッシュと可変長に対応", "srcs": ["blockdiff"]}, {"id": "d7", "date": "2025-05-20", "lane": "model", "title": "Gemini Diffusion", "detail": "Google I/Oで公開。毎秒1,479トークン。実験的な研究プレビュー", "srcs": ["geminidiff"]}, {"id": "d8", "date": "2025-08-04", "lane": "model", "title": "Seed Diffusion", "detail": "ByteDanceのコード向け拡散型。H20で毎秒2,146トークン", "srcs": ["seeddiff"]}, {"id": "d9", "date": "2025-12-17", "lane": "model", "title": "LLaDA2.0（100B）", "detail": "拡散型で初の1,000億パラメータ級。自己回帰モデルからの変換で学習", "srcs": ["llada2"]}, {"id": "d10", "date": "2026-02-24", "lane": "model", "title": "Mercury 2", "detail": "初の推論対応の拡散型LLM", "srcs": ["mercury2"]}, {"id": "d11", "date": "2026-06-10", "lane": "model", "title": "DiffusionGemma", "detail": "Google初のオープンウェイトの拡散型テキストモデル（Apache 2.0）", "srcs": ["diffgemma"]}, {"id": "d12", "date": "2026-09-08", "lane": "model", "title": "Mercury 2.5", "detail": "毎秒1,107トークン、文脈260K", "srcs": ["mercury25"]}], "srcs": ["mercury", "mercury2b", "geminidiff2", "diffgemma", "seeddiff", "llada2", "blockdiff", "difflimits", "arvsdiff"]}
+    "diffusion": {"title": "拡散型言語モデル（dLLM）", "lead": "文章を1トークンずつ順番に書く代わりに、全体の下書きを並列に推敲して仕上げる方式。画像生成で主流の「拡散」をテキストに応用した。", "speed": {"title": "出力速度（tok/s）：拡散型はメーカー公表値、自己回帰型は第三者計測", "items": [["Seed Diffusion Preview（ByteDance・H20）", 2146, "diff", "seeddiff"], ["Gemini Diffusion（実験版）", 1479, "diff", "geminidiff2"], ["Mercury Coder Mini（H100）", 1109, "diff", "mercury"], ["Mercury 2.5", 1107, "diff", "mercury25"], ["DiffusionGemma（H100 1基）", 1100, "diff", "diffgemma2"], ["Mercury 2（Blackwell）", 1009, "diff", "mercury2b"], ["DeepSeek V4.1 Flash（自己回帰で最速）", 209, "ar", "speed"], ["Claude Sonnet 5.5", 139, "ar", "speed"], ["Claude Opus 5.5", 97, "ar", "aaspeed"], ["GPT-6 Astra", 56, "ar", "aaspeed"]]}, "latency": {"title": "推論込みの応答完了までの時間（秒、Inception発表）", "items": [["Mercury 2", 1.7], ["Gemini 3 Flash（推論モード）", 14.4], ["Claude Haiku 4.5（推論モード）", 23.4]], "src": "mercury2b"}, "stats": [{"v": "約5〜10倍", "l": "同程度の品質の速度重視モデルに対する速度（各社発表）"}, {"v": "89.6%", "l": "Gemini DiffusionのHumanEval（同規模の自己回帰型84.8%）", "note": "比較対象はSeed-Coder-8B-Instruct", "cmp": [["拡散型", 89.6, "diff"], ["自己回帰型", 84.8, "ar"]], "max": 100}, {"v": "100B", "l": "拡散型で初の1,000億パラメータ級（LLaDA2.0、MoE）"}], "challenges": [{"t": "KVキャッシュが効きにくい", "d": "生成中のブロック全体が毎回書き換わるため、計算結果を再利用しにくい。長い文脈ほど再計算が重くなる。", "fix": "ブロック単位で順に生成するブロック拡散（Block Diffusion）で、確定済み部分をキャッシュ"}, {"t": "最上位の品質にはまだ届かない", "d": "Gemini Diffusionは軽量のFlash-Lite並み、DiffusionGemmaは元の自己回帰モデルより低い。", "fix": "学習済みの自己回帰モデルを拡散型に変換する手法（LLaDA2.0）で、大規模化と品質の両立を図る"}, {"t": "「考え直す」推論と相性が悪い", "d": "途中で「待って、間違えた」と方針を変える推論の流れが、ブロックの並列推敲に乗りにくい。", "fix": "Mercury 2で推論に対応。推敲の手順そのものを推論に使う研究が進む"}, {"t": "長さが固定されがち", "d": "あらかじめ決めた長さの枠を埋める方式のため、可変長の出力が苦手。", "fix": "枠を伸縮させる手法（DreamOn、CARVE など）"}], "verdictShort": "中小規模では実用段階。最上位の品質はまだ自己回帰型が優位で、大規模化の成否が鍵", "checks": [["中小規模で品質を保ち5〜10倍速", "done"], ["コード補完・編集予測で実用", "done"], ["高速なエージェント・ループで採用", "done"], ["100B級への大規模化（LLaDA2.0）", "doing"], ["最上位モデル並みの品質", "todo"]], "verdict": "中小規模のモデルでは、品質を保ったまま5〜10倍の高速化が実用段階に入った。コード補完・次の編集の予測・高速なエージェント・ループでは、すでに有力な選択肢になっている。一方、最上位モデルの品質ではまだ自己回帰型が優位で、「最上位かつ超高速」というブレイクスルーには、拡散型の大規模化（LLaDA2.0の100B級など）の成否が鍵になる。", "uses": ["コード補完・次の編集の予測（Mercury Edit）", "高速なエージェント・ループ", "音声対話など低遅延が必要な用途", "手元のGPUでの高速生成（DiffusionGemma）"], "lanes": [{"id": "research", "label": "研究"}, {"id": "model", "label": "モデル"}], "events": [{"id": "d1", "date": "2015-03-12", "lane": "research", "title": "拡散モデルの提案", "detail": "Sohl-Dicksteinらが、非平衡熱力学に基づく拡散モデルを提案", "srcs": ["sohl"]}, {"id": "d2", "date": "2020-06-19", "lane": "research", "title": "DDPM", "detail": "Hoらのノイズ除去拡散モデル。画像生成で拡散が主流になる転機", "srcs": ["ddpm"]}, {"id": "d3", "date": "2021-07-07", "lane": "research", "title": "離散拡散（D3PM）", "detail": "テキストのような離散データへの拡散の拡張", "srcs": ["d3pm"]}, {"id": "d4", "date": "2025-02-14", "lane": "model", "title": "LLaDA 8B", "detail": "ゼロから学習した拡散型LLMが、同規模の自己回帰型（LLaMA3 8B）に匹敵", "srcs": ["llada"]}, {"id": "d5", "date": "2025-02-26", "lane": "model", "title": "Mercury Coder", "detail": "初の商用規模の拡散型LLM。H100で毎秒1,000トークン超", "srcs": ["mercury"]}, {"id": "d6", "date": "2025-03-12", "lane": "research", "title": "ブロック拡散", "detail": "ブロック単位で順に生成し、ブロック内は並列に推敲。キャッシュと可変長に対応", "srcs": ["blockdiff"]}, {"id": "d7", "date": "2025-05-20", "lane": "model", "title": "Gemini Diffusion", "detail": "Google I/Oで公開。毎秒1,479トークン。実験的な研究プレビュー", "srcs": ["geminidiff"]}, {"id": "d8", "date": "2025-08-04", "lane": "model", "title": "Seed Diffusion", "detail": "ByteDanceのコード向け拡散型。H20で毎秒2,146トークン", "srcs": ["seeddiff"]}, {"id": "d9", "date": "2025-12-17", "lane": "model", "title": "LLaDA2.0（100B）", "detail": "拡散型で初の1,000億パラメータ級。自己回帰モデルからの変換で学習", "srcs": ["llada2"]}, {"id": "d10", "date": "2026-02-24", "lane": "model", "title": "Mercury 2", "detail": "初の推論対応の拡散型LLM", "srcs": ["mercury2"]}, {"id": "d11", "date": "2026-06-10", "lane": "model", "title": "DiffusionGemma", "detail": "Google初のオープンウェイトの拡散型テキストモデル（Apache 2.0）", "srcs": ["diffgemma"]}, {"id": "d12", "date": "2026-09-08", "lane": "model", "title": "Mercury 2.5", "detail": "毎秒1,107トークン、文脈260K", "srcs": ["mercury25"]}], "srcs": ["mercury", "mercury2b", "geminidiff2", "diffgemma", "seeddiff", "llada2", "blockdiff", "difflimits", "arvsdiff"]}
   },
   "history": {
     "eras": [
@@ -942,13 +955,16 @@ function lineObstacles(pts, r = 3) {
     for (let k = 0; k <= n; k++) { const x = x0 + (x1 - x0) * k / n, y = y0 + (y1 - y0) * k / n; out.push({ x: x - r, y: y - r, w: 2 * r, h: 2 * r }); } }
   return out;
 }
+/** 重なりのため名前を省いた点があれば、カードの副題に件数を添える（図の中に書いて重ねない） */
+function hiddenNote(host, n) { const sub = host.closest(".card")?.querySelector(".card-h .sub"); if (!sub) return; sub.querySelector(".hn")?.remove(); if (n) sub.insertAdjacentHTML("beforeend", `<span class="hn">・名前の省略${n}点はカーソルで</span>`); }
 /** 点ラベルの衝突回避。候補（右→左→上→下…）から既存ラベル・点と重ならない位置を選び、item.p._l に [x, y] を設定 */
 function placeLabels(items, box, opt = {}) {
   const placed = items.map(it => ({ x: it.cx - 7, y: it.cy - 7, w: 14, h: 14 })).concat(opt.obstacles || []);
   const hit = a => placed.some(b => a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y);
   items.forEach(it => {
     const w = measure(it.text, 11, it.weight || 400) + 4, h = 14, { cx, cy } = it;
-    const pos = { right: [cx + 9, cy - 7], left: [cx - 9 - w, cy - 7], top: [cx - w / 2, cy - 22], bottom: [cx - w / 2, cy + 9], tr: [cx + 9, cy - 19], br: [cx + 9, cy + 5], tl: [cx - 9 - w, cy - 19], bl: [cx - 9 - w, cy + 5] };
+    const pos = { right: [cx + 9, cy - 7], left: [cx - 9 - w, cy - 7], top: [cx - w / 2, cy - 22], bottom: [cx - w / 2, cy + 9], tr: [cx + 9, cy - 19], br: [cx + 9, cy + 5], tl: [cx - 9 - w, cy - 19], bl: [cx - 9 - w, cy + 5],
+      top2: [cx - w / 2, cy - 36], bottom2: [cx - w / 2, cy + 23], tr2: [cx + 4, cy - 33], br2: [cx + 4, cy + 19], tl2: [cx - 4 - w, cy - 33], bl2: [cx - 4 - w, cy + 19] };   // 2段目の候補（少し離れた位置）
     const cands = (it.order || ["right", "left", "top", "bottom", "tr", "br", "tl", "bl"]).map(k => pos[k]).concat(Object.values(pos));
     const ok = ([x, y]) => x > box.L && x + w < box.R && y > box.T && y + h < box.B;
     const c = cands.find(c => ok(c) && !hit({ x: c[0], y: c[1], w, h })) || (opt.hide ? null : cands.find(ok) || cands[0]);
@@ -1132,7 +1148,17 @@ const Tip = {
   add(html) { const k = "t" + (++this.n); this.reg.set(k, html); return k; },
   /** グラフの行（anchor）にカーソルがあるときは、読んでいる行や隣の行を覆わないよう、カード（グラフ）の外側の左右に出す。
    *  外側に入らない場合と、行以外の要素ではカーソルの右下（はみ出す方向は反転） */
-  show(k, x, y, anchor) { const h = this.reg.get(k); if (!h) return this.hide(); const t = this.el; t.innerHTML = h; t.classList.add("on");
+  /** グラフ上の項目は、浮かぶ吹き出しではなく、そのカードの見出し行に1行の読み取り表示を出す（どのカードの値も隠さない） */
+  readout(k, anchor) {
+    const head = anchor?.closest("svg") && anchor.closest(".card")?.querySelector(".card-h"); if (!head) return false;
+    const box = document.createElement("div"); box.innerHTML = this.reg.get(k);
+    const parts = [box.querySelector(".tt")?.textContent, box.querySelector(".tv")?.textContent, ...[...box.querySelectorAll(".tm")].map(e => e.textContent).filter(t => t && !/クリックで詳細/.test(t)).sort((a, b) => /位/.test(b) - /位/.test(a))].map(t => t?.trim()).filter(Boolean);
+    let r = head.querySelector(".readout"); if (!r) { r = document.createElement("div"); r.className = "readout"; head.append(r); }
+    const h2 = head.querySelector("h2"); r.style.left = (h2.offsetLeft + h2.offsetWidth + 12) + "px";
+    r.innerHTML = `<b>${esc(parts[0] || "")}</b>${parts[1] ? `<span class="rv">${esc(parts[1])}</span>` : ""}<span class="rm">${esc(parts.slice(2).join("・"))}</span>`; r.title = parts.join(" ・ ");
+    this.cur = r; this.el.classList.remove("on"); return true;
+  },
+  show(k, x, y, anchor) { const h = this.reg.get(k); if (!h) return this.hide(); if (this.cur && !this.cur.isConnected) this.cur = null; if (this.cur && this.cur.closest(".card") !== anchor?.closest(".card")) { this.cur.remove(); this.cur = null; } if (this.readout(k, anchor)) return; const t = this.el; t.innerHTML = h; t.classList.add("on");
     const r = t.getBoundingClientRect(); let px = x + 14, py = y + 14;
     const card = anchor?.closest("svg") && anchor.closest(".card"), c = card?.getBoundingClientRect(), vtop = Math.max(8, $("#view").getBoundingClientRect().top);
     // 比べたい行を隠さない順に試す：① グラフ内で全行の値ラベルより右の空き ② カードの外の左右 ③ カードの上下（ヘッダーより下）
@@ -1143,7 +1169,7 @@ const Tip = {
     else if (c && (c.bottom + 8 + r.height <= innerHeight - 8 || c.top - 8 - r.height >= vtop)) { px = clamp(x - r.width / 2, 8, innerWidth - r.width - 8); py = c.bottom + 8 + r.height <= innerHeight - 8 ? c.bottom + 8 : c.top - 8 - r.height; }
     else { if (px + r.width > innerWidth - 8) px = x - r.width - 14; if (py + r.height > innerHeight - 8) py = y - r.height - 14; }
     t.style.left = px + "px"; t.style.top = py + "px"; },
-  hide() { this.el.classList.remove("on"); },
+  hide() { this.el.classList.remove("on"); this.cur?.remove(); this.cur = null; },
 };
 function tipModel(m, title, value, extra) {
   const s = extra?.src ? S.D.src.get(extra.src) : null;
@@ -1273,14 +1299,16 @@ const Chart = {
     const { W, H } = this.size(host);
     const L = 44, R = 18, T = 10, Bm = 34;
     const xs = pts.map(p => p.x), ys = pts.map(p => p.y);
-    const xl = o.xLog ? Math.pow(10, Math.floor(Math.log10(Math.min(...xs)))) : 0;
-    const xh = o.xLog ? Math.pow(10, Math.ceil(Math.log10(Math.max(...xs) * 1.05))) : niceMax(Math.max(...xs));
+    // xFit：線形軸をデータの範囲に合わせる（発表日など0起点に意味がない量）
+    const xr = Math.max(...xs) - Math.min(...xs) || 1;
+    const xl = o.xLog ? Math.pow(10, Math.floor(Math.log10(Math.min(...xs)))) : o.xFit ? Math.min(...xs) - xr * 0.06 : 0;
+    const xh = o.xLog ? Math.pow(10, Math.ceil(Math.log10(Math.max(...xs) * 1.05))) : o.xFit ? Math.max(...xs) + xr * 0.06 : niceMax(Math.max(...xs));
     const yr = Math.max(...ys) - Math.min(...ys), ystep = niceMax(Math.max(yr, 1) / 4);
     const yl = o.yZero ? 0 : Math.floor((Math.min(...ys) - yr * 0.12) / ystep) * ystep, yh = Math.ceil((Math.max(...ys) + yr * 0.12 + 1e-9) / ystep) * ystep;
     const X = v => L + (o.xLog ? (Math.log10(v) - Math.log10(xl)) / (Math.log10(xh) - Math.log10(xl)) : (v - xl) / (xh - xl)) * (W - L - R);
     const Y = v => T + (1 - (v - yl) / (yh - yl || 1)) * (H - T - Bm);
     let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(o.title || "")}">`;
-    const xt = o.xLog ? logTicks(xl, xh, W - L - R) : ticks(xl, xh);
+    const xt = o.xLog ? logTicks(xl, xh, W - L - R) : o.xTicks ? o.xTicks(xl, xh) : ticks(xl, xh);
     // 左端の目盛は軸の内側に寄せる（縦軸の目盛と重ならない）
     xt.forEach(t => { const x = X(t), lw = measure(o.xTick(t), 10.5), edge = x - lw / 2 < L + 2; s += `<line class="gl" x1="${x}" x2="${x}" y1="${T}" y2="${H - Bm}"/><text class="ax" x="${edge ? x + 2 : x}" y="${H - Bm + 14}" text-anchor="${edge ? "start" : "middle"}">${esc(o.xTick(t))}</text>`; });
     ticks(yl, yh, 4).forEach(t => { s += `<line class="gl" x1="${L}" x2="${W - R}" y1="${Y(t)}" y2="${Y(t)}"/><text class="ax" x="${L - 6}" y="${Y(t) + 3.5}" text-anchor="end">${esc(o.yTick ? o.yTick(t) : fmt.num(t, 0))}</text>`; });
@@ -1294,14 +1322,16 @@ const Chart = {
     }
     pts.sort((a, b) => b.y - a.y);
     // 前線上の点は右方向に破線が伸びるため、上・左を優先
-    placeLabels(pts.map(p => ({ p, cx: X(p.x), cy: Y(p.y), text: p.m.name, weight: p.front ? 600 : 400, order: p.front ? ["top", "left", "bottom"] : null })), { L, R: W - 2, T: 0, B: H - Bm }, { obstacles: o._obs || [] });
+    placeLabels(pts.map(p => ({ p, cx: X(p.x), cy: Y(p.y), text: p.m.name, weight: p.front ? 600 : 400, order: p.front ? ["top", "left", "bottom"] : null })), { L, R: W - 2, T: 0, B: H - Bm }, { obstacles: o._obs || [], hide: !!o.hideLabels });
+    const hidden = pts.filter(p => !p._l).length;
     pts.forEach(p => {
       const cx = X(p.x), cy = Y(p.y);
       const tip = Tip.add(tipModel(p.m, null, null, { rank: p.tip, note: p.note, src: p.src }));
       s += `<g data-t="${tip}" data-m="${esc(p.m.id)}"><circle class="hit" cx="${cx}" cy="${cy}" r="14"/>
         <circle class="mk" cx="${cx}" cy="${cy}" r="${p.front ? 7 : 6}" fill="${color(p.m)}" stroke="var(--surface)" stroke-width="2"/>
-        <text class="lb2" x="${p._l[0]}" y="${p._l[1] + 11}"${p.front ? ' font-weight="600" style="fill:var(--text)"' : ""}>${esc(p.m.name)}</text></g>`;
+        ${p._l ? `<text class="lb2" x="${p._l[0]}" y="${p._l[1] + 11}"${p.front ? ' font-weight="600" style="fill:var(--text)"' : ""}>${esc(p.m.name)}</text>` : ""}</g>`;
     });
+    hiddenNote(host, hidden);
     host.innerHTML = s + "</svg>";
   },
 
@@ -1469,7 +1499,7 @@ const podiumTable = (rows, id) => `<div style="position:absolute;inset:0;overflo
 /** モデルの横顔：行＝モデル、列＝指標。各セルに「全モデル中の位置」のレーン（そのモデルだけ色）と値を並べる */
 function profileGrid(models, specs, ms, id, opt = {}) {
   const cols = specs.map(metric).filter(Boolean).map(mt => ({ mt, r: ranked(mt, ms) }));
-  const head = `<thead><tr><th>モデル</th>${cols.map(c => `<th title="${esc(c.mt.name)}">${esc(c.mt.short)}<span class="muted" style="font-weight:400">${c.mt.higher ? "（右ほど良い）" : "（左ほど安い）"}</span></th>`).join("")}</tr></thead>`;
+  const head = `<thead><tr><th>モデル</th>${cols.map(c => `<th title="${esc(c.mt.name)}">${esc(c.mt.short)}<span class="muted pgh">${c.mt.higher ? "右ほど良い →" : "← 左ほど安い"}</span></th>`).join("")}</tr></thead>`;
   const body = models.map(m => `<tr><td>${mName(m)}</td>${cols.map(c => { const x = c.r.find(o => o.m === m);
     return x ? `<td><div class="pg">${lane(c.r, c.mt, { marks: [{ m, t: "" }] })}<span class="num">${esc(c.mt.fmt(x.v).replace(/ tok\/s|\/1M/, ""))}</span></div></td>` : `<td class="na">—</td>`; }).join("")}</tr>`).join("");
   return `<div style="${opt.auto ? "" : "position:absolute;inset:0;"}overflow:hidden" id="${id}"><table class="tbl pgrid" style="table-layout:fixed"><colgroup><col style="width:${cols.length > 4 ? 18 : 22}%">${cols.map(() => "<col>").join("")}</colgroup>${head}<tbody>${body}</tbody></table></div>`;
@@ -1486,6 +1516,10 @@ function shed(root, selectors) {
 }
 /** 箱 box が収まらないとき、指定の要素を後ろから省く（shed の単一要素版） */
 function shedBox(box, selectors) { for (const sel of selectors) for (const el of [...box.querySelectorAll(sel)].reverse()) { if (box.scrollHeight <= box.clientHeight + 1) return; el.closest("div:not(.legend)")?.remove?.() ?? el.remove(); } }
+/** 縦一覧（.li と見出し .li-g）の行の高さを、枠の高さに合わせて配分する（下に空白を残さない） */
+function fillList(list, lo = 19, hi = 40) { if (!list) return; const li = list.querySelectorAll(".li"), ng = list.querySelectorAll(".li-g").length; const gh = list.querySelector(".li-g")?.offsetHeight || 24;
+  li.forEach(el => el.style.minHeight = clamp((list.clientHeight - ng * gh) / Math.max(1, li.length) - 2, lo, hi) + "px");
+  for (let k = 0; k < 8 && list.scrollHeight > list.clientHeight + 1; k++) li.forEach(el => el.style.minHeight = Math.max(lo, parseFloat(el.style.minHeight) - 1) + "px"); }
 /** 表の行高を、枠の高さに合わせて配分する（スクロールさせない） */
 function fitRows(wrap, lo = 22, hi = 56, more = n => `ほか ${n} モデル（全件はヒートマップ・仕様一覧）`) {
   if (!wrap) return;
@@ -1886,6 +1920,7 @@ Chart.benchMap = function (host, pts) {
   ticks(0, yh, 4).forEach(t => { s += `<line class="gl" x1="${L}" x2="${W - R}" y1="${Y(t)}" y2="${Y(t)}"/><text class="ax" x="${L - 6}" y="${Y(t) + 3.5}" text-anchor="end">${t}</text>`; });
   s += `<text class="ax" x="${(L + W - R) / 2}" y="${H - 4}" text-anchor="middle">首位のスコア（右ほど飽和）</text><text class="ax" x="0" y="${T - 12}" style="font-weight:600;fill:var(--text-2)">↑ 上位と下位の差（pt・上ほど差がつく）</text>`;
   placeLabels(pts.map(p => ({ p, cx: X(p.x), cy: Y(p.y), text: p.b.short || p.b.label })), { L, R: W - R, T, B: H - B }, { hide: true });
+  hiddenNote(host, pts.filter(p => !p._l).length);
   pts.forEach(p => {
     const tip = Tip.add(`<div class="tt">${esc(p.b.label)}</div><div class="tm">首位 ${fmt.num(p.x)}%・差 ${fmt.num(p.y)}pt・${p.n}モデル</div><div class="tm" style="margin-top:4px">クリックで解説</div>`);
     s += `<g data-t="${tip}" data-gb="${esc(p.b.id)}" style="cursor:pointer"><circle class="hit" cx="${X(p.x)}" cy="${Y(p.y)}" r="12"/><circle cx="${X(p.x)}" cy="${Y(p.y)}" r="6" fill="var(--ink)" stroke="var(--surface)" stroke-width="2"/>
@@ -1928,7 +1963,7 @@ function renderGuide(v) {
   const legend = `<span class="legend"><span>${abMark(2)}主に測る</span><span>${abMark(1)}一部測る</span></span>`;
   v.innerHTML = card("各ベンチマークが測る能力", "行クリックで個別解説", `<div id="abWrap" style="position:absolute;inset:0;overflow:hidden"><table class="tbl fit">${head}<tbody>${body}</tbody></table></div>`,
       { right: legend, style: "grid-row:1/3", foot: `<div class="caveat"><span>形式：${[...D.kinds.values()].map(k => `${KIND_GLYPH[k.id] || ""} ${k.label}＝${k.desc}`).join("／")}</span></div>` })
-    + card("飽和度と識別力", "%単位のベンチ。表示中モデルのデータから算出", host("ch-bmap"))
+    + card("飽和度と識別力", "%単位・表示中モデルから算出", host("ch-bmap"))
     + card("規模（問題・タスク数）", "対数目盛。少数でも長時間の課題ほど1件の重みが大きい", host("ch-size"));
   const w = $("#abWrap"); w.style.setProperty("--rh", clamp((w.clientHeight - 40 - 24 * D.cats.length) / Math.max(1, D.benchmarks.length), 24, 54) + "px");
   const pts = D.benchmarks.filter(b => b.unit === "%").map(b => { const vs = ms.map(m => score(m, b.id)).filter(isNum); return vs.length >= 3 ? { b, x: Math.max(...vs), y: Math.max(...vs) - Math.min(...vs), n: vs.length } : null; }).filter(Boolean);
@@ -1964,6 +1999,7 @@ function renderGuideDetail(v, ms) {
     + card(esc(b.label), esc(D.cats.find(c => c.id === (b.category || "other"))?.label || ""), center, { right: kindBadge(b) })
     + `<div style="display:grid;grid-template-rows:minmax(0,1fr) auto;gap:12px;min-height:0">${card("スコア分布", r.length ? `${r.length}モデル・首位と最下位の差 ${fmt.num(Math.abs(r[0].v - r[r.length - 1].v))}${b.unit === "%" ? "pt" : ""}` : "データなし", host("ch-gd"))}
       ${card("測る能力", `<span class="legend" style="display:inline-flex"><span>${abMark(2)}主に</span><span>${abMark(1)}一部</span></span>`, abil, { style: "flex:none" })}</div>`;
+  fillList(v.querySelector(".list"), 26, 44);
   const rb = $("#relBox"); if (rb && rb.clientHeight < 90) { rb.previousElementSibling.remove(); rb.remove(); } else { fitRows($("#guideRel"), 30, 48, k => `ほか ${k} ベンチ`); fixLanes(v); }
   Chart.hbar($("#ch-gd"), r.map(x => ({ ...x, src: x.m.scores[b.id]?.src, note: x.m.scores[b.id]?.note })), { title: b.label, fmt: mt.fmt, max: b.max, zeroBased: b.zeroBased, refs: b.refs, maxRow: 46, median: true,
     emptyMsg: "表示中のモデルにこのベンチのデータがありません", tick: t => b.unit === "%" ? t + "%" : fmt.num(t, 0) });
@@ -2117,7 +2153,7 @@ Chart.lineage = function (host, models, upcoming, asOf, selId) {
       const x = X(ymd(m.released)), h = 12;
       let pos = null, label = m.name, w = 0;
       for (const nm of pre && m.name.startsWith(pre) && m.name.length > pre.length + 1 ? [m.name, m.name.slice(pre.length)] : [m.name]) {
-        w = measure(nm, 10.5) + 2;
+        w = measure(nm, 10.5) + 8;   // 隣の名前と1語に見えないよう余白を含める
         const cands = [[x - w / 2, dy - 7 - h], [x - w / 2, dy + 7], [x + 7, dy - h / 2], [x - 7 - w, dy - h / 2], [x - w / 2, dy - 9 - 2 * h], [x - w / 2, dy + 9 + h], [x + 4, dy - 7 - h], [x - w - 4, dy + 7], [x + 4, dy + 7], [x - w - 4, dy - 7 - h], [x - w / 2, dy - 11 - 3 * h], [x - w / 2, dy + 11 + 2 * h]].map(([a, b]) => [clamp(a, L, W - R - w), b]);
         const okBox = ([a, b]) => b > y0 - 2 && b + h < y0 + laneH + 2 && free(a, b, w, h);
         pos = cands.find(c => okBox(c) && offToday(c[0], w)) || cands.find(okBox); if (pos) { label = nm; break; }
@@ -2150,7 +2186,7 @@ Chart.mini = function (host, c) {
   const lw = inl ? Math.min(W0 * 0.45, Math.max(...c.items.map(it => measure(short(it[0]), 11))) + 10) : 0;
   const lines = t => { if (!inl || measure(t, 11) + 10 <= lw) return [t]; const cut = [...t.matchAll(/[をのにはとで・、]/g)].map(m => m.index + 1).filter(i => measure(t.slice(0, i), 11) + 10 <= lw).pop() || Math.ceil(t.length / 2); return [t.slice(0, cut), t.slice(cut)]; };
   const W = W0 - lw, barH = inl ? clamp(rowH * 0.6, 6, 14) : clamp(rowH * 0.3, 6, 28);
-  let s = `<svg viewBox="0 0 ${W0} ${H}" role="img" aria-label="${esc(c.title)}"><g transform="translate(${lw} ${top})">`;
+  let s = `<svg viewBox="0 0 ${W0} ${H}" role="img" aria-label="${esc(c.title)}"><defs><pattern id="mini-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="var(--surface)" stroke-width="2.2" opacity=".75"/></pattern></defs><g transform="translate(${lw} ${top})">`;
   const vals = c.items.flatMap(it => it.slice(1).filter(isNum)).concat((c.refs || []).map(r => r.v));
   let X, tks = [];
   const isLog = c.type === "log" || c.type === "change";
@@ -2178,7 +2214,7 @@ Chart.mini = function (host, c) {
       s += `<line x1="0" x2="${W - R}" y1="${by + barH / 2}" y2="${by + barH / 2}" stroke="var(--border)" stroke-width="1"/>`;
       if (isNum(b)) s += `<rect x="${X(a)}" y="${by}" width="${Math.max(4, X(b) - X(a))}" height="${barH}" rx="${barH / 2}" fill="var(--seq-hi)" opacity=".55"/>`;
       else s += `<circle cx="${X(a)}" cy="${by + barH / 2}" r="${Math.min(barH / 2 + 1, 9)}" fill="var(--seq-hi)"/>`;
-    } else s += `<rect x="0" y="${by}" width="${Math.max(2, X(a))}" height="${barH}" rx="3" fill="${c.items[i][3] === "ar" ? "var(--muted)" : "var(--seq-hi)"}"/>`;
+    } else { const g = c.items[i][3]; s += `<rect x="0" y="${by}" width="${Math.max(2, X(a))}" height="${barH}" rx="3" fill="${g === "ar" ? "var(--muted)" : "var(--seq-hi)"}"/>${g === "diff" ? `<rect x="0" y="${by}" width="${Math.max(2, X(a))}" height="${barH}" rx="3" fill="url(#mini-hatch)"/>` : ""}`; }   // 拡散型＝斜線（速度画面と同じ表し方）
     const tw = measure(txt, 11.5), ex = (isNum(b) ? X(b) : X(a)) + 7, inside = ex + tw > W;
     s += `<text class="vl" x="${inside ? X(a) - 7 : ex}" y="${by + barH / 2 + 4}" text-anchor="${inside ? "end" : "start"}">${esc(txt)}</text></g>`;
   });
@@ -2199,7 +2235,7 @@ function timeScale(t0, t1, x0, x1, split, frac) {
   const ticks = () => {
     const out = [], yr = 365.25 * 864e5;
     const seg = (a, b, xa, xb) => { const pxYear = (xb - xa) / ((b - a) / yr || 1);
-      const step = pxYear > 400 ? 1 : pxYear > 130 ? 3 : pxYear > 45 ? 12 : pxYear > 8 ? 120 : 240; // 月数
+      const step = pxYear > 400 ? 1 : pxYear > 130 ? 3 : pxYear > 40 ? 12 : pxYear > 18 ? 24 : pxYear > 9 ? 60 : pxYear > 4 ? 120 : 240; // 月数
       const d = new Date(a); d.setUTCDate(1); d.setUTCMonth(Math.ceil(d.getUTCMonth() / Math.min(step, 12)) * Math.min(step, 12));
       if (step >= 12) { d.setUTCMonth(0); let y = d.getUTCFullYear(); if (d.getTime() < a) y++; const sy = step / 12; y = Math.ceil(y / sy) * sy; for (; ; y += sy) { const t = Date.UTC(y, 0, 1); if (t > b) break; out.push({ t, label: String(y), major: true }); } }
       else for (; d.getTime() <= b; d.setUTCMonth(d.getUTCMonth() + step)) { const m = d.getUTCMonth() + 1; out.push({ t: d.getTime(), label: m === 1 ? `${d.getUTCFullYear()}年` : `${m}月`, major: m === 1 }); }
@@ -2234,7 +2270,8 @@ Chart.events = function (host, events, lanes, opt = {}) {
   if (sc.splitX != null) s += `<text class="ax" x="${sc.splitX}" y="${T + 10}" text-anchor="middle" style="fill:var(--text-2)">≈</text><text class="ax" x="${sc.splitX - 4}" y="${H - Bm - 4}" text-anchor="end">← 圧縮</text>`;
   const ax = asOf <= t1 ? X(asOf) : null;
   if (ax != null) s += `<text class="ax" x="${ax - 4}" y="${T + 10}" text-anchor="end" style="fill:var(--text);font-weight:600">今日</text>`;
-  const placed = [], leaders = [], leadDefs = [], labels = ax != null ? [{ x: ax - 34, y: T, w: 34, h: 13 }] : [];
+  const todayBox = ax != null ? [{ x: ax - 34, y: T, w: 34, h: 13 }] : [];
+  const placed = [...todayBox], leaders = [], leadDefs = [], labels = [...todayBox];   // 「今日」の文字もラベルの障害物に
   const offLine = (a, w) => [ax, sc.splitX].every(x => x == null || a > x + 2 || a + w < x - 2);
   lanes.forEach((ln, i) => {
     const y0 = T + i * laneH, cy = y0 + laneH / 2;
@@ -2277,8 +2314,8 @@ Chart.events = function (host, events, lanes, opt = {}) {
   });
   // 引き出し線は最後に描き、他のラベルと交わる区間だけ途切れさせる（線が文字を貫かない）
   leadDefs.forEach(d => { const others = labels.filter(b => b !== d.own && !(b.x === d.own.x && b.y === d.own.y));
-    s += vline(d.x, Math.min(d.cy, d.ly) + (d.ly < d.cy ? 0 : 5), Math.max(d.cy, d.ly) - (d.ly < d.cy ? 5 : 0), others, 'stroke="var(--muted)" stroke-width="1"');
-    if (!d.inside) s += `<path d="M${d.x},${d.ly}H${d.ex}" stroke="var(--muted)" stroke-width="1"/>`; });
+    s += vline(d.x, Math.min(d.cy, d.ly) + (d.ly < d.cy ? 0 : 5), Math.max(d.cy, d.ly) - (d.ly < d.cy ? 5 : 0), others, 'stroke="var(--text-2)" stroke-width="1.3"');
+    if (!d.inside) s += `<path d="M${d.x},${d.ly}H${d.ex}" stroke="var(--text-2)" stroke-width="1.3"/>`; });
   if (ax != null) s += vline(ax, T, H - Bm, labels, 'stroke="var(--text)" stroke-width="1.5"');
   if (sc.splitX != null) s += vline(sc.splitX, T + 14, H - Bm, labels, 'stroke="var(--text-2)" stroke-dasharray="2 3"');
   host.innerHTML = s + "</svg>";
@@ -2344,10 +2381,10 @@ function renderDiffusion(v) {
   if (!df) { v.innerHTML = `<div class="card"><div class="empty">拡散型のデータがありません</div></div>`; return; }
   v.style.gridTemplateColumns = "minmax(0,1.05fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1.1fr)";
   v.style.gridTemplateRows = "minmax(0,1fr) minmax(0,1.05fr)";
-  const legend = `<span class="legend"><span><svg width="12" height="10"><rect width="12" height="10" rx="2" fill="var(--ink)"/></svg>拡散型</span><span><svg width="12" height="10"><rect width="12" height="10" rx="2" fill="var(--axis)"/></svg>自己回帰型</span></span>`;
+  const legend = `<span class="legend"><span><i class="sw-hatch"></i>拡散型（斜線）</span><span><svg width="12" height="10"><rect width="12" height="10" rx="2" fill="var(--axis)"/></svg>自己回帰型</span></span>`;
   v.innerHTML = card("仕組みの違い", "", `<div class="tc" style="position:absolute;inset:0"><p class="lead2">${esc(df.lead)}</p><div style="position:relative;flex:1;min-height:150px" id="mech"></div></div>`)
     + card("出力速度の比較", "tok/s", host("ch-dspeed"), { right: legend, style: "grid-column:span 2", foot: `<div class="caveat"><span>${esc(df.speed.title)}。計測環境（GPU・条件）が異なるため、目安として比較してください。</span></div>` })
-    + card("応答完了までの時間", "推論込み・秒", `<div class="tc" style="position:absolute;inset:0"><div style="position:relative;flex:1;min-height:80px">${host("ch-dlat")}</div><div class="stats" style="gap:3px">${df.stats.map(x => `<div class="stat"${x.note ? ` data-t="${Tip.add(`<div class="tt">${esc(x.l)}</div><div class="tm">${esc(x.note)}</div>`)}"` : ""}><b>${esc(x.v)}</b><span>${esc(x.l)}</span></div>`).join("")}</div></div>`)
+    + card("応答完了までの時間", "推論込み・秒", `<div class="tc" style="position:absolute;inset:0"><div style="position:relative;flex:1;min-height:80px">${host("ch-dlat")}</div><div class="stats" style="gap:3px">${df.stats.map(x => statHtml(x, 0)).join("")}</div></div>`)
     + card("研究とモデルの年表", "2015〜2020年は圧縮表示", host("ch-dev"), { style: "grid-column:span 2" })
     + card("課題と対策", "課題 → 対策（カーソルで詳細）", `<div class="pf" style="position:absolute;inset:0;overflow:hidden">${df.challenges.map(c => `<div class="pf-r" data-t="${Tip.add(`<div class="tt">${esc(c.t)}</div><div class="tm">${esc(c.d)}</div><div class="tm" style="margin-top:4px">対策：${esc(c.fix)}</div>`)}"><div class="pf-p"><span class="pf-i">!</span>${esc(c.t)}</div><span class="pf-a" aria-hidden="true">→</span><div class="pf-f">${esc(c.fix)}</div></div>`).join("")}</div>`)
     + card("ブレイクスルーになるか", "", `<div class="tc" style="position:absolute;inset:0;gap:6px"><div class="impl" style="font-weight:600" title="${esc(df.verdict)}"><span>${esc(df.verdictShort || df.verdict)}</span></div>${df.checks ? `<div class="sec-h" style="margin:2px 0 0">到達状況</div><div class="checks">${df.checks.map(([t, st]) => `<div class="ck ${st}"><span class="ck-i">${st === "done" ? "✓" : st === "doing" ? "…" : "○"}</span>${esc(t)}<span class="ck-s">${st === "done" ? "達成" : st === "doing" ? "進行中" : "未達"}</span></div>`).join("")}</div>` : ""}<div class="sec-h" style="margin:2px 0 0">いま向いている使い方</div><div class="tags">${df.uses.map(u => `<span class="tag">${esc(u)}</span>`).join("")}</div><div style="flex:1"></div>${srcLinks(df.srcs)}</div>`);
@@ -2398,12 +2435,19 @@ function srcLinks(ids) {
   const shown = xs.slice(0, 3), rest = xs.length - shown.length;
   return xs.length ? `<div class="srcs" title="${esc(xs.map(x => x.label).join(" / "))}">出典：${shown.map(x => { const u = safeUrl(x.url); return u ? `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(x.label.split(" – ")[0])}</a>` : esc(x.label.split(" – ")[0]); }).join("・")}${rest > 0 ? `<span> ほか${rest}件</span>` : ""}</div>` : "";
 }
+/** 数値カードの1項目：値・説明に加え、bar（同じカード内で比べる量）や cmp（2つ以上の値の比較棒）があれば図を添える */
+function statHtml(x, bmax) {
+  const tip = x.note ? ` data-t="${Tip.add(`<div class="tt">${esc(x.l)}</div><div class="tv">${esc(x.v)}</div><div class="tm">${esc(x.note)}</div>`)}"` : "";
+  const cmx = x.cmp ? (x.max || Math.max(...x.cmp.map(c => c[1]))) : 0;
+  const cmp = x.cmp ? `<span class="scmp">${x.cmp.map(([l, v, k]) => `<span class="sc-r"><span class="sc-l">${esc(l)}</span><i class="sbar"><i class="${k === "diff" ? "hatch" : k === "ar" ? "gray" : ""}" style="width:${(v / cmx * 100).toFixed(1)}%"></i></i><span class="num">${esc(fmt.num(v))}</span></span>`).join("")}</span>` : "";
+  return `<div class="stat"${tip}><b>${esc(x.v)}</b><span>${esc(x.l)}${x.note ? ' <span class="info">i</span>' : ""}${x.bar && bmax ? `<i class="sbar"><i style="width:${Math.max(1.5, x.bar / bmax * 100).toFixed(1)}%"></i></i>` : ""}${cmp}</span></div>`;
+}
 /** 動向カード：見出し → 示唆（結論）→ 主要な数値 → 図 → 背景の説明 → 出典（結論→根拠→詳細）。
  *  横長の枠では「左＝文章と数値／右＝図」の2列にし、図に十分な面積を与える */
 function trendCard(t, i, opt = {}) {
   // 数値に bar（比べられる量）があれば、同じカード内の最大値に対する長さの棒を添える（文字のKPIを図で比較）
   const bmax = Math.max(0, ...t.stats.map(x => x.bar || 0));
-  const stats = `<div class="stats">${t.stats.map(x => `<div class="stat"${x.note ? ` data-t="${Tip.add(`<div class="tt">${esc(x.l)}</div><div class="tv">${esc(x.v)}</div><div class="tm">${esc(x.note)}</div>`)}"` : ""}><b>${esc(x.v)}</b><span>${esc(x.l)}${x.note ? ' <span class="info">i</span>' : ""}${x.bar && bmax ? `<i class="sbar"><i style="width:${Math.max(1.5, x.bar / bmax * 100).toFixed(1)}%"></i></i>` : ""}</span></div>`).join("")}</div>`;
+  const stats = `<div class="stats">${t.stats.map(x => statHtml(x, bmax)).join("")}</div>`;
   const chart = t.chart ? `<div class="sec-h" style="margin:2px 0 -4px">${esc(t.chart.title)}</div><div style="position:relative;flex:1;min-height:70px">${host("ch-tr-" + i)}</div>` : "";
   const text = `<div class="impl" style="font-weight:600;color:var(--text)"><span>${esc(t.implication)}</span></div>${stats}`, foot = `<p class="lead2">${esc(t.lead)}</p>${srcLinks(t.srcs)}`;
   const body = opt.wide && t.chart ? `<div class="tc wide" style="position:absolute;inset:0"><div class="tc tx">${text}${foot}</div><div class="tc">${chart}</div></div>`
@@ -2418,22 +2462,24 @@ function renderFuture(v) {
   const ts = O.trends.filter(t => t.group === sub);
   if (sub === "safety") {
     v.style.gridTemplateColumns = `repeat(${Math.max(1, ts.length)},minmax(0,1fr))`;
-    v.style.gridTemplateRows = "minmax(0,1.35fr) minmax(0,1fr)";
+    v.style.gridTemplateRows = "minmax(0,1fr) minmax(0,1.15fr)";
     v.innerHTML = card("安全・規制の年表", "●＝実施済み・○＝予定。項目にカーソルで詳細", host("ch-ev"), { style: `grid-column:1/-1` }) + ts.map((t, i) => trendCard(t, i, { wide: true })).join("");
     Chart.events($("#ch-ev"), dateEvents(O.events), O.lanes, { title: "安全・規制の年表" });
   } else {
     // 3件以上は2列に並べ（奇数なら最後を全幅）、各カードを「文章｜図」の横長レイアウトにする
     // 4件以上は2列の横長カード（左＝文章｜右＝図）、3件以下は縦長カードを横一列
-    // 関連する長期推移（AIの歴史の「性能の伸び」）があれば下段に並べ、動向を「推移の中のどこか」として示す
-    const n = ts.length, wide = n >= 4, cols = wide ? 2 : Math.max(1, n);
-    const gs = (O.groupGrowth?.[sub] || []).map(id => D.history?.growth.find(g => g.id === id)).filter(Boolean);
+    // この画面固有の実データ（収録モデルの発表日×指標）があれば下段に散布図で並べ、動向を手元のデータで確かめられるようにする
+    const n = ts.length, wide = n >= 4, cols = wide ? 2 : Math.max(1, n), ms = visible();
+    const mc = (O.groupModelCharts?.[sub] || []).filter(([spec]) => metric(spec));
     v.style.gridTemplateColumns = `repeat(${cols},minmax(0,1fr))`;
-    v.style.gridTemplateRows = gs.length ? "minmax(0,1.25fr) minmax(0,1fr)" : `repeat(${Math.ceil(Math.max(1, n) / cols)},minmax(0,1fr))`;
+    v.style.gridTemplateRows = mc.length ? "minmax(0,1.25fr) minmax(0,1fr)" : `repeat(${Math.ceil(Math.max(1, n) / cols)},minmax(0,1fr))`;
     v.innerHTML = n ? ts.map((t, i) => trendCard(t, i, { wide })).join("")
-      + (gs.length ? `<div style="grid-column:1/-1;display:grid;grid-template-columns:repeat(${gs.length},minmax(0,1fr));gap:12px;min-height:0">${gs.map((g, i) => card(esc(g.title), "", `<div style="position:absolute;inset:0;display:flex;flex-direction:column;gap:6px"><div class="impl" style="flex:none;font-weight:600"><span>${esc(g.note || "")}</span></div><div style="position:relative;flex:1;min-height:0">${host("ch-fg" + i)}</div></div>`, { foot: srcLinks(g.srcs), right: `<button class="go" data-hist="1" title="AIの歴史 › 性能の伸び（長期推移${g.log ? "・対数目盛" : ""}）">歴史で見る</button>` })).join("")}</div>` : "")
+      + (mc.length ? `<div style="grid-column:1/-1;display:grid;grid-template-columns:repeat(${mc.length},minmax(0,1fr));gap:12px;min-height:0">${mc.map(([spec, title, impl], i) => card(esc(title), "点にカーソルで詳細", `<div style="position:absolute;inset:0;display:flex;flex-direction:column;gap:6px"><div class="impl" style="flex:none;font-weight:600"><span>${esc(impl)}</span></div><div style="position:relative;flex:1;min-height:0">${host("ch-mc" + i)}</div></div>`)).join("")}</div>` : "")
       : `<div class="card"><div class="empty">このカテゴリの動向データはまだありません</div></div>`;
-    gs.forEach((g, i) => Chart.growth($("#ch-fg" + i), g));
-    v.querySelectorAll("[data-hist]").forEach(b => b.onclick = () => go("history", "growth"));
+    const yr = d => { const t = ymd(d), y = new Date(t).getUTCFullYear(); return y + (t - Date.UTC(y, 0, 1)) / (365.25 * 864e5); };
+    mc.forEach(([spec, title], i) => { const mt = metric(spec), pts = ms.filter(m => m.released && isNum(mt.get(m))).map(m => ({ m, x: yr(m.released), y: mt.get(m) }));
+      const lg = spec.startsWith("price"); if (lg) pts.forEach(p => { p.yv = p.y; p.y = Math.log10(p.y); p.tip = `${fmt.date(p.m.released)}・${fmt.usd(p.yv)}/1M`; }); else pts.forEach(p => p.tip = `${fmt.date(p.m.released)}・${mt.fmt(p.y)}`);
+      Chart.scatter($("#ch-mc" + i), pts, { title, xFit: true, hideLabels: true, frontier: !lg, xTicks: (a, b) => { for (const st of [12, 6, 3, 2, 1]) { const out = []; for (let k = Math.ceil(a * 12 / st) * st; k <= b * 12 + 1e-6; k += st) out.push(k / 12); if (out.length >= 4 || st === 1) return out.length > 8 ? out.filter((_, i) => i % 2 === 0) : out; } }, xTick: t => { const k = Math.round(t * 12), y = Math.floor(k / 12), mo = k - y * 12 + 1; return `${y}/${String(mo).padStart(2, "0")}`; }, yTick: lg ? t => fmt.usd(Math.pow(10, t)) : t => fmt.num(t, 0), xLabel: "発表日 →", yLabel: lg ? "混合単価（$/1M・対数）" : "AA指数 ↑", emptyMsg: "発表日と値のあるモデルが2つ以上必要です" }); });
   }
   // 枠に収まらない場合は背景説明（詳細）を省き、見出しのツールチップへ移す（結論と数値・図を優先）
   v.querySelectorAll(".tc.tx").forEach(tx => { if (tx.clientHeight - tx.scrollHeight > 0 || [...tx.children].reduce((a, c) => a + c.offsetHeight, 0) < tx.clientHeight - 120) tx.classList.add("roomy"); if (tx.scrollHeight > tx.clientHeight + 1) tx.classList.remove("roomy"); });
