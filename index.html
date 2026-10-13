@@ -188,7 +188,20 @@ table{border-collapse:collapse;width:100%}
 .tbl.dense th{padding:4px 6px;font-size:11px}
 .tbl.dense td{padding:0 6px;line-height:1.2}
 .tbl.dense .lim{padding:1px 3px;font-size:10.5px}
-.ulist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px 6px}
+.gantt{display:grid;gap:1px}
+.gantt .li,.gantt .gh{display:grid;grid-template-columns:minmax(0,1fr) 42%;gap:8px;align-items:center;min-height:21px;padding:1px 6px;font-size:11.5px}
+.gantt .gn{display:flex;align-items:center;gap:6px;min-width:0;line-height:1.25;text-align:left;white-space:normal;overflow:visible}
+.gantt .gn .sw{flex:none}
+.gtrack{position:relative;height:12px;display:block}
+.gtrack::before{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:var(--grid)}
+.gaxis{height:14px}.gaxis::before{display:none}
+.gaxis span{position:absolute;top:0;font-size:10.5px;color:var(--muted);transform:translateX(-50%);white-space:nowrap}
+.gaxis .gnow{color:var(--text);font-weight:650}
+.gb{position:absolute;top:1px;bottom:1px;border-radius:3px;min-width:4px}
+.gb.solid{background:var(--c)}
+.gb.hatch{background:repeating-linear-gradient(135deg,var(--c) 0 2px,transparent 2px 5px);box-shadow:inset 0 0 0 1.5px var(--c)}
+.gb.outline{border:1.5px dashed var(--c)}
+.gt{position:absolute;top:-2px;bottom:-2px;width:1.5px;background:var(--text);opacity:.7}
 .ulist .li{min-height:22px;padding:2px 6px;font-size:11.5px}
 .tbl th.sortable{cursor:pointer;user-select:none}
 .tbl th.sortable:hover{color:var(--text)}
@@ -397,6 +410,9 @@ ul.plain{list-style:none;margin:0;padding:0}
 .stat span{font-size:11.5px;color:var(--text-2);line-height:1.4}
 .impl{font-size:12px;line-height:1.6;background:var(--surface-2);border-radius:8px;padding:8px 10px;display:grid;grid-template-columns:auto 1fr;gap:8px}
 .impl::before{content:"→";font-weight:700;color:var(--text)}
+.tc .impl{font-weight:600;color:var(--text)}
+.tc.wide{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:20px}
+.loopback{font-size:11.5px;color:var(--text-2);border:1.5px dashed var(--border-strong);border-radius:8px;padding:5px 10px;text-align:center}
 .srcs{font-size:10.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .srcs a{color:var(--muted)}
 .conf-key{display:inline-flex;align-items:center;gap:5px}
@@ -710,7 +726,7 @@ button.info:hover{border-color:var(--ink);color:var(--text)}
       {"id": "compute", "group": "infra", "title": "学習計算量は年4〜5倍で拡大、伸びは鈍化へ", "lead": "最先端モデルの学習計算量は急拡大を続けてきたが、電力などの制約で伸びが鈍るとの見通しが出ている。", "stats": [{"v": "4〜5倍／年", "l": "最先端モデルの学習計算量（Epoch）"}, {"v": "約5×10²⁶", "l": "公開推定で最大の学習（Grok 4、FLOP）"}, {"v": "3〜4倍／年", "l": "2028年までの見通し（鈍化）"}], "chart": {"type": "log", "title": "学習計算量（FLOP、対数）", "unit": "FLOP", "items": [["EU AI Actの基準", 1e+25], ["Grok 4（推定）", 5e+26], ["2026年の最先端（推定幅）", 1e+26, 1e+27]]}, "implication": "計算量の伸びが鈍る分、推論時計算・データ・アルゴリズムの工夫が差別化の中心になる。", "srcs": ["epochc", "deluair"]},
       {"id": "agents", "group": "infra", "title": "エージェント接続の標準化（MCP・A2A）", "lead": "AIエージェントとツール・他エージェントをつなぐ共通規格が定着し、企業での本番利用が広がっている。", "stats": [{"v": "1万超", "l": "MCPを実装した企業サーバー（2026年4月）"}, {"v": "9,700万", "l": "MCP SDKのダウンロード数"}, {"v": "150超", "l": "A2Aを支持する組織"}, {"v": "数日", "l": "Google Cloud「Gemini agent」のサブエージェントが動き続ける時間（10/8発表、プレビュー）"}], "chart": {"type": "bars", "title": "企業での導入状況（調査により定義が異なる）", "unit": "%", "max": 100, "items": [["本番アプリにAIエージェントを組込み（Gartner、2026年Q1）", 80], ["MCP接続エージェントを本番運用（2026年7月）", 78], ["MCPサーバーを本番運用（ソフトウェア企業）", 41], ["MCPサーバーを運用するFortune 500", 28]]}, "implication": "接続方法が標準化され、モデルの乗り換えコストが下がる。「どの標準に対応しているか」が選定の基準になる。", "srcs": ["mcp", "agentad", "gagent"]},
       {"id": "world", "group": "frontier", "title": "世界モデルとフィジカルAI", "lead": "観測から環境の動きを学んで先を予測する「世界モデル」と、ロボットを動かすVLA（視覚・言語・行動）モデルが進展している。", "stats": [{"v": "Genie 3", "l": "初のリアルタイム対話型の世界モデル（DeepMind）"}, {"v": "2億本", "l": "Cosmos Predict 2.5の学習動画クリップ（NVIDIA）"}, {"v": "2万時間", "l": "GR00T N1.7に追加した一人称視点の人間動画"}], "chart": {"type": "log", "title": "ロボット制御の二層構成（制御周期 Hz、対数）", "unit": "Hz", "items": [["遅い層：状況判断・計画（VLA）", 2, 5], ["速い層：反射的な運動制御", 200]]}, "implication": "言語の次の主戦場として、物理世界の理解と身体の制御が本格化している。", "srcs": ["worldm", "nvphys", "robo", "vbtrend"]},
-      {"id": "memory", "group": "frontier", "title": "継続学習と長期記憶", "lead": "再学習なしで知識を更新し、作業をまたいで記憶を保つ仕組みの研究が進んでいる。", "stats": [{"v": "Nested Learning", "l": "速さの異なる最適化を入れ子にした学習法（Google）"}, {"v": "Titans", "l": "推論時に長期記憶を取り込む構造（Google）"}, {"v": "数日〜数週間", "l": "記憶を保って長期タスクを続けるエージェント（方向性）"}], "chart": {"type": "flow", "title": "継続学習のイメージ", "steps": ["会話・作業", "重要な情報を記憶へ", "次の作業で再利用", "知識を更新（再学習なし）"]}, "implication": "毎回説明し直す手間が減り、長期プロジェクトを任せやすくなる。一方で、記憶の管理と削除の仕組みが必要になる。", "srcs": ["vbtrend", "anthroad"]},
+      {"id": "memory", "group": "frontier", "title": "継続学習と長期記憶", "lead": "再学習なしで知識を更新し、作業をまたいで記憶を保つ仕組みの研究が進んでいる。", "stats": [{"v": "Nested Learning", "l": "速さの異なる最適化を入れ子にした学習法（Google）"}, {"v": "Titans", "l": "推論時に長期記憶を取り込む構造（Google）"}, {"v": "数日〜数週間", "l": "記憶を保って長期タスクを続けるエージェント（方向性）"}], "chart": {"type": "flow", "title": "継続学習のイメージ", "loop": true, "steps": ["会話・作業", "重要な情報を記憶へ", "次の作業で再利用", "知識を更新（再学習なし）"]}, "implication": "毎回説明し直す手間が減り、長期プロジェクトを任せやすくなる。一方で、記憶の管理と削除の仕組みが必要になる。", "srcs": ["vbtrend", "anthroad"]},
       {"id": "ondevice", "group": "frontier", "title": "小型モデル・オンデバイスAI", "lead": "スマートフォンやPCの中で動く小型モデルが実用水準に達し、オフラインでも使える用途が広がっている。", "stats": [{"v": "1GB未満", "l": "Gemma 4 E2B（テキストのみ・量子化）の必要メモリ"}, {"v": "Apache 2.0", "l": "Muse Glimmer 30B（Meta、8月公開）"}, {"v": "25億台", "l": "2027年のエッジAI機器（予測）"}], "chart": {"type": "bars", "title": "Gemma 4 のサイズ（十億パラメータ）", "unit": "B", "items": [["E2B（実効2B）", 2], ["E4B（実効4B）", 4], ["26B MoE", 26], ["31B Dense", 31]]}, "implication": "データを外部に出さずに使えるため、機密情報を扱う業務やオフライン環境での利用が現実的になった。", "srcs": ["gemma", "gemmaqat", "ondev", "museopen"]},
       {"id": "rsi", "group": "frontier", "title": "モデル自身による改善（自己改善ループ）", "lead": "モデルが自分の学習データや手順を改善する反復ループが、実際の製品開発に使われ始めた。", "stats": [{"v": "33回", "l": "Qwen3.8-Maxの反復改善サイクル（Alibaba発表）"}, {"v": "40→45", "l": "その結果のAA指数"}], "chart": {"type": "bars", "title": "Qwen3.8 Max のAA指数", "unit": "pt", "items": [["初版（8/3）", 40], ["0902版", 45]]}, "implication": "改善の速度がさらに上がる可能性がある一方、何がどう変わったかを検証する重要性も増す。", "srcs": ["apsara", "qwen38"]},
       {"id": "gating", "group": "safety", "title": "高度なサイバー能力と段階的な公開", "lead": "最上位モデルを、まず審査済みの組織だけに提供する「段階的公開」が相次ぐ。評価中のモデルが実在のシステムに到達する事例も報告され、評価環境そのものの管理も課題になった。", "stats": [{"v": "数千件", "l": "Mythos Previewが見つけた未知の脆弱性（Anthropic）"}, {"v": "650超", "l": "Argonを先行提供したFairwindの参加組織（Google）"}, {"v": "公開見送り", "l": "GPT-6.1 Astra：安全基準を満たさず（OpenAI）"}], "chart": null, "implication": "最新・最上位のモデルほど、すぐには一般利用できない時代になった。導入計画では「提供範囲」も確認が必要。", "srcs": ["mythos", "argonfw", "astra", "astra61", "anthinc"]},
@@ -1193,8 +1209,11 @@ const Chart = {
   dumbbell(host, rows) {
     if (!rows.length) return this.empty(host);
     const { W, H } = this.size(host);
+    // 行が詰まりすぎる場合は上位だけ描き、残りは件数で示す（hbar と同じ規則）
+    const minRow = 16; let more = 0;
+    if ((H - 16) / rows.length < minRow) { const k = Math.max(3, Math.floor((H - 16 - 14) / minRow)); more = rows.length - k; rows = rows.slice(0, k); }
     const labelW = clamp(Math.max(...rows.map(r => measure(r.m.name))) + 24, 80, W * 0.4), R = 46, axisH = 16, n = rows.length;
-    const rowH = Math.min(34, (H - axisH) / n);
+    const rowH = Math.min(34, (H - axisH - (more ? 14 : 0)) / n);
     const all = rows.flatMap(r => [r.a, r.b]).filter(isNum);
     const lo = Math.pow(10, Math.floor(Math.log10(Math.min(...all)))), hi = Math.pow(10, Math.ceil(Math.log10(Math.max(...all))));
     const X = v => labelW + (Math.log10(v) - Math.log10(lo)) / (Math.log10(hi) - Math.log10(lo)) * (W - labelW - R);
@@ -1210,6 +1229,7 @@ const Chart = {
         <circle class="mk" cx="${X(r.b)}" cy="${cy}" r="5" fill="${color(m)}" stroke="var(--surface)" stroke-width="1.5"/>
         <text class="vl" x="${X(r.b) + 9}" y="${cy + 4}">${esc(fmt.usd(r.b))}</text></g>`;
     });
+    if (more) s += `<text class="ax" x="16" y="${H - 2}" style="fill:var(--text-2)">ほか ${more} モデル（全件は仕様一覧）</text>`;
     host.innerHTML = s + "</svg>";
   },
 
@@ -1919,8 +1939,8 @@ Chart.lineage = function (host, models, upcoming, asOf, selId) {
 
 /** 汎用ミニチャート（トレンドカード用）：bars＝線形の横棒、log＝対数軸の点・範囲、flow＝手順図 */
 Chart.mini = function (host, c) {
-  if (c.type === "flow") { host.innerHTML = `<div style="position:absolute;inset:0;display:grid;align-content:center">${flowHtml(c.steps, host.clientWidth < 120 * c.steps.length)}</div>`; return; }
-  const { W, H } = this.size(host), n = c.items.length, rowH = Math.min(64, (H - 18) / n), barH = clamp(rowH * 0.34, 6, 16), R = 64;
+  if (c.type === "flow") { const v = host.clientWidth < 120 * c.steps.length; host.innerHTML = `<div style="position:absolute;inset:0;display:grid;align-content:start;gap:6px">${flowHtml(c.steps, v)}${c.loop ? `<div class="loopback">↻ STEP ${c.steps.length} のあと STEP 1 に戻って繰り返す</div>` : ""}</div>`; return; }
+  const { W, H } = this.size(host), n = c.items.length, rowH = Math.min(92, (H - 18) / n), barH = clamp(rowH * 0.36, 6, 24), R = 64;
   let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(c.title)}">`;
   const vals = c.items.flatMap(it => it.slice(1).filter(isNum));
   let X, tks = [];
@@ -1935,13 +1955,13 @@ Chart.mini = function (host, c) {
   c.items.forEach(([label, a, b], i) => {
     b = isNum(b) ? b : undefined;
     const y = i * rowH, by = y + 16, val = isNum(b) ? `${vf(a)}〜${vf(b)}` : vf(a), unit = c.unit === "%" ? "%" : c.unit === "$" ? "" : "";
-    const txt = (c.unit === "$" ? "$" : "") + val + unit, tip = Tip.add(`<div class="tt">${esc(label)}</div><div class="tv">${esc(txt)}${c.unit && !["%", "$"].includes(c.unit) ? " " + esc(c.unit) : ""}</div>`);
+    const txt = val + unit, tip = Tip.add(`<div class="tt">${esc(label)}</div><div class="tv">${esc(txt)}${c.unit && !["%", "$"].includes(c.unit) ? " " + esc(c.unit) : ""}</div>`);
     s += `<g data-t="${tip}"><text class="lb2" x="0" y="${y + 11}">${esc(fitText(label, W - 4, 11))}</text>`;
     if (c.type === "log") {
       s += `<line x1="0" x2="${W - R}" y1="${by + barH / 2}" y2="${by + barH / 2}" stroke="var(--border)" stroke-width="1"/>`;
-      if (isNum(b)) s += `<rect x="${X(a)}" y="${by}" width="${Math.max(4, X(b) - X(a))}" height="${barH}" rx="${barH / 2}" fill="var(--ink)" opacity=".55"/>`;
-      else s += `<circle cx="${X(a)}" cy="${by + barH / 2}" r="${barH / 2 + 1}" fill="var(--ink)"/>`;
-    } else s += `<rect x="0" y="${by}" width="${Math.max(2, X(a))}" height="${barH}" rx="3" fill="${c.items[i][3] === "ar" ? "var(--axis)" : "var(--ink)"}" opacity=".85"/>`;
+      if (isNum(b)) s += `<rect x="${X(a)}" y="${by}" width="${Math.max(4, X(b) - X(a))}" height="${barH}" rx="${barH / 2}" fill="var(--seq-hi)" opacity=".55"/>`;
+      else s += `<circle cx="${X(a)}" cy="${by + barH / 2}" r="${Math.min(barH / 2 + 1, 9)}" fill="var(--seq-hi)"/>`;
+    } else s += `<rect x="0" y="${by}" width="${Math.max(2, X(a))}" height="${barH}" rx="3" fill="${c.items[i][3] === "ar" ? "var(--axis)" : "var(--seq-hi)"}"/>`;
     const tw = measure(txt, 11.5), ex = (isNum(b) ? X(b) : X(a)) + 7, inside = ex + tw > W;
     s += `<text class="vl" x="${inside ? X(a) - 7 : ex}" y="${by + barH / 2 + 4}" text-anchor="${inside ? "end" : "start"}">${esc(txt)}</text></g>`;
   });
@@ -2099,14 +2119,15 @@ function srcLinks(ids) {
   const xs = (ids || []).map(id => S.D.src.get(id)).filter(Boolean);
   return xs.length ? `<div class="srcs" title="${esc(xs.map(x => x.label).join(" / "))}">出典：${xs.map(x => { const u = safeUrl(x.url); return u ? `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(x.label.split(" – ")[0])}</a>` : esc(x.label); }).join("・")}</div>` : "";
 }
-function trendCard(t, i) {
-  return card(esc(t.title), "", `<div class="tc" style="position:absolute;inset:0">
-      <p class="lead2">${esc(t.lead)}</p>
-      <div class="stats">${t.stats.map(x => `<div class="stat"${x.note ? ` data-t="${Tip.add(`<div class="tt">${esc(x.l)}</div><div class="tv">${esc(x.v)}</div><div class="tm">${esc(x.note)}</div>`)}"` : ""}><b>${esc(x.v)}</b><span>${esc(x.l)}${x.note ? ' <span class="info">i</span>' : ""}</span></div>`).join("")}</div>
-      ${t.chart ? `<div><div class="sec-h" style="margin-bottom:2px">${esc(t.chart.title)}</div></div><div style="position:relative;flex:1;min-height:70px">${host("ch-tr-" + i)}</div>` : '<div style="flex:1"></div>'}
-      <div class="impl"><span>${esc(t.implication)}</span></div>
-      ${srcLinks(t.srcs)}
-    </div>`);
+/** 動向カード：見出し → 示唆（結論）→ 主要な数値 → 図 → 背景の説明 → 出典（結論→根拠→詳細）。
+ *  横長の枠では「左＝文章と数値／右＝図」の2列にし、図に十分な面積を与える */
+function trendCard(t, i, opt = {}) {
+  const stats = `<div class="stats">${t.stats.map(x => `<div class="stat"${x.note ? ` data-t="${Tip.add(`<div class="tt">${esc(x.l)}</div><div class="tv">${esc(x.v)}</div><div class="tm">${esc(x.note)}</div>`)}"` : ""}><b>${esc(x.v)}</b><span>${esc(x.l)}${x.note ? ' <span class="info">i</span>' : ""}</span></div>`).join("")}</div>`;
+  const chart = t.chart ? `<div class="sec-h" style="margin:2px 0 -4px">${esc(t.chart.title)}</div><div style="position:relative;flex:1;min-height:70px">${host("ch-tr-" + i)}</div>` : "";
+  const text = `<div class="impl"><span>${esc(t.implication)}</span></div>${stats}`, foot = `<p class="lead2">${esc(t.lead)}</p>${srcLinks(t.srcs)}`;
+  const body = opt.wide && t.chart ? `<div class="tc wide" style="position:absolute;inset:0"><div class="tc">${text}<div style="flex:1"></div>${foot}</div><div class="tc">${chart}</div></div>`
+    : `<div class="tc" style="position:absolute;inset:0">${text}${chart || '<div style="flex:1"></div>'}${foot}</div>`;
+  return card(esc(t.title), "", body, { style: opt.style || "" });
 }
 
 function renderFuture(v) {
@@ -2117,13 +2138,17 @@ function renderFuture(v) {
   if (sub === "safety") {
     v.style.gridTemplateColumns = `repeat(${Math.max(1, ts.length)},minmax(0,1fr))`;
     v.style.gridTemplateRows = "minmax(0,1.35fr) minmax(0,1fr)";
-    v.innerHTML = card("安全・規制の年表", "●＝実施済み・○＝予定。項目にカーソルで詳細", host("ch-ev"), { style: `grid-column:1/-1` }) + ts.map(trendCard).join("");
+    v.innerHTML = card("安全・規制の年表", "●＝実施済み・○＝予定。項目にカーソルで詳細", host("ch-ev"), { style: `grid-column:1/-1` }) + ts.map((t, i) => trendCard(t, i, { wide: true })).join("");
     Chart.events($("#ch-ev"), dateEvents(O.events), O.lanes, { title: "安全・規制の年表" });
   } else {
-    v.style.gridTemplateColumns = `repeat(${Math.max(1, ts.length)},minmax(0,1fr))`;
-    v.style.gridTemplateRows = "minmax(0,1fr)";
-    v.innerHTML = ts.length ? ts.map(trendCard).join("") : `<div class="card"><div class="empty">このカテゴリの動向データはまだありません</div></div>`;
+    // 3件以上は2列に並べ（奇数なら最後を全幅）、各カードを「文章｜図」の横長レイアウトにする
+    const n = ts.length, cols = n >= 3 ? 2 : Math.max(1, n);
+    v.style.gridTemplateColumns = `repeat(${cols},minmax(0,1fr))`;
+    v.style.gridTemplateRows = `repeat(${Math.ceil(Math.max(1, n) / cols)},minmax(0,1fr))`;
+    v.innerHTML = n ? ts.map((t, i) => trendCard(t, i, { wide: true, style: n >= 3 && n % 2 && i === n - 1 ? "grid-column:1/-1" : "" })).join("") : `<div class="card"><div class="empty">このカテゴリの動向データはまだありません</div></div>`;
   }
+  // 枠に収まらない場合は背景説明（詳細）を省き、見出しのツールチップへ移す（結論と数値・図を優先）
+  v.querySelectorAll(".tc").forEach(tc => { if (tc.scrollHeight > tc.clientHeight + 1) { const l = tc.querySelector(".lead2"); if (l) { tc.closest(".card").querySelector("h2").title = l.textContent; l.remove(); } } });
   ts.forEach((t, i) => t.chart && Chart.mini($("#ch-tr-" + i), t.chart));
 }
 
@@ -2138,17 +2163,31 @@ function renderRoadmap(v) {
   v.style.gridTemplateRows = "minmax(0,1fr)";
   const legend = `<span class="legend"><span><svg width="12" height="12"><circle cx="6" cy="6" r="4" fill="var(--surface)" stroke="var(--text-2)" stroke-width="2"/></svg>旧世代</span><span><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="var(--text-2)"/></svg>現行</span>${O.confidence.map(c => `<span class="conf-key" title="${esc(c.desc)}">${confKey(c.id)}${esc(c.label)}</span>`).join("")}</span>`;
   const p = u && D.pv.get(u.provider), conf = u && O.confidence.find(c => c.id === u.conf);
-  const others = ups.map(x => `<button class="li" data-up="${esc(x.id)}" aria-current="${x.id === u?.id}"><span><span class="sw" style="background:${provColor(D.pv.get(x.provider))}"></span>${esc(x.name)}</span><span class="muted num" style="font-size:11px">${esc(x.window[0].replace("-", "/"))}〜</span></button>`).join("");
-  const detail = u ? `<div class="stack" style="position:absolute;inset:0;overflow:auto;gap:10px">
+  // 予定のミニ・ガント：同じ時間軸に各予定の期間を帯で並べ、確度を帯の塗り（塗り＝公式・斜線＝報道・破線＝予測）で示す
+  const mi = ym => { const [y, m] = ym.split("-").map(Number); return y * 12 + m - 1; };
+  const sorted = [...ups].sort((a, b) => a.window[0].localeCompare(b.window[0]) || a.window[1].localeCompare(b.window[1]));
+  const g0 = Math.min(...ups.map(x => mi(x.window[0])), mi(D.meta.asOf.slice(0, 7))), g1 = Math.max(...ups.map(x => mi(x.window[1]))) + 1;
+  const gx = k => ((k - g0) / Math.max(1, g1 - g0) * 100).toFixed(2) + "%";
+  const bar = x => { const c = provColor(D.pv.get(x.provider)), st = CONF_STYLE[x.conf];
+    return `<i class="gb ${st}" style="left:${gx(mi(x.window[0]))};width:calc(${gx(mi(x.window[1]) + 1)} - ${gx(mi(x.window[0]))});--c:${c}"></i>`; };
+  const today = `<i class="gt" style="left:${gx(mi(D.meta.asOf.slice(0, 7)) + Number(D.meta.asOf.slice(8, 10)) / 31)}"></i>`;
+  const yrs = []; for (let k = Math.ceil(g0 / 12) * 12; k < g1; k += 12) yrs.push(`<span style="left:${gx(k)}">${k / 12}</span>`);
+  const others = `<div class="gantt"><div class="gh"><span></span><div class="gtrack gaxis">${yrs.join("")}<span class="gnow" style="left:${gx(mi(D.meta.asOf.slice(0, 7)))}">今日</span></div></div>${sorted.map(x => `<button class="li" data-up="${esc(x.id)}" aria-current="${x.id === u?.id}" title="${esc(x.name)}：${esc(x.window[0].replace("-", "/"))}〜${esc(x.window[1].replace("-", "/"))}"><span class="gn"><span class="sw" style="background:${provColor(D.pv.get(x.provider))}"></span>${esc(x.name)}</span><span class="gtrack">${today}${bar(x)}</span></button>`).join("")}</div>`;
+  const detail = u ? `<div class="stack" id="upDetail" style="position:absolute;inset:0;overflow:hidden;gap:10px">
       <div style="display:flex;gap:6px;flex-wrap:wrap"><span class="kb"><span class="sw" style="background:${provColor(p)}"></span>${esc(p?.label || u.provider)}</span><span class="kb">${esc(O.statuses[u.status] || u.status)}</span><span class="kb" title="${esc(conf?.desc || "")}">${confKey(u.conf, provColor(p))}確度：${esc(conf?.label || "")}</span></div>
-      <dl class="kv" style="grid-template-columns:1fr"><div><dt>見通しの時期（このページでの目安の幅）</dt><dd>${esc(u.window[0].replace("-", "年") + "月")} 〜 ${esc(u.window[1].replace("-", "年") + "月")}</dd></div></dl>
+      <div><div class="sec-h">見通しの時期 <b class="num" style="color:var(--text)">${esc(u.window[0].replace("-", "/"))} 〜 ${esc(u.window[1].replace("-", "/"))}</b></div></div>
       <p class="txt" style="font-weight:600">${esc(u.summary)}</p>
       ${u.points?.length ? `<ul class="pros">${u.points.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}
       ${srcLinks(u.srcs)}
-      <div class="sec-h" style="margin-top:4px">ほかの予定</div><div class="ulist">${others}</div>
+      <div class="sec-h" style="margin-top:4px">すべての予定（時期順・クリックで切替）</div>${others}
     </div>` : `<div class="empty">表示中の提供元に予定はありません</div>`;
-  v.innerHTML = card("モデルの系譜と今後の投入予定", "点＝発表済みモデル（クリックで詳細）・帯＝今後の見通し（クリックで右に表示）", host("ch-lin"), { right: legend })
+  v.innerHTML = card("モデルの系譜と今後の投入予定", "点＝発表済み・帯＝今後の見通し（クリックで詳細）", host("ch-lin"), { right: legend })
     + card(u ? esc(u.name) : "予定", "選択中の見通し", detail);
+  // 右の一覧が収まらない場合は、選択中以外の行を末尾から省き件数を示す（スクロールさせない）
+  const det = $("#upDetail"); if (det && det.scrollHeight > det.clientHeight + 1) {
+    det.querySelector(".gantt").insertAdjacentHTML("beforeend", `<div class="muted" id="upMore" style="font-size:11px;padding:2px 6px">ほか 0 件</div>`);
+    let cut = 0; for (const r of [...det.querySelectorAll(".gantt .li")].reverse()) { if (det.scrollHeight <= det.clientHeight + 1) break; if (r.getAttribute("aria-current") === "true") continue; r.remove(); cut++; }
+    $("#upMore").textContent = `ほか ${cut} 件（左の図の帯をクリック）`; }
   Chart.lineage($("#ch-lin"), ms, ups, D.meta.asOf, u?.id);
   v.querySelectorAll("[data-up]").forEach(el => el.onclick = e => { e.stopPropagation(); S.upcoming = el.dataset.up; store.set("upcoming", S.upcoming); Tip.hide(); render(); });
 }
