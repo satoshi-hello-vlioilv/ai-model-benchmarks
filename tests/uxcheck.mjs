@@ -53,6 +53,7 @@ for (const [theme, w, h] of SETS) {
       // コントラスト（主要な文字）
       // oklab()/color() など任意の色表記を、canvas で sRGB に正規化してから輝度を計算
       const cv = document.createElement("canvas").getContext("2d", { willReadFrequently: true });
+      const alphaOf = c => { cv.clearRect(0, 0, 1, 1); cv.fillStyle = "rgba(0,0,0,0)"; cv.fillStyle = c; cv.fillRect(0, 0, 1, 1); return cv.getImageData(0, 0, 1, 1).data[3] / 255; };
       const rgb = c => { cv.clearRect(0, 0, 1, 1); cv.fillStyle = "#000"; cv.fillStyle = c; cv.fillRect(0, 0, 1, 1); const d = cv.getImageData(0, 0, 1, 1).data; return `rgb(${d[0]},${d[1]},${d[2]})`; };
       const lum = c0 => { const c = rgb(c0); const m = c.match(/[\d.]+/g); if (!m) return null; const [r, g, b] = m.slice(0, 3).map(x => { x = +x / 255; return x <= 0.03928 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4); }); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
       const bgOf = el => { for (let e = el; e; e = e.parentElement) { if (e.tagName === "svg" || e.closest?.("svg")) { if (e.tagName !== "svg") continue; } const c = getComputedStyle(e).backgroundColor; if (c.startsWith("oklab") || c.startsWith("color(") || c.startsWith("oklch")) { const al = c.match(/\/\s*([\d.]+)/); if (!al || +al[1] > 0.5) return c; continue; } const a = c.match(/[\d.]+/g); if (a && (a.length < 4 || +a[3] > 0.5)) return c; } return getComputedStyle(document.body).backgroundColor; };
@@ -64,7 +65,9 @@ for (const [theme, w, h] of SETS) {
         const cs = getComputedStyle(el), isSvg = !!el.closest("svg");
         const fg = isSvg ? cs.fill : cs.color; if (!fg || fg === "none") return;
         const op = (() => { let o = 1; for (let e = el; e && e !== document.body; e = e.parentElement) o *= +getComputedStyle(e).opacity; return o; })();
-        const L1 = lum(fg), L2 = lum(bgOf(el)); if (L1 == null || L2 == null) return;
+        // SVG の文字は、真下に描かれた図形（矩形・円など）の塗りを背景とみなす（文字だけでは背景色が分からないため）
+        const svgBg = () => { const r = el.getBoundingClientRect(); const under = document.elementsFromPoint(r.left + r.width / 2, r.top + r.height / 2).find(e => e !== el && e.closest("svg") === el.closest("svg") && /^(rect|circle|path|ellipse|polygon)$/.test(e.tagName) && !/^(none|url)/.test(getComputedStyle(e).fill) && alphaOf(getComputedStyle(e).fill) > 0.5 && +getComputedStyle(e).fillOpacity > 0.5 && +getComputedStyle(e).opacity > 0.5); return under ? getComputedStyle(under).fill : null; };
+        const L1 = lum(fg), L2 = lum((isSvg && svgBg()) || bgOf(el)); if (L1 == null || L2 == null) return;
         const ratio = (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05) * (op < 1 ? op : 1);
         const big = parseFloat(cs.fontSize) >= 18 || (parseFloat(cs.fontSize) >= 14 && +cs.fontWeight >= 700);
         if (ratio < (big ? 3 : 4.5)) { const k = el.textContent.trim().slice(0, 16) + "|" + fg; if (!seen.has(k)) { seen.add(k); add("contrast", `${ratio.toFixed(2)}: "${el.textContent.trim().slice(0, 20)}"`); } }
