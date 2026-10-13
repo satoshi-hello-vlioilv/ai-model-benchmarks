@@ -292,7 +292,7 @@ table{border-collapse:collapse;width:100%}
 .log{font-size:11.5px;line-height:1.6;max-height:100%;overflow:auto}
 .log li{margin:0 0 2px}
 .log .e{color:var(--critical)} .log .w{color:var(--text-2)} .log .ok{color:var(--good-text)}
-pre.code{margin:0;font:11px/1.5 Consolas,"Cascadia Mono",ui-monospace,monospace;background:var(--surface-2);border-radius:8px;padding:10px;overflow:auto;color:var(--text-2);height:100%}
+pre.code{margin:0;font:11px/1.5 Consolas,"Cascadia Mono",ui-monospace,monospace;background:var(--surface-2);border-radius:8px;padding:10px;overflow:hidden;color:var(--text-2);position:absolute;inset:0;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere}
 .src-list{font-size:11.5px;overflow:auto;height:100%}
 .src-list li{padding:3px 0;border-bottom:1px solid var(--grid);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
 .src-list a{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -307,7 +307,7 @@ ul.plain{list-style:none;margin:0;padding:0}
 .ow{display:inline-flex;align-items:center;gap:2px;white-space:nowrap}
 .ow-yes{color:var(--text)}.ow-yes .ico{color:var(--good,#1f8a4c)}
 .ow-no{color:var(--text-2)}
-.tiers{display:flex;flex-direction:column;gap:10px;height:100%;overflow:hidden}
+.tiers{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-evenly;gap:6px;overflow:hidden}
 .tier{display:grid;grid-template-columns:52px minmax(0,38%) minmax(0,1fr);column-gap:12px;align-items:start}
 .tier .tk{font-weight:700;font-size:13px;text-align:right}
 .tier .tb{position:relative;height:16px;display:flex;align-items:center}
@@ -343,6 +343,7 @@ ul.plain{list-style:none;margin:0;padding:0}
 .near{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:12px;align-items:center;font-size:12px}
 .binfo{display:grid;gap:12px;align-content:start}
 .pgrid td{padding-top:0;padding-bottom:0}
+.pgrid .lim{display:none}
 .pgrid .lane{height:16px}
 .pg{display:grid;grid-template-columns:minmax(0,1fr) 4.2em;gap:8px;align-items:center}
 .pg .num{text-align:right;font-size:11.5px}
@@ -436,6 +437,10 @@ ul.plain{list-style:none;margin:0;padding:0}
 .impl{font-size:12px;line-height:1.6;background:var(--surface-2);border-radius:8px;padding:8px 10px;display:grid;grid-template-columns:auto 1fr;gap:8px}
 .impl::before{content:"→";font-weight:700;color:var(--text)}
 .tc.wide{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:20px}
+/* 横長カードの文章列：縦に余裕があれば、示唆・数値・説明を均等に配置し、数値の文字を大きくする */
+.tc.tx.roomy{justify-content:space-evenly}
+.tc.tx.roomy .stat b{font-size:clamp(18px,1.5vw,24px)}
+.tc.tx.roomy .stats{gap:12px}
 .pf{display:grid;grid-auto-rows:1fr;gap:6px}
 .pf-r{display:grid;grid-template-columns:minmax(0,0.85fr) 16px minmax(0,1.15fr);gap:6px;align-items:stretch;font-size:11.5px}
 .pf-p{background:color-mix(in oklab,var(--critical) 9%,var(--surface));border:1px solid color-mix(in oklab,var(--critical) 35%,transparent);border-radius:7px;padding:6px 8px;font-weight:650;display:flex;gap:6px;align-items:center}
@@ -1453,7 +1458,7 @@ function profileGrid(models, specs, ms, id, opt = {}) {
   const head = `<thead><tr><th>モデル</th>${cols.map(c => `<th title="${esc(c.mt.name)}">${esc(c.mt.short)}<span class="muted" style="font-weight:400">${c.mt.higher ? "（右ほど良い）" : "（左ほど安い）"}</span></th>`).join("")}</tr></thead>`;
   const body = models.map(m => `<tr><td>${mName(m)}</td>${cols.map(c => { const x = c.r.find(o => o.m === m);
     return x ? `<td><div class="pg">${lane(c.r, c.mt, { marks: [{ m, t: "" }] })}<span class="num">${esc(c.mt.fmt(x.v).replace(/ tok\/s|\/1M/, ""))}</span></div></td>` : `<td class="na">—</td>`; }).join("")}</tr>`).join("");
-  return `<div style="${opt.auto ? "" : "position:absolute;inset:0;"}overflow:hidden" id="${id}"><table class="tbl pgrid" style="table-layout:fixed"><colgroup><col style="width:20%">${cols.map(() => "<col>").join("")}</colgroup>${head}<tbody>${body}</tbody></table></div>`;
+  return `<div style="${opt.auto ? "" : "position:absolute;inset:0;"}overflow:hidden" id="${id}"><table class="tbl pgrid" style="table-layout:fixed"><colgroup><col style="width:${cols.length > 4 ? 18 : 22}%">${cols.map(() => "<col>").join("")}</colgroup>${head}<tbody>${body}</tbody></table></div>`;
 }
 /** 枠に収まらないとき、優先度の低い要素（selectors の順）から省き、省いた文章は見出しのツールチップへ移す（切れたまま見せない） */
 function shed(root, selectors) {
@@ -1465,6 +1470,8 @@ function shed(root, selectors) {
     }
   });
 }
+/** 箱 box が収まらないとき、指定の要素を後ろから省く（shed の単一要素版） */
+function shedBox(box, selectors) { for (const sel of selectors) for (const el of [...box.querySelectorAll(sel)].reverse()) { if (box.scrollHeight <= box.clientHeight + 1) return; el.closest("div:not(.legend)")?.remove?.() ?? el.remove(); } }
 /** 表の行高を、枠の高さに合わせて配分する（スクロールさせない） */
 function fitRows(wrap, lo = 22, hi = 56, more = n => `ほか ${n} モデル（全件はヒートマップ・仕様一覧）`) {
   if (!wrap) return; const n = wrap.querySelectorAll("tbody tr").length, th = wrap.querySelector("thead")?.offsetHeight || 0; wrap.style.setProperty("--rh", clamp((wrap.clientHeight - th - 2) / Math.max(1, n), lo, hi) + "px");
@@ -1488,21 +1495,27 @@ function renderBench(v) {
   const cnt = bs.map(b => ranked(metric("bench:" + b.id), ms).length), need = (b, k) => 96 + (b.caveat ? 34 : 0) + k * 20;   // カード1枚に必要な高さの目安（見出し＋注記＋軸＋行）
   const nWin = new Set(bs.map(b => ranked(metric("bench:" + b.id), ms)[0]?.m).filter(Boolean)).size;
   const rowFr = Array.from({ length: rowsN }, (_, k) => Math.max(...bs.slice(k * cols, k * cols + cols).map((b, j) => need(b, cnt[k * cols + j])), k === rowsN - 1 && n > 4 && n % 3 ? 70 + nWin * 22 : 0));   // 最後の段は「首位の数」カードも考慮
+  // 1指標：左＝グラフ（全高）、右＝横顔表（残りの高さ・行を配分）＋見方（内容の高さ）
   v.style.gridTemplateRows = n === 1 ? "minmax(0,1fr) auto" : n === 2 ? `${chartH}px auto auto` : rowFr.map(f => `minmax(0,${f}fr)`).join(" ");
   const r0 = few ? ranked(metric("bench:" + bs[0].id), ms) : [], rk = m => { const i = r0.findIndex(x => x.m === m); return i < 0 ? 99 : i; };
   const pgModels = few ? ms.filter(m => bs.some(b => score(m, b.id) != null)).sort((a, c) => rk(a) - rk(c)) : [];
   const pgSpecs = [...bs.map(b => "bench:" + b.id), ...(bs.some(b => b.id === "aa_index") ? [] : ["bench:aa_index"]), "price:blended", "spec:speed"];
   const pgCard = few ? card("上位モデルの横顔", "各指標での位置（色の点＝そのモデル・灰＝その他）", profileGrid(pgModels, pgSpecs, ms, "pgWrap", { auto: n === 2 }), { style: n === 2 ? "grid-column:1/-1" : "" }) : "";
   v.innerHTML = bs.map(b => card(esc(b.label), `${esc(b.unit === "Elo" ? "Elo（相対評価）" : b.unit === "%" ? "正答・成功率" : b.unit)}`,
-    host("ch-" + b.id), { right: `<button class="info" data-gb="${esc(b.id)}" title="${esc(b.desc || "")}（クリックで解説へ）" aria-label="${esc(b.label)}の解説">i</button>`, foot: b.caveat ? `<div class="caveat">${esc(b.caveat)}</div>` : "" })).join("")
-    + pgCard + (n === 1 ? benchInfo(bs[0], ms, "wide") : n > 4 && n % 3 ? benchSummary(bs, ms, cols * rowsN - n) : n === 2 ? bs.map(b => benchInfo(b, ms, "compact")).join("") : "");
+    host("ch-" + b.id), { right: `<button class="info" data-gb="${esc(b.id)}" title="${esc(b.desc || "")}（クリックで解説へ）" aria-label="${esc(b.label)}の解説">i</button>`, style: n === 1 ? "grid-row:1/3" : "", foot: b.caveat ? `<div class="caveat">${esc(b.caveat)}</div>` : "" })).join("")
+    + pgCard + (n === 1 ? benchInfo(bs[0], ms, "side") : n > 4 && n % 3 ? benchSummary(bs, ms, cols * rowsN - n) : n === 2 ? bs.map(b => benchInfo(b, ms, "compact")).join("") : "");
   // 横顔表は内容の高さで置き、画面に収まらなければ残りの高さに合わせて行を詰める（それでも入らない行は件数表示）
   const pw = $("#pgWrap");
+  // 1指標で右列が収まらない場合：見方カードは内容の高さ（最大で半分）、横顔表は残りの高さに合わせて行を詰める
+  if (pw && n === 1) { const bi = v.querySelector(".binfo.side"), ic = bi.closest(".card"), gap = parseFloat(getComputedStyle(v).rowGap) || 12;
+    const cap = (v.clientHeight - gap) * 0.6, natural = () => { bi.style.bottom = "auto"; const h = bi.offsetHeight + (ic.offsetHeight - bi.parentElement.clientHeight) + 2; bi.style.bottom = ""; return h; };   // 内容の高さ＋見出し等
+    v.style.gridTemplateRows = `minmax(0,1fr) ${Math.min(natural(), cap)}px`; shedBox(bi, [".legend", ".comp-l", ".note"]);
+    v.style.gridTemplateRows = `minmax(0,1fr) ${Math.min(natural(), cap)}px`; }   // 省いた後の高さで詰め直す
   if (pw && n === 2) { const pc = pw.closest(".card"), info = v.querySelector(".binfo")?.closest(".card")?.offsetHeight || 0, gap = parseFloat(getComputedStyle(v).rowGap) || 12;
     // 横顔表は内容の高さ（上限＝残りの高さ）、余った高さはグラフの段へ回す
     const natural = pw.getBoundingClientRect().top - pc.getBoundingClientRect().top + pw.querySelector("table").offsetHeight + parseFloat(getComputedStyle(pc).paddingBottom) + 6, h = Math.min(natural, v.clientHeight - chartH - info - 2 * gap);
     v.style.gridTemplateRows = `minmax(${chartH}px,1fr) ${h}px auto`; pw.style.cssText = "position:absolute;inset:0;overflow:hidden"; }
-  fitRows(pw, 18, n === 2 ? 34 : 56);
+  fitRows(pw, 18, n === 2 ? 34 : 72);
   v.querySelectorAll("[data-cmp]").forEach(btn => btn.onclick = () => compareWith(btn.dataset.cmp.split(",")).run());
   if ($("#benchCmp")) $("#benchCmp").onclick = () => { const ids = []; bs.forEach(b => { const r = ranked(metric("bench:" + b.id), ms); if (r[0] && !ids.includes(r[0].m.id)) ids.push(r[0].m.id); }); compareWith(ids).run(); };
   fixLanes(v);
@@ -1532,11 +1545,11 @@ function benchInfo(b, ms, mode) {
   const what = `<div class="note">${esc(b.desc || "説明は未登録です")}</div>
     ${b.flow ? `<div><div class="sec-h">評価の流れ</div>${flowHtml(b.flow)}</div>` : ""}
     ${b.composition ? `<div>${compHtml(b.composition)}</div>` : ""}`;
-  const who = `${mode === "wide" ? `<div><div class="sec-h">公表 ${r.length} / ${ms.length} モデル</div><div class="wb wide" style="display:block"><i style="width:${ms.length ? r.length / ms.length * 100 : 0}%;background:var(--seq-hi)"></i></div></div>` : ""}
-    ${mode === "wide" ? `<div><h4 style="margin:0 0 6px;font-size:11.5px;color:var(--text-2)">未公表・未計測のモデル（${missing.length}）</h4><div class="legend">${missing.length ? missing.map(m => mName(m)).join("") : '<span class="muted">なし</span>'}</div></div>` : ""}
+  const who = `${mode !== "compact" ? `<div><div class="sec-h">公表 ${r.length} / ${ms.length} モデル</div><div class="wb wide" style="display:block"><i style="width:${ms.length ? r.length / ms.length * 100 : 0}%;background:var(--seq-hi)"></i></div></div>` : ""}
+    ${mode !== "compact" ? `<div><h4 style="margin:0 0 6px;font-size:11.5px;color:var(--text-2)">未公表・未計測のモデル（${missing.length}）</h4><div class="legend">${missing.length ? missing.map(m => mName(m)).join("") : '<span class="muted">なし</span>'}</div></div>` : ""}
     <div style="display:flex;gap:16px"><button class="go" data-gb="${esc(b.id)}">個別解説で詳しく</button>${r.length > 1 ? `<button class="go" data-cmp="${esc(r.slice(0, 3).map(x => x.m.id).join(","))}">上位3を比較</button>` : ""}</div>`;
   const body = mode === "wide" ? `<div class="stack">${what}</div><div class="stack">${who}</div>` : what + who;
-  return card(`${esc(b.short || b.label)} の見方`, esc(cat?.label || ""), `<div class="binfo ${mode}">${body}</div>`, { style: mode === "wide" ? "grid-column:1/-1" : "" });
+  return card(`${esc(b.short || b.label)} の見方`, esc(cat?.label || ""), `<div class="binfo ${mode}"${mode === "side" ? ' style="position:absolute;inset:0;overflow:hidden"' : ""}>${body}</div>`, { style: mode === "wide" ? "grid-column:1/-1" : "" });
 }
 
 function renderHeat(v, ms) {
@@ -1600,12 +1613,12 @@ function renderCost(v) {
 function renderSpeed(v) {
   const ms = visible(), mt = metric("spec:speed"), ct = metric("spec:context"), aa = metric("bench:aa_index");
   v.style.gridTemplateColumns = "minmax(0,1fr) minmax(0,1fr)";
-  v.style.gridTemplateRows = "minmax(0,1.15fr) minmax(0,1fr)";
+  v.style.gridTemplateRows = "minmax(0,1.3fr) minmax(0,1fr)";
   const sp = ranked(mt, ms), arTop = sp.find(r => r.m.arch !== "diffusion");
   v.innerHTML = card("出力速度", "1秒あたりの出力トークン数（高いほど速い）・斜線＝拡散型（公表値）", host("ch-sp"), { style: "grid-row:1/3", foot: `<div class="caveat">推論モード・計測環境により変動。初回トークンまでの待ち時間（思考時間）は含まない。拡散型（Mercury・DiffusionGemma）はメーカー公表値で、第三者計測の自己回帰型とは条件が異なる。</div>` })
     + card("速さと賢さ", "右上ほど速くて賢い・破線＝同じ速さでより賢いモデルがない境界", host("ch-sx"))
     + card("コンテキスト長", "一度に入力できる最大トークン数の段階と該当モデル", `<div class="tiers" id="ctxTiers"></div>`, { foot: `<div class="caveat">日本語の文字数は 1トークン≒0.5〜0.7字 で換算（文庫本1冊≒10万字）。未公表のモデルは非表示。</div>` });
-  Chart.hbar($("#ch-sp"), sp.map(r => ({ ...r, src: r.m.speedObj?.src, note: r.m.speedObj?.note })), { title: "出力速度", fmt: mt.fmt, short: v => fmt.num(v, 0), median: true, maxRow: 64,
+  Chart.hbar($("#ch-sp"), sp.map(r => ({ ...r, src: r.m.speedObj?.src, note: r.m.speedObj?.note })), { title: "出力速度", fmt: mt.fmt, short: v => fmt.num(v, 0), median: true, maxRow: 96, maxBar: 24,
     diff: (a, b) => fmt.num(Math.abs(a - b), 0) + " tok/s", hatch: r => r.m.arch === "diffusion", emph: r => r.m === sp[0]?.m || r.m === arTop?.m,
     note: r => r.m === arTop?.m && arTop !== sp[0] ? "← 自己回帰型の最速" : "" });
   const pts = ms.filter(m => isNum(m.speed) && isNum(aa && aa.get(m))).map(m => ({ m, x: m.speed, y: aa.get(m), src: m.scores.aa_index?.src }));
@@ -1724,7 +1737,7 @@ function renderData(v) {
     <div><div class="sec-h">ベンチ別の公表数（現行 ${ms.length} モデル中・名前で解説へ）</div><div class="covers">${cover}</div></div>
     <div class="caveat" style="margin:0"><span>${(D.meta.notes || []).map(esc).join(" ")}</span></div>
   </div>`;
-  const imp = `<div style="display:grid;gap:12px;align-content:start;position:absolute;inset:0;overflow:hidden">
+  const imp = `<div style="display:grid;gap:12px;align-content:start">
     ${flowHtml(["JSONを用意", "取り込み", "自動で検証", "全画面に反映"])}
     <p class="txt t2" style="margin:-4px 0 0;font-size:11.5px">右の書式で差分だけを書いたJSONを、ドロップかURLで取り込みます。誤りがあれば取り込まず、成功するとすべての画面に反映されブラウザに保存されます。</p>
     <div class="drop" id="drop">JSONファイルをここにドロップ<br><span class="muted">または</span> <button class="btn" id="pickBtn" style="height:26px">ファイルを選択</button><input type="file" id="file" accept=".json,application/json" hidden></div>
@@ -1739,11 +1752,16 @@ function renderData(v) {
   // 出典：参照モデル数の多い順。件数は棒で示す（収まらない分は件数を明示）
   const srcN = s => D.models.filter(m => Object.values(m.scores).some(x => x.src === s.id) || (m.sources || []).includes(s.id) || m.speedObj?.src === s.id).length;
   const srcArr = [...D.src.values()].map(s => ({ s, n: srcN(s) })).sort((a, b) => b.n - a.n), srcMax = Math.max(1, ...srcArr.map(x => x.n));
+  // 画面の見本は「1要素＝1行」に詰めて全体を見渡せるようにする（ダウンロードされるテンプレートは整形済み）
+  const tplObj = JSON.parse(tpl), tplView = "{\n" + Object.entries(tplObj).map(([k, val]) => Array.isArray(val) ? `  "${k}": [\n${val.map(x => "    " + JSON.stringify(x).replace(/,"/g, ', "').replace(/":/g, '": ')).join(",\n")}\n  ]` : `  "${k}": ${JSON.stringify(val).replace(/":/g, '": ')}`).join(",\n") + "\n}";
   const srcs = `<div id="srcWrap" style="position:absolute;inset:0;overflow:hidden"><table class="tbl srct" style="table-layout:fixed;width:100%"><colgroup><col><col style="width:30%"></colgroup><tbody>${srcArr.map(({ s, n }) => { const u = safeUrl(s.url); return `<tr><td class="st">${u ? `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer" title="${esc(u)}">${esc(s.label)}</a>` : esc(s.label)}</td><td><div class="cv2"><div class="wb wide"><i style="width:${n / srcMax * 100}%;background:var(--seq-hi)"></i></div><span class="num muted">${n}</span></div></td></tr>`; }).join("")}</tbody></table></div>`;
-  v.innerHTML = card("データを最新化", "HTMLを編集せずに差し替え・追記", imp)
-    + `<div style="display:grid;grid-template-rows:auto minmax(0,1fr);gap:12px;min-height:0">${card("現在のデータ", "", stat, { style: "flex:none" })}${card("出典", `${D.src.size}件・参照モデル数の多い順`, srcs)}</div>`
-    + card("追記用JSONの書式", "差分のみ・id一致で上書き", `<pre class="code">${esc(tpl)}</pre>`);
+  // 左＝操作（取り込み → 書式の見本）、右＝現状（データの状態 → 出典）。各列とも上は内容の高さ、下が残りを使う
+  v.style.gridTemplateColumns = "minmax(0,1fr) minmax(0,1.25fr)";
+  v.innerHTML = `<div style="display:grid;grid-template-rows:auto minmax(0,1fr);gap:12px;min-height:0">${card("データを最新化", "HTMLを編集せずに差し替え・追記", imp, { style: "flex:none" })}${card("追記用JSONの書式", "差分のみ・id一致で上書き", `<pre class="code">${esc(tplView)}</pre>`)}</div>`
+    + `<div style="display:grid;grid-template-rows:auto minmax(0,1fr);gap:12px;min-height:0">${card("現在のデータ", "", stat, { style: "flex:none" })}${card("出典", `${D.src.size}件・参照モデル数の多い順`, srcs)}</div>`;
   fitRows($("#srcWrap"), 22, 30, n => `ほか ${n} 件（「現在のデータを書き出し」で全件）`);
+  const pre = v.querySelector("pre.code"); for (let lh = 1.5; pre && pre.scrollHeight > pre.clientHeight + 1 && lh > 1.3; lh -= 0.05) pre.style.lineHeight = lh.toFixed(2);   // 収まるまで行間→文字を詰める
+  if (pre && pre.scrollHeight > pre.clientHeight + 1) pre.style.fontSize = "10.5px";
   const mode = () => (v.querySelector('input[name="mode"]:checked') || {}).value || "merge";
   const drop = $("#drop");
   $("#pickBtn").onclick = () => $("#file").click();
@@ -2086,8 +2104,8 @@ function vline(x, y0, y1, boxes, attrs) {
 /** 汎用ミニチャート（トレンドカード用）：bars＝線形の横棒、log＝対数軸の点・範囲、flow＝手順図 */
 Chart.mini = function (host, c) {
   if (c.type === "stages") { host.innerHTML = `<div class="stages">${c.items.map(([st, who], i) => `<div class="stg s${i}"><b>${esc(st)}</b><span>${esc(who)}</span></div>`).join('<span class="stg-a" aria-hidden="true">↓ 公開範囲が広がる</span>')}</div>`; return; }
-  if (c.type === "flow") { const v = host.clientWidth < 120 * c.steps.length; host.innerHTML = `<div style="position:absolute;inset:0;display:grid;align-content:start;gap:6px">${flowHtml(c.steps, v)}${c.loop ? `<div class="loopback">↻ STEP ${c.steps.length} のあと STEP 1 に戻って繰り返す</div>` : ""}</div>`; return; }
-  const { W: W0, H } = this.size(host), n = c.items.length, top = c.refs || c.callout ? 18 : 0, rowH = Math.min(c.type === "change" ? 70 : 120, (H - 18 - top) / n), R = 64;
+  if (c.type === "flow") { const v = host.clientWidth < 120 * c.steps.length; host.innerHTML = `<div style="position:absolute;inset:0;display:grid;align-content:space-evenly;gap:6px">${flowHtml(c.steps, v)}${c.loop ? `<div class="loopback">↻ STEP ${c.steps.length} のあと STEP 1 に戻って繰り返す</div>` : ""}</div>`; return; }
+  const { W: W0, H } = this.size(host), n = c.items.length, top = c.refs || c.callout ? 18 : 0, rowH = Math.min(c.type === "change" ? 90 : 180, (H - 18 - top) / n), R = 64;
   // 行が低い（ラベルを棒の上に置けない）ときは、ラベルを左の列に並べる（値ラベルと次の行のラベルが重ならない）
   // 左列に置くときは、入らないラベルの括弧書き（出典・時期など）を省く（全文はツールチップ）
   const inl = rowH < 30, short = t => !inl || measure(t, 11) + 10 <= W0 * 0.45 ? t : t.replace(/（[^）]*）/g, "");
@@ -2334,7 +2352,7 @@ function trendCard(t, i, opt = {}) {
   const stats = `<div class="stats">${t.stats.map(x => `<div class="stat"${x.note ? ` data-t="${Tip.add(`<div class="tt">${esc(x.l)}</div><div class="tv">${esc(x.v)}</div><div class="tm">${esc(x.note)}</div>`)}"` : ""}><b>${esc(x.v)}</b><span>${esc(x.l)}${x.note ? ' <span class="info">i</span>' : ""}</span></div>`).join("")}</div>`;
   const chart = t.chart ? `<div class="sec-h" style="margin:2px 0 -4px">${esc(t.chart.title)}</div><div style="position:relative;flex:1;min-height:70px">${host("ch-tr-" + i)}</div>` : "";
   const text = `<div class="impl" style="font-weight:600;color:var(--text)"><span>${esc(t.implication)}</span></div>${stats}`, foot = `<p class="lead2">${esc(t.lead)}</p>${srcLinks(t.srcs)}`;
-  const body = opt.wide && t.chart ? `<div class="tc wide" style="position:absolute;inset:0"><div class="tc">${text}${foot}</div><div class="tc">${chart}</div></div>`
+  const body = opt.wide && t.chart ? `<div class="tc wide" style="position:absolute;inset:0"><div class="tc tx">${text}${foot}</div><div class="tc">${chart}</div></div>`
     : `<div class="tc" style="position:absolute;inset:0">${text}${chart || '<div style="flex:1"></div>'}${foot}</div>`;
   return card(esc(t.title), "", body, { style: opt.style || "" });
 }
@@ -2351,7 +2369,7 @@ function renderFuture(v) {
     Chart.events($("#ch-ev"), dateEvents(O.events), O.lanes, { title: "安全・規制の年表" });
   } else {
     // 3件以上は2列に並べ（奇数なら最後を全幅）、各カードを「文章｜図」の横長レイアウトにする
-    // 4件は2×2の横長カード（左＝文章｜右＝図）、3件以下は縦長カードを横に並べる（図は残りの高さいっぱい）
+    // 4件以上は2列の横長カード（左＝文章｜右＝図）、3件以下は縦長カードを横一列
     // 関連する長期推移（AIの歴史の「性能の伸び」）があれば下段に並べ、動向を「推移の中のどこか」として示す
     const n = ts.length, wide = n >= 4, cols = wide ? 2 : Math.max(1, n);
     const gs = (O.groupGrowth?.[sub] || []).map(id => D.history?.growth.find(g => g.id === id)).filter(Boolean);
@@ -2363,6 +2381,7 @@ function renderFuture(v) {
     gs.forEach((g, i) => Chart.growth($("#ch-fg" + i), g));
   }
   // 枠に収まらない場合は背景説明（詳細）を省き、見出しのツールチップへ移す（結論と数値・図を優先）
+  v.querySelectorAll(".tc.tx").forEach(tx => { if (tx.clientHeight - tx.scrollHeight > 0 || [...tx.children].reduce((a, c) => a + c.offsetHeight, 0) < tx.clientHeight - 120) tx.classList.add("roomy"); if (tx.scrollHeight > tx.clientHeight + 1) tx.classList.remove("roomy"); });
   shed(v, [".lead2", ".srcs"]);
   ts.forEach((t, i) => t.chart && Chart.mini($("#ch-tr-" + i), t.chart));
 }
