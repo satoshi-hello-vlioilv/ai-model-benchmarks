@@ -529,7 +529,7 @@ button.info:hover{border-color:var(--ink);color:var(--text)}
 .fb ul{display:grid;gap:3px;font-size:12px;line-height:1.5;padding-left:22px}
 .fb li{list-style:disc}
 .fb.ok li::marker{color:var(--f-ok)}.fb.rp li::marker{color:var(--f-rp)}.fb.ng li::marker{color:var(--f-ng)}
-.verdict{display:grid;gap:9px}
+.verdict{display:grid;gap:13px}
 .vd{display:grid;gap:2px;padding-left:10px;border-left:3px solid var(--border-strong)}
 .vd.ok{border-left-color:var(--f-ok)}.vd.rp{border-left-color:var(--f-rp)}.vd.ng{border-left-color:var(--f-ng)}
 .vtl2{display:inline-block;font-size:10.5px;color:var(--text-2);border:1px solid var(--border);border-radius:4px;padding:0 4px;margin-right:6px;line-height:15px;white-space:nowrap}
@@ -539,6 +539,7 @@ button.info:hover{border-color:var(--ink);color:var(--text)}
 .vjudge .vtl2{margin-right:0}
 .vjudge b{color:var(--text);font-size:13.5px}
 .vref.more{color:var(--text-2)}
+.vgo{font-size:11px;margin-left:4px}
 .nhead{display:grid;grid-template-columns:78px 72px minmax(0,1fr) auto 22px 10px;gap:8px;padding:2px 8px 4px;font-size:10.5px;color:var(--text-2);border-bottom:1px solid var(--grid);flex:none}
 .nhead span:nth-child(4){text-align:right}
 .nhead span:nth-child(5){grid-column:5/7}
@@ -551,7 +552,7 @@ button.info:hover{border-color:var(--ink);color:var(--text)}
 .vref.on{background:var(--ink);color:var(--ink-text);border-color:var(--ink)}
 .vref.on .chev{color:var(--ink-text)}
 .vmore{font-size:11px;align-self:center}
-.aflow{display:flex;flex-wrap:wrap;align-items:center;gap:4px 5px;font-size:11.5px;border-top:1px solid var(--grid);padding-top:8px}
+.aflow{display:flex;flex-wrap:wrap;align-items:center;gap:4px 4px;font-size:11.5px;border-top:1px solid var(--grid);padding-top:8px}
 .aflow .lgt{margin-right:4px;font-size:11.5px}
 .af{display:inline-flex;align-items:center;gap:4px;color:var(--text);white-space:nowrap}
 .af i{font-style:normal;width:15px;height:15px;border-radius:4px;background:var(--ink);color:var(--ink-text);display:grid;place-items:center;font-size:10.5px;font-weight:700}
@@ -587,6 +588,11 @@ button.info:hover{border-color:var(--ink);color:var(--text)}
 .rel .nd{font-size:11px;color:var(--text-2);white-space:nowrap;padding-top:1px}
 .rel .ntl{white-space:normal;color:var(--text);font-size:11.5px}
 .nchart{border-top:1px solid var(--grid);padding-top:8px}
+.nrow.hi{box-shadow:inset 3px 0 0 var(--seq-hi);background:color-mix(in oklab,var(--seq-hi) 7%,transparent)}
+.nrow.hi[aria-current="true"]{box-shadow:inset 3px 0 0 var(--ink)}
+.fmore{list-style:none !important;margin-left:-14px;font-size:11px;color:var(--text-2)}
+.nver .vref2{grid-template-columns:96px 112px minmax(0,1fr) auto 10px}
+.nver .vv{display:flex;align-items:center;gap:5px;white-space:nowrap}
 .sbars{display:grid;gap:3px}
 .sbr{display:grid;grid-template-columns:150px minmax(0,1fr) minmax(0,1fr);gap:8px;align-items:center;font-size:11.5px;color:var(--text-2);border-radius:5px;padding:1px 4px}
 .sbr.on{background:var(--surface-2);color:var(--text);font-weight:650}
@@ -597,7 +603,7 @@ button.info:hover{border-color:var(--ink);color:var(--text)}
 .sbt i.a{background:var(--seq-hi)}.sbt i.p{background:var(--v-lg)}
 .sbt b{font-size:11px;font-weight:650;color:var(--text)}
 .sbh{font-size:10.5px;color:var(--text-2);padding-top:0}
-.cmon{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px;height:74px;align-items:end}
+.cmon{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px;height:110px;align-items:end}
 .cm{display:grid;grid-template-rows:auto 1fr auto;justify-items:center;height:100%;font-size:10.5px;color:var(--text-2)}
 .cm i{display:block;width:60%;background:var(--seq-hi);border-radius:2px 2px 0 0;align-self:end;min-height:1px;opacity:.55}
 .cm.on i{opacity:1}.cm.on{color:var(--text);font-weight:700}
@@ -1202,7 +1208,7 @@ button.info:hover{border-color:var(--ink);color:var(--text)}
     {"id": "policy", "label": "各国政府の対応", "short": "各国の対応"}
   ],
   "newsTopics": [
-    {"id": "leak", "asOf": "2026-10-24", "title": "情報漏洩と中国AIの悪用", "headline": "企業情報の流出に使われたのは、中国製の攻撃ツールと米国製AIの併用。「中国AIアプリ経由の漏洩」は確認例が乏しい", "headShort": "流出の実例は攻撃ツール経由。中国AIアプリ経由は確認例が乏しい", "verdict": [{"k": "ok", "t": "事実：韓国の銀行と日本企業で流出", "d": "攻撃ツールARTEXと米国製AIを併用。犯人は金銭目的の個人と推定", "refs": ["l-kr-bank", "l-gmo", "n-storm0940"], "claim": "AIを悪用した侵入で、企業情報が流出した"}, {"k": "ok", "t": "事実：米政府（CISA・NSA・FBI）も6社を名指し", "d": "企業データの漏洩ではなく知的財産の問題。件数はAnthropicの集計", "refs": ["l-cisa", "l-anth-sep", "l-anth-dist", "l-oai-memo", "l-ostp", "l-distdef"], "claim": "中国AI企業が米国モデルを「蒸留」している"}, {"k": "rp", "t": "一部は事実だが、AI企業の自己報告が中心", "d": "独立検証・被害企業名はない。主に米国製AIを使用。中国は否定", "refs": ["l-gtg1002", "l-vn", "l-oai-ban", "l-gtig", "l-ta419"], "claim": "中国の国家支援集団がAIで諜報している"}, {"k": "ng", "t": "確認例はほぼない", "d": "確認済みはDeepSeekの設定ミスと韓国の事例のみ。禁止は予防措置", "refs": ["l-wiz", "l-kr", "l-rizap", "l-bans", "l-jp-ppc", "l-de", "l-dhs"], "claim": "中国AIアプリに入れた社内情報が漏れた"}], "actShort": ["機密入力の禁止", "中国保存AIの遮断", "耐フィッシング認証", "公開機器の修正", "蒸留の検知"], "actions": ["社外AIへの機密入力を禁止し、使えるAIを許可制に", "中国にデータを置くAIは業務端末で遮断", "多要素認証をフィッシング耐性のある方式（FIDO2）へ", "公開サーバー・VPNの脆弱性を最優先で修正", "API提供側は大量取得（蒸留）を検知"]}
+    {"id": "leak", "asOf": "2026-10-24", "title": "情報漏洩と中国AIの悪用", "headline": "企業情報の流出に使われたのは、中国製の攻撃ツールと米国製AIの併用。「中国AIアプリ経由の漏洩」は確認例が乏しい", "headShort": "流出の実例は攻撃ツール経由。中国AIアプリ経由は確認例が乏しい", "verdict": [{"k": "ok", "t": "事実：韓国の銀行と日本企業で流出", "d": "攻撃ツールARTEXと米国製AIを併用。犯人は金銭目的の個人と推定", "refs": ["l-kr-bank", "l-gmo", "n-storm0940"], "claim": "AIを悪用した侵入で、企業情報が流出した"}, {"k": "ok", "t": "事実：米政府（CISA・NSA・FBI）も6社を名指し", "d": "企業データの漏洩ではなく知的財産の問題。件数はAnthropicの集計", "refs": ["l-cisa", "l-anth-sep", "l-anth-dist", "l-oai-memo", "l-ostp", "l-distdef"], "claim": "中国AI企業が米国モデルを「蒸留」している"}, {"k": "rp", "t": "一部は事実だが、AI企業の自己報告が中心", "d": "独立検証・被害企業名はない。主に米国製AIを使用。中国は否定", "refs": ["l-gtg1002", "l-vn", "l-oai-ban", "l-gtig", "l-ta419"], "claim": "中国の国家支援集団がAIで諜報している"}, {"k": "ng", "t": "確認例はほぼない", "d": "確認済みはDeepSeekの設定ミスと韓国の事例のみ。禁止は予防措置", "refs": ["l-wiz", "l-kr", "l-rizap", "l-bans", "l-jp-ppc", "l-de", "l-dhs"], "claim": "中国AIアプリに入れた社内情報が漏れた"}], "actShort": ["入力禁止", "中国AI遮断", "FIDO2認証", "脆弱性修正", "蒸留検知"], "actions": ["社外AIへの機密入力を禁止し、使えるAIを許可制に", "中国にデータを置くAIは業務端末で遮断", "多要素認証をフィッシング耐性のある方式（FIDO2）へ", "公開サーバー・VPNの脆弱性を最優先で修正", "API提供側は大量取得（蒸留）を検知"]}
   ],
   "news": [
     {"id": "n-mistral-l4", "date": "2026-10-06", "cat": "model", "title": "Mistral Large 4 をプレビュー公開", "short": "Mistral L4", "lead": "米中以外で最も賢いモデル（AA指数38）。重みは10月末に公開予定。", "conf": "official", "facts": ["約1.05兆パラメータのMoE。プレビュー期間は半額", "重みの公開予定は10/31（10/23時点で未公開）"], "impl": "欧州のデータ主権を重視する企業にとって、自社運用できる大型モデルの選択肢になる。", "srcs": ["ml4", "ml4k", "ml4aa"], "recorded": "2026-10-08", "ver": "1.3.1"},
@@ -2619,7 +2625,7 @@ function timeScale(t0, t1, x0, x1, split, frac) {
     const out = [], yr = 365.25 * 864e5;
     const seg = (a, b, xa, xb) => { const pxYear = (xb - xa) / ((b - a) / yr || 1);
       // 1か月が十分に広い（直近30日など）ときは週の目盛り：月初＝「n月」、8・15・22日＝「m/d」
-      if (pxYear > 3000) { const d = new Date(a); d.setUTCDate(1); for (; d.getTime() <= b; d.setUTCMonth(d.getUTCMonth() + 1)) for (const day of [1, 8, 15, 22]) { const t = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), day), m = d.getUTCMonth() + 1; if (t >= a && t <= b) out.push({ t, label: day === 1 ? `${m}月` : `${String(m).padStart(2, "0")}/${String(day).padStart(2, "0")}`, major: day === 1 }); } return; }
+      if (pxYear > 3000) { const d = new Date(a); d.setUTCDate(1); for (; d.getTime() <= b; d.setUTCMonth(d.getUTCMonth() + 1)) for (const day of [1, 8, 15, 22]) { const t = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), day), m = d.getUTCMonth() + 1; if (t >= a && t <= b) out.push({ t, label: `${String(m).padStart(2, "0")}/${String(day).padStart(2, "0")}`, major: day === 1 }); } return; }
       const step = pxYear > 400 ? 1 : pxYear > 130 ? 3 : pxYear > 40 ? 12 : pxYear > 18 ? 24 : pxYear > 9 ? 60 : pxYear > 4 ? 120 : 240; // 月数
       const d = new Date(a); d.setUTCDate(1); d.setUTCMonth(Math.ceil(d.getUTCMonth() / Math.min(step, 12)) * Math.min(step, 12));
       if (step >= 12) { d.setUTCMonth(0); let y = d.getUTCFullYear(); if (d.getTime() < a) y++; const sy = step / 12; y = Math.ceil(y / sy) * sy; for (; ; y += sy) { const t = Date.UTC(y, 0, 1); if (t > b) break; out.push({ t, label: String(y), major: true }); } }
@@ -2941,7 +2947,7 @@ const factLegend = () => `<span class="legend"><span class="lgt">事実の判定
 function newsRow(n, sel, opt = {}) {
   const c = newsCat(n.cat), cf = newsConf(n.conf), lt = opt.full && S.D.leakTypes.find(t => t.id === n.type);
   const rec = opt.rec ? `<span class="nrc num"><span>記録 ${esc(md(n.recorded || ""))}</span><span class="nrv">${opt.showVer ? `v${esc(n.ver)}` : ""}</span></span>` : "";
-  return `<button class="li nrow${opt.full ? " full" : ""}" data-news="${esc(n.id)}" aria-current="${n.id === sel}" title="${esc(cf.label)}：${esc(cf.desc)}"><span class="nd num">${esc(opt.full ? fmt.date(n.date) : md(n.date))}</span><span class="nc">${lt ? esc(lt.short) : `${ico(c.icon)}${esc(c.label)}`}</span><span class="ntl">${esc(n.title)}</span>${opt.full ? factTally(n) || `<span class="ft muted">—</span>` : ""}${rec}${confKey(n.conf)}<span class="chev">›</span></button>`;
+  return `<button class="li nrow${opt.full ? " full" : ""}${opt.hi ? " hi" : ""}" data-news="${esc(n.id)}" aria-current="${n.id === sel}" title="${esc(cf.label)}：${esc(cf.desc)}"><span class="nd num">${esc(opt.full ? fmt.date(n.date) : md(n.date))}</span><span class="nc">${lt ? esc(lt.short) : `${ico(c.icon)}${esc(c.label)}`}</span><span class="ntl">${esc(n.title)}</span>${opt.full ? factTally(n) || `<span class="ft muted">—</span>` : ""}${rec}${confKey(n.conf)}<span class="chev">›</span></button>`;
 }
 /** 確認されている事実／報道・主張／否定・食い違い の3段（色と形で区別） */
 function factBlocks(n) {
@@ -2975,6 +2981,7 @@ function newsDetail(n, pool, opt = {}) {
     ${n.impl ? `<div class="nimpl"><div class="sec-h">意味すること</div><p class="txt t2">${esc(n.impl)}</p></div>` : ""}
     ${rel.length ? `<div class="nrel"><div class="sec-h">この話題の前後（${esc(lt ? lt.short : c.label)}・${nb.length}件）</div>${miniLane(n, nb)}<div class="rels">${rel.map(x => `<button class="li rel" data-news="${esc(x.id)}"><span class="nd num">${esc(fmt.date(x.date))}</span><span class="ntl">${esc(x.title)}</span>${confKey(x.conf)}<span class="chev">›</span></button>`).join("")}</div></div>` : ""}
     ${opt.chart ? `<div class="nchart">${opt.chart}</div>` : ""}
+    ${opt.verBlock && n.ver ? (() => { const c = S.D.changelog.find(x => x.version === n.ver); return c ? `<div class="nver"><div class="sec-h">この話題を記録した版</div><button class="li rel vref2" data-ver="${esc(c.version)}"><span class="vv"><b class="num">v${esc(c.version)}</b>${vBadge(c.type)}</span><span class="nd num">${esc(fmt.date(c.date.slice(0, 10)))} ${esc(c.date.slice(11, 16))}</span><span class="ntl">${esc(c.title)}</span>${chgBar(c)}<span class="chev">›</span></button></div>` : ""; })() : ""}
     <div class="nfoot">${srcLinks(n.srcs)}<div class="nrec">記録 <b class="num">${esc(fmt.date(n.recorded || ""))}</b>・<button class="go" data-ver="${esc(n.ver || "")}">v${esc(n.ver || "—")} の更新内容</button></div></div>
   </div>`;
 }
@@ -2988,10 +2995,12 @@ function foldTail(box, rowSel, more) {
   return cut;
 }
 /** 詳細が収まらなければ、指定の順に後ろから1つずつ省き、空になった塊は消す（詳細欄そのものは消さない） */
-function fitDetail(id = "nwDetail", sels = [".rels .rel", ".nrel .mlane", ".fb.ng li", ".fb.rp li", ".pros li", ".nstats .stat", ".nimpl", ".fb.ok li", ".nchart"]) {
+function fitDetail(id = "nwDetail", sels = [".rels .rel", ".nrel .mlane", ".nchart", ".nimpl", ".nstats .stat", ".nchips", ".pros li:not(:first-child)", ".fb.ng li:not(:first-child)", ".fb.rp li:not(:first-child)", ".fb.ok li:not(:first-child)"]) {
   const d = $("#" + id); if (!d) return;
-  for (const sel of sels) for (const el of [...d.querySelectorAll(sel)].reverse()) { if (d.scrollHeight <= d.clientHeight + 1) return; const box = el.parentElement; el.remove(); if (box && !box.children.length) (box.closest(".fb,.nstats,.cg,.nrel,.vnews") || box).remove(); else if (box?.classList.contains("rels") && !box.children.length) box.closest(".nrel")?.remove(); }
-  d.querySelectorAll(".nrel,.vnews").forEach(r => { if (!r.querySelector(".rel")) r.remove(); });   // 行が残らない見出しは消す
+  for (const sel of sels) for (const el of [...d.querySelectorAll(sel)].reverse()) { if (d.scrollHeight <= d.clientHeight + 1) break; const box = el.parentElement; el.remove(); el.dataset.cut = 1; if (box?.closest(".fb")) box.dataset.cut = (+box.dataset.cut || 0) + 1; if (box && !box.children.length) (box.closest(".nstats,.cg,.nrel") || box).remove(); }
+  d.querySelectorAll(".nrel").forEach(r => { if (!r.querySelector(".rel")) r.remove(); });   // 行が残らない見出しは消す（版のニュースは見出しの導線を残す）
+  // 事実の区分で省いた件数を示す（一覧の ✓・△・✕ の件数と一致させる）
+  d.querySelectorAll(".fb ul[data-cut]").forEach(u => u.insertAdjacentHTML("beforeend", `<li class="fmore">ほか ${u.dataset.cut}件（一覧の件数と同じ）</li>`));
 }
 /** 年表の点・一覧・関連・前後の点：どれを押しても同じ選択に切り替わる（まとめた点は、その数件に一覧を絞る） */
 function bindNews(v, key) {
@@ -3016,7 +3025,7 @@ function catMonths(n) {
   const D = S.D, same = D.news.filter(x => n.topic === "leak" ? x.type === n.type : x.cat === n.cat), end = D.meta.asOf.slice(0, 7), ms = [];
   for (let [y, m] = end.split("-").map(Number), i = 0; i < 12; i++, m = m === 1 ? (y--, 12) : m - 1) ms.unshift(`${y}-${String(m).padStart(2, "0")}`);
   const cnt = ms.map(mo => same.filter(x => x.date.startsWith(mo)).length), mx = Math.max(1, ...cnt);
-  return `<div class="sec-h">${esc(n.topic === "leak" ? (D.leakTypes.find(t => t.id === n.type)?.short || "") : newsCat(n.cat).label)}の月別件数（直近12か月）</div><div class="cmon">${ms.map((mo, i) => `<span class="cm${n.date.startsWith(mo) ? " on" : ""}" title="${mo.replace("-", "年")}月：${cnt[i]}件"><b class="num">${cnt[i] || ""}</b><i style="height:${cnt[i] / mx * 100}%"></i><em class="num">${+mo.slice(5)}</em></span>`).join("")}</div>`;
+  return `<div class="sec-h">${esc(n.topic === "leak" ? (D.leakTypes.find(t => t.id === n.type)?.short || "") : newsCat(n.cat).label)}の月別件数（直近12か月）</div><div class="cmon">${ms.map((mo, i) => `<span class="cm${n.date.startsWith(mo) ? " on" : ""}" title="${mo.replace("-", "年")}月：${cnt[i]}件"><b class="num">${cnt[i] || ""}</b><i style="height:${cnt[i] / mx * 100}%"></i><em class="num">${i === 0 || mo.endsWith("-01") ? `${mo.slice(0, 4)}/${+mo.slice(5)}` : +mo.slice(5)}</em></span>`).join("")}</div>`;
 }
 const setNote = (n, label) => `<span class="fset">${esc(label)} ${n}件に絞り込み中 <button class="go" data-unset="1">解除</button></span>`;
 
@@ -3041,7 +3050,7 @@ function renderNews(v) {
   const row = n => { const r = newsRow(n, S.news, { rec: isArc, showVer: n.ver !== pv }); pv = n.ver; return r; };
   const rows = isArc
     ? months.slice().reverse().filter(mo => list.some(n => n.date.startsWith(mo))).map(mo => { pv = null; return `<div class="li-g">${mo.replace("-", "年").replace(/年0/, "年")}月・${list.filter(n => n.date.startsWith(mo)).length}件</div>${list.filter(n => n.date.startsWith(mo)).map(row).join("")}`; }).join("")
-    : list.map(n => newsRow(n, S.news)).join("");
+    : list.map(n => newsRow(n, S.news, { hi: n.cat === newsSurge()?.c.id && asOf - ymd(n.date) <= 10 * DAY })).join("");
   const chip = (k, val, label, n, ico2 = "") => `<button class="fchip" data-${k}="${esc(val)}" aria-pressed="${(k === "cat" ? S.newsCat : S.newsConfF) === val}">${ico2}${esc(label)}<b class="num">${n}</b>${(k === "cat" ? S.newsCat : S.newsConfF) === val ? '<span aria-hidden="true">✕</span>' : ""}</button>`;
   const base = all.filter(n => !S.newsMonth || n.date.startsWith(S.newsMonth));
   const filters = isArc ? `<div class="fchips">${D.newsCats.map(c => chip("cat", c.id, c.label, base.filter(n => n.cat === c.id).length, ico(c.icon))).join("")}<span class="fsep"></span>${D.newsConf.map(c => chip("conf", c.id, c.label, base.filter(n => n.conf === c.id).length, confKey(c.id))).join("")}</div>` : "";
@@ -3049,10 +3058,10 @@ function renderNews(v) {
   const top = isArc
     ? card("月別の記録件数", (S.newsCat || S.newsConfF) ? "数字＝該当／全体・濃い棒＝該当・棒を押すとその月に絞り込み" : S.newsMonth ? "同じ棒をもう一度押すと解除" : "棒を押すとその月に絞り込み", `<div class="mbars" id="mbars"></div>${filters}`, { style: "flex:none" })
     : card(`直近30日の話題（分野別・${recent.length}件）`, "青帯＝直近10日で増えた分野", host("ch-news"), { style: "flex:none;height:47%", right: confLegend() });
-  const listSub = S.newsSet ? setNote(list.length, "年表の") : isArc ? (cur.length ? `${cur.join("・")}で絞り込み中 <button class="go" data-unset="1">すべて解除</button>` : "発生日の新しい順・各行に記録した日") : "新しい順・押すと右に詳細";
+  const listSub = S.newsSet ? setNote(list.length, "年表の") : isArc ? (cur.length ? `${cur.join("・")}で絞り込み中 <button class="go" data-unset="1">すべて解除</button>` : "発生日の新しい順・各行に記録した日") : "新しい順・青い縁＝直近10日で増えた分野";
   const left = `<div style="display:flex;flex-direction:column;gap:12px;min-height:0">${top}
     ${card(isArc ? `ニュース記録（${list.length}件）` : "話題の一覧", listSub, `<div class="nlist" id="nlist">${rows || `<div class="empty">該当する記録はありません</div>`}</div>`, { style: "flex:1;min-height:0", right: isArc ? confLegend() : "" })}</div>`;
-  v.innerHTML = left + card(sel ? "選択中の話題" : "話題", sel ? `${newsCat(sel.cat).label}・${fmt.date(sel.date)}` : "", newsDetail(sel, all, { chart: sel ? (isArc ? catMonths(sel) : surgeChart(sel.cat)) : "" }));
+  v.innerHTML = left + card(sel ? "選択中の話題" : "話題", sel ? `${newsCat(sel.cat).label}・${fmt.date(sel.date)}` : "", newsDetail(sel, all, { chart: sel ? (isArc ? catMonths(sel) : surgeChart(sel.cat)) : "", verBlock: isArc }));
   if (isArc) monthBars($("#mbars"), all, months, all.filter(catOk));   // 月の棒は分野・確度の絞り込みだけを反映（月の絞り込みでほかの月を0にしない）
   else Chart.events($("#ch-news"), evOf(recent, n => n.cat, S.news), D.newsCats.filter(c => recent.some(n => n.cat === c.id)).map(c => ({ id: c.id, label: c.label })),
     { from: asOf - 31 * DAY, to: asOf + 2 * DAY, hideOverlap: true, pick: true, cluster: 15, zebra: true, title: "直近30日の話題", focus: { lane: newsSurge()?.c.id, from: asOf - 10 * DAY } });
@@ -3081,27 +3090,26 @@ function renderLeak(v) {
   v.style.gridTemplateRows = "minmax(0,1fr)";
   const byId = id => all.find(n => n.id === id);
   // 結論：4つの主張それぞれに、根拠記事の事実判定の件数と、根拠記事へのチップ（押すと時系列・一覧・詳細が同時に切り替わる）
-  const verdict = `<div class="verdict">${(T.verdict || []).map(x => { const refs = (x.refs || []).map(byId).filter(Boolean), shown = refs.slice(0, 3), rest = refs.slice(3);
+  const verdict = `<div class="verdict">${(T.verdict || []).map(x => { const refs = (x.refs || []).map(byId).filter(Boolean), shown = refs.slice(0, 2), rest = refs.slice(2);   // 根拠は最大2件＋「ほか n件」
       return `<div class="vd ${esc(x.k)}"><div class="vclaim"><span class="vtl2">噂・主張</span>${esc(x.claim || "")}<span class="ar">→</span></div>
         <div class="vjudge"><span class="fk ${esc(x.k)}">${x.k === "ok" ? "✓" : x.k === "ng" ? "✕" : "△"}</span><b>${esc(x.t)}</b></div>
         <span class="vdd">${esc(x.d)}</span>
         <div class="vrefs"><span class="vtl2">根拠 ${refs.length}件</span>${shown.map(n => `<button class="vref${n.id === S.leak ? " on" : ""}" data-news="${esc(n.id)}">${esc(n.short || n.title)}<span class="chev">›</span></button>`).join("")}${rest.length ? `<button class="vref more" data-news="${esc(refs.map(n => n.id).join(","))}" title="根拠の${refs.length}件に一覧を絞り込む">ほか ${rest.length}件<span class="chev">›</span></button>` : ""}</div></div>`; }).join("")}</div>
-    ${T.actions?.length ? `<div class="aflow"><span class="lgt">企業の対策</span>${(T.actShort || T.actions).map((a, i) => `<span class="af" title="${esc(T.actions[i] || a)}"><i class="num">${i + 1}</i>${esc(a)}</span>`).join('<span class="ar" aria-hidden="true">→</span>')}</div>` : ""}`;
+    ${T.actions?.length ? `<div class="aflow"><span class="lgt">対策</span>${(T.actShort || T.actions).map((a, i) => `<span class="af" title="${esc(T.actions[i] || a)}"><i class="num">${i + 1}</i>${esc(a)}</span>`).join('<span class="ar" aria-hidden="true">→</span>')}</div>` : ""}`;
   const rows = `<div class="nhead"><span>日付</span><span>種類</span><span>出来事</span><span>事実の判定（件）</span><span>確度</span></div>` + ns.map(n => newsRow(n, S.leak, { full: true })).join("");
   v.innerHTML = `<div style="display:flex;flex-direction:column;gap:12px;min-height:0">
       ${card("時系列：何が起きたか（種類別）", "点・「n件」を押すと詳細", host("ch-leak"), { style: "flex:none;height:42%", right: confLegend() })}
       ${card(`事実関係の一覧（${ns.length}件）`, S.newsSet ? setNote(ns.length, "選んだ") : "新しい順・押すと右に詳細", `<div class="nlist" id="nlist">${rows}</div>`, { style: "flex:1;min-height:0", right: factLegend() })}</div>
     <div style="display:flex;flex-direction:column;gap:12px;min-height:0">
-      ${card("結論：確かなこと・言い過ぎなこと", T.asOf ? `${fmt.date(T.asOf)}時点・チップで根拠へ` : "", `<div class="stack" id="vdBox" style="gap:9px">${verdict}</div>`, { style: "flex:none" })}
-      ${card("選択中の出来事", sel ? fmt.date(sel.date) : "", newsDetail(sel, all, { chart: sel ? catMonths(sel) : "" }), { style: "flex:1;min-height:0" })}</div>`;
+      ${card("結論：確かなこと・言い過ぎなこと", T.asOf ? `${fmt.date(T.asOf)}時点・「根拠」を押すと該当の記事へ` : "", `<div class="stack" id="vdBox" style="gap:9px">${verdict}</div>`, { style: "flex:none" })}
+      ${card("選択中の出来事", sel ? fmt.date(sel.date) : "", newsDetail(sel, all), { style: "flex:1;min-height:0" })}</div>`;
   const types = D.leakTypes.filter(t => all.some(n => n.type === t.id)), t0 = Math.min(...all.map(n => ymd(n.date)));
   Chart.events($("#ch-leak"), evOf(all, n => n.type, S.leak), types.map(t => ({ id: t.id, label: t.short || t.label })), { from: Date.UTC(new Date(t0).getUTCFullYear(), new Date(t0).getUTCMonth() - 1, 1), pad: 1, hideOverlap: true, pick: true, cluster: 15, zebra: true, title: "情報漏洩とAI悪用の時系列" });
   foldTail($("#nlist"), ".nrow", k => `ほか ${k} 件（「ニュース記録」で全件）`);
   const det = $("#nwDetail");
-  if (det && det.clientHeight < 300) v.querySelectorAll("#vdBox .vrefs").forEach(r => { const cs = [...r.querySelectorAll(".vref:not(.more)")]; if (cs.length < 3) return; const drop = cs.slice(2).filter(c => !c.classList.contains("on")); drop.forEach(c => c.remove());
-    const all = (r.querySelector(".vref.more")?.dataset.news || cs.map(c => c.dataset.news).join(",")).split(","), k = all.length - r.querySelectorAll(".vref:not(.more)").length; let mo = r.querySelector(".vref.more");
-    if (k <= 0) { mo?.remove(); return; }
-    if (!mo) { r.insertAdjacentHTML("beforeend", `<button class="vref more" data-news="${esc(all.join(","))}">ほか ${k}件<span class="chev">›</span></button>`); } else mo.firstChild.textContent = `ほか ${k}件`; });
+  // 詳細が事実の3区分を出しきれないときは、結論の根拠チップを「根拠 n件 ›」の1ボタン（一覧をその根拠に絞り込む）にまとめる
+  if (det && det.scrollHeight > det.clientHeight + 1) v.querySelectorAll("#vdBox .vrefs").forEach(r => { const ids = [...r.querySelectorAll(".vref")].flatMap(c => c.dataset.news.split(",")), u = [...new Set(ids)];
+    r.previousElementSibling?.insertAdjacentHTML("beforeend", ` <button class="go vgo" data-news="${esc(u.join(","))}" title="根拠の記事に一覧を絞り込む">根拠 ${u.length}件</button>`); r.remove(); });
   fitDetail(); bindNews(v, "leak");
 }
 
@@ -3157,7 +3165,7 @@ function renderVersions(v) {
       <div class="dtiles vtiles">${tiles}</div>
       <div class="vmix"><span class="sec-h" style="margin:0">変更の内訳</span>${chgBar(cur, 16)}<span class="muted" style="font-size:11.5px">${CHG_GROUP.map(([k, l]) => { const n = (cur.changes || []).filter(c => CHG[c.k]?.[2] === k).length; return n ? `${l} ${n}` : ""; }).filter(Boolean).join("・")}</span></div>
       <div class="cgs">${groups}</div>
-      ${vnews.length ? `<div class="vnews"><div class="sec-h">この版で記録したニュース ${vnews.length}件${s.news > vnews.length ? `（ほか ${s.news - vnews.length}件は以前の版で記録済み）` : ""}</div>${vnews.map(n => `<button class="li rel" data-nref="${esc(n.id)}"><span class="nd num">${esc(fmt.date(n.date))}</span><span class="ntl">${esc(n.title)}</span>${confKey(n.conf)}<span class="chev">›</span></button>`).join("")}</div>` : ""}
+      ${vnews.length ? `<div class="vnews"><div class="sec-h">この版で記録したニュース ${vnews.length}件${s.news > vnews.length ? `（ほか ${s.news - vnews.length}件は以前の版で記録済み）` : ""} <button class="go" data-allnews="1">ニュース記録で見る</button></div>${vnews.map(n => `<button class="li rel" data-nref="${esc(n.id)}"><span class="nd num">${esc(fmt.date(n.date))}</span><span class="ntl">${esc(n.title)}</span>${confKey(n.conf)}<span class="chev">›</span></button>`).join("")}</div>` : ""}
     </div>` : `<div class="empty">更新履歴がありません</div>`;
   v.innerHTML = card("版ごとの収録モデル数", "横軸＝公開日（間隔は経過日数）・棒を押すとその版の内容", `<div class="vbars" id="vbars"></div>`, { style: "grid-column:1/-1", right: legend })
     + card(`更新履歴（${vs.length}版・新しい順）`, "帯の長さ＝変更の項目数", `<div class="nlist" id="vlist">${list}</div>`, { right: chgLegend() })
@@ -3170,6 +3178,7 @@ function renderVersions(v) {
   const vn = v.querySelector(".vnews"); if (vn) { const k = vnews.length - vn.querySelectorAll(".rel").length; if (k > 0) { vn.insertAdjacentHTML("beforeend", `<div class="muted" style="font-size:11px;padding:2px 6px">ほか ${k} 件（「AIニュース › ニュース記録」で全件）</div>`); fitDetail("verDetail", [".vnews .rel"]); const k2 = vnews.length - vn.querySelectorAll(".rel").length; vn.lastElementChild.textContent = `ほか ${k2} 件（「AIニュース › ニュース記録」で全件）`; } }
   v.querySelectorAll("[data-v]").forEach(el => el.onclick = () => { S.ver = el.dataset.v; Tip.hide(); render(); });
   v.querySelectorAll("[data-nref]").forEach(el => el.onclick = e => { e.stopPropagation(); const n = D.news.find(x => x.id === el.dataset.nref); if (!n) return; S.newsSet = null; if (n.topic === "leak") { S.leak = n.id; go("news", "leak"); } else { S.news = n.id; S.newsMonth = null; S.newsCat = null; S.newsConfF = null; go("news", "archive"); } });
+  v.querySelectorAll("[data-allnews]").forEach(el => el.onclick = () => { S.newsSet = null; S.newsMonth = null; S.newsCat = null; S.newsConfF = null; go("news", "archive"); });
   v.querySelectorAll(".nref[data-up]").forEach(el => el.onclick = e => { e.stopPropagation(); S.upcoming = el.dataset.up; go("future", "roadmap"); });
 }
 
