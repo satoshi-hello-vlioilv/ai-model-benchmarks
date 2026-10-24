@@ -8,7 +8,7 @@ import path from "node:path";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const url = pathToFileURL(path.join(root, "index.html")).href;
 const verbose = process.argv.includes("--verbose");
-const ROUTES = ["overview", "models/matrix", "models/profile", "bench/index", "bench/agentic", "bench/reason", "bench/work", "bench/computer", "bench/heat", "guide/map", "guide/detail", "future/roadmap", "future/diffusion", "future/capability", "future/infra", "future/frontier", "future/safety", "history/timeline", "history/growth", "cost", "speed", "compare", "table", "data"];
+const ROUTES = ["overview", "models/matrix", "models/profile", "bench/index", "bench/agentic", "bench/reason", "bench/work", "bench/computer", "bench/heat", "guide/map", "guide/detail", "future/roadmap", "future/diffusion", "future/capability", "future/infra", "future/frontier", "future/safety", "history/timeline", "history/growth", "cost", "speed", "compare", "table", "data", "news/recent", "news/leak", "news/archive", "data/versions"];
 const SETS = [["light", 1728, 1152], ["light", 1536, 864], ["dark", 1728, 1152]];
 
 const browser = await chromium.launch();

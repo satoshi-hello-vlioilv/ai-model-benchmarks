@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AIモデル比較ダッシュボード</title>
+<link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAB8UlEQVR4nOyXO08CQRCAZ2/XV8RYGEDPWnnExEcs1Fj6E2hsfHRY+6osLDW2RDptLWz9AzYmWEAiD//ACSRaERq5PWdBToIc54a7w4Kv2dnZzc3czOzdDoM2gsHgmqIo+yhGCIEojlPQG++GATkAnuMcbkul0lPrImmRR1V1+hw3HxJCKLiAYRg6Pv+qWCye4fTTdCAQCCwyRu9QDIE3ZGo1fbdcLmcUMcOQb3toXLD4bRMIvv0Gpcojhl0Bh1HVWYjH43U5mbwGTdPMNUwH13W+wiglO24YFxwdHUIsFqvLY2MjcHx8Yq4Jm2j7gKG4BC4RCs2bciQS7bCDhBketTD0j7CIwORfd3fLaSfwyHUF0xBkIEG3nHY2ALZIOWCfU3mkHHADKQescmpVG3Y1IO2AVU6tasPxGrCil9r4nzUgm1NZva0DsjmV1ds64MZ5l3LASwYODBxQ8G5Wgj4hbONdkKTbFwqFV1PO53OO638gaerz+RbwZrLZqs5ms8AYg1TqGRKJBFQqFUf1LRG4J36/f25oiL3gfBg8BI1XsDlZptVq9WNiYryG4dgCTyGn2Cc+NL/WVFVnUjgugzekNe1tFUe92ZDoqNjg3LgQDSS4ROPZxiXaWhc2he7X/6rRnsMentCos+055DnnN+3t+RcAAAD//yu5BawAAAAGSURBVAMAURzn8HxtzooAAAAASUVORK5CYII=">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAAIs0lEQVR4nOzdXUxUZx7H8f8AQeQ1BgTR+DYDBIHRgSDoJqUaQ5nG2I1WZESJ2drhxmRJut1S3djIctHJoiyJRkq6JPRKMUa7FBODRC9QEqOAMi9GxPBi12BQIwKCLwv7tCRb0/pnnnOGMzlDf58LQ+A5OcP45ZkzM2fOE7J0aSIBvEsIATAQB7AQB7AQB7AQB7AQB7AQB7AQB7AQB7AQB7AQB7AQB7AQB7AQB7AQB7AQB7AQB7AQB7AQB7AQB7AQB7AQB7CCo6KiCPQqNjY2Nze3oOCDJUuWvHr1amRkhPwIM4cehYWFHTr0tw8/tCYkJLz9/bGxsWvXrh4+/NXQ0BBpDzOH7lgslsbGxvffz4uMjPzVj0JDQ5OSkmw22/DwsMfjIY0hDn359NP933xTFxMTM8uYBQsWFBQUpKamNjc3k5YQh46Yzea6ujqDwSAzODk5eWLixc2bHaQZAz4rqxNiPmhtbV25cqX8JuIQ1Wq19vb2kjaCCPRBHGYqKoN+PgQ5ceJEcHAwaQNx6EJQUNCePcWkXFpaWlZWFmkDceiC0WhUPQEYjSbSBl7n0AVf/oNNJsQxr5lMq0ktk8lI2kAcuhAWtpDUiozU6sUIxAEsxAEsxAEsxAEsxAEsxAEsxAEsxAEsxAEsxAEsxAGs+RZHRESE2ZyRnp4hiK+dzm6323P79u0nT54QKDR/4ggPD//ss7988smfQkJ++aWsVuvMF5cutRw+/NXDhw8JpM2Tk322bt165cqV0lL722W8LT//AzHgwIED2p1UN//MhzgKCwtra2sTE72cKb1w4cLy8nKHw0EgJ+DjiI+Pr6yslB9fVFS0adMmAgkBH8fx48fF0YaiTaqrq2f/1BDMCOw4MjLMGzduJIXi4uK2b99O4E1gx5GZuY5UycrKJPAmsJ/KZmaq/MiGxYI4vAv0mcNCqqxatQofEvYqsOMwmZJIrTVr1hDM6vf73kpQED7t5wXeeAMW4gAW4gAW4gAW4gAW4gAW4gAW4gAW4gAW4gAWXkL2iXiDZvny5TRPYeZQzGJZZ7PZ0tPN69atnfnOyMiI2+2+detWfX398PAwzReIQ4Ho6OgvvzxYXLz7V2/axcTE/OFnJSUlR48ebWhomJ6epsCHhxVZGzZsaGtr27t3zyxv50ZFRVVUVFy8eDE+Pp4CH+KQEhkZWVtbu2jRIpnB4kCkqqqKAh/ikOJwfB0bGys/fvPmzUVFNgpwiMO7/Pz8jz76IylUUXFk2bJlFMgQh3d2eykpFx4e/vHHOyiQ4dmKd0lJKi8urt0l6/0DcXghJoC4uDhSxZfzn/UAcXiRkpJMahmN6i93rweIwwtfLlkf6B+NQRzAQhzAQhzAQhzAQhzAQhzAQhzAQhzAQhzAQhzAQhzA8mscZrM5PT0jLe2n0/nv3r3rdrtdLldfXx+BLvkpjuLi4vLy8rfPwdyyZcvMFz09PeJHHR0dBDqj+ZlgqampTU1NDoeDOzs3JSXl/Pnzx44dkzx9F/xG25nDZDI1NzeHhoZ6HVlYWGixWKxW6+vXrwn0QcOZw2AwnDx5UqaMGcnJyV98UU6gGxrGUVb2Z6XX+iwttWdnZxPog4ZxqDhpW0w2drudQB+0OuZISkpSd5Lc+vXrCfRBq5kjK0vlJevj4uK8rrkE/qFVHL4sS5CZiSUNdEGrhxVfzspPTg7sj3vMG1rFERSkfhFGX7aFOYQ33oCFOICFOICFOICFOICFOICFOICFOICFOICFOICFOICFOICFOICFOICFOICFOICFOICFOICFOICFOICFOICFOICFOICFOICFOICFOICFOICFOICFOICFOICFOICFOICFOICFOICFOICFOICFOIClVRxTU/8ltaanp0h7knvR1Y2Z821np9VFagcHB0itvj7ZbX1Z5am/X2ovAwODpNb9+/clR/b3q99Lf79WS11pFYfH4yG13G6X5EjVe3n+/PmjR49kRg4NDY2MjJAqbrdbcqTHIzvSl70opVUcqm/x5OSk/B+c6r10dnbKD+7uvk2qyFd+79491asQuVyye1FKqzicTpW32OVyT09PSw5WHYeiO9TlUjk/OZ2yN0/8ym63mr1MTU2pvqu90ioOMQF8++2/SCFxH1VXH5Mf39bW5nQ6SaFnz541NDTIj//uuwbxMEQKicmpvf2a/Piamn+ScnV1dW/evCFtBKtbFUXG1atteXl5itbHqKmpOXPmjPx48XfT2tq6a9eusLAw+U1KSkp6enpI2ujoaHd3944dOwwGg+Qmjx8/3rlz54sXL0iaOLgODg7Jzc2V3+T69etlZWWkGQ3jENNAS0vLtm3boqOjZcZfutRy8OAhUmh8fLyrq7OwcJfk+MrKv//wQzMpNDg4ODk58d57eZLjS0r29vbKHjn9X3t7+9q1a41Go8zgBw8e7N69e2JigjSjYRyCuOmnT5+Oj49PT0+fZZh4DHI4vj5ypIJU+fHH/5w7dy47OzshIWGWYeLpSWlp6fff/5tUuXmz48aNG2IujIiImGVYV1eXmMk8njukSlNT0/j4WE5ObkjIbC9BNTY27t+/X8WDnSLaxiGIg3Axf4i7TNyt4eHhvx0gZmybzXb58mXygXi2eerUqZcvX+bk5AQHv2NFjrNnz+7bt0/+edA7iflDtJ6YuOSdCxuKvVdV/ePzz/8qjmnIBx0dnRcuXBC/yOLFi3/70+HhYbvdXl9f74c1Vg1Ll/pvzayMDHP6T9JWrFhx584dkYX4t7+/n+aO6M9szphZF138iTudYifimNX59OlTmjuxsbFi/p/Z0ejomHjuI3Yh/p3bSX716tVpaWliF6mpqQMDA+JFnZkF3slf/BoHBBa88QYsxAEsxAEsxAEsxAEsxAEsxAEsxAEsxAEsxAEsxAEsxAEsxAEsxAEsxAEsxAEsxAEsxAEsxAEsxAEsxAEsxAEsxAEsxAEsxAEsxAEsxAEsxAGs/wEAAP//TTEZkQAAAAZJREFUAwAB8WHBKl29LAAAAABJRU5ErkJggg==">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cstyle%3Erect%7Bfill:%231a1a19%7Dpath%7Bstroke:%23fcfcfb%7D@media(prefers-color-scheme:dark)%7Brect%7Bfill:%23f2f1ec%7Dpath%7Bstroke:%231a1a19%7D%7D%3C/style%3E%3Crect width='32' height='32' rx='8'/%3E%3Cpath d='M7 25v-7M13 25V10M19 25V14M25 25V6' fill='none' stroke-width='3.6' stroke-linecap='round'/%3E%3C/svg%3E">
 <meta name="description" content="主要AIモデルの性能・価格・速度・仕様を1画面で比較するダッシュボード。データはJSONで差し替え・追記可能。">
 <style>
@@ -24,6 +26,7 @@
   --seq-lo:#f0efec; --seq-hi:#1c5cab;          /* 逐次（ヒートマップ）＝青1色相 */
   --c-other:#8a8983;
   --good:#0ca30c; --good-text:#1d7a2e; --warning:#fab219; --critical:#d03b3b;
+  --f-ok:#1f6fb8; --f-rp:#e3a20f; --f-ng:#c93a3a; --v-lg:#b9c8db;   /* 事実の判定（確認・主張・否定）／旧世代の帯 */
   --shadow:0 1px 2px rgba(20,20,18,.05),0 4px 16px rgba(20,20,18,.05);
   --radius:10px;
 }
@@ -37,7 +40,7 @@
     --grid:#2a2a27; --axis:#4a4a45;
     --c1:#3987e5; --c2:#d95926; --c3:#199e70; --c4:#c98500;
     --c5:#d55181; --c6:#008300; --c7:#9085e9; --c8:#e66767;
-    --seq-lo:#232321; --seq-hi:#5598e7; --c-other:#9a9990; --bar:color-mix(in oklab,#5598e7 28%,transparent);
+    --seq-lo:#232321; --seq-hi:#5598e7; --f-ok:#4a90e2; --f-rp:#e8ab1c; --f-ng:#e05858; --v-lg:#6f7f96; --c-other:#9a9990; --bar:color-mix(in oklab,#5598e7 28%,transparent);
     --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
   }
 }
@@ -50,7 +53,7 @@
   --grid:#2a2a27; --axis:#4a4a45;
   --c1:#3987e5; --c2:#d95926; --c3:#199e70; --c4:#c98500;
   --c5:#d55181; --c6:#008300; --c7:#9085e9; --c8:#e66767;
-  --seq-lo:#232321; --seq-hi:#5598e7; --c-other:#9a9990; --bar:color-mix(in oklab,#5598e7 28%,transparent);
+  --seq-lo:#232321; --seq-hi:#5598e7; --f-ok:#4a90e2; --f-rp:#e8ab1c; --f-ng:#e05858; --v-lg:#6f7f96; --c-other:#9a9990; --bar:color-mix(in oklab,#5598e7 28%,transparent);
   --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
 }
 
@@ -488,7 +491,153 @@ ul.plain{list-style:none;margin:0;padding:0}
 button.info{padding:0;background:none;cursor:pointer}
 button.info:hover{border-color:var(--ink);color:var(--text)}
 @media (forced-colors: active){ .mk{forced-color-adjust:none} }
-@media (max-width:1700px){ .filters .lbl{display:none} .chip{padding:0 7px;font-size:11.5px} .filters{gap:4px} }
+/* AIニュース・更新履歴 */
+.nlist{position:absolute;inset:0;overflow:hidden;display:flex;flex-direction:column;gap:1px}
+.chev{color:var(--text-2);font-weight:700;font-size:13px;line-height:1}
+.li:hover .chev,.li[aria-current="true"] .chev{color:var(--text)}
+.nrow{grid-template-columns:42px 128px minmax(0,1fr) auto 22px 10px;gap:8px;align-items:start;padding:4px 8px;line-height:1.4;cursor:pointer}
+.nrow.full{grid-template-columns:78px 72px minmax(0,1fr) auto 22px 10px}
+.nrow > span:first-child{overflow:visible}
+.nrow .nd{color:var(--text-2);font-size:11.5px;padding-top:1px;white-space:nowrap}
+.nrow .nc{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text-2);white-space:nowrap;padding-top:1px}
+.nrow .nc .ico svg{width:13px;height:13px}
+.nrow .ntl{color:var(--text);white-space:normal}
+.nrow svg,.rel svg{margin-top:3px}
+.nrow .chev,.rel .chev{padding-top:2px}
+.nrc{font-size:11px;color:var(--text-2);white-space:nowrap;padding-top:1px}
+.nchips{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.nchips .kb .ico svg{width:12px;height:12px}
+.nt{font-size:15px;line-height:1.45;margin:0;font-weight:700;color:var(--text)}
+.nstats{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 14px}
+.nstats .stat{grid-template-columns:auto minmax(0,1fr)}
+.nfoot{margin-top:auto;display:grid;gap:4px}
+.nrec{font-size:11px;color:var(--text-2);display:flex;gap:6px;align-items:center}
+.nrec .go{font-size:11px;font-weight:600}
+/* 事実の判定：✓確認（青）・△主張（琥珀）・✕否定・食い違い（赤）。色と形の二重符号化 */
+.fk{width:16px;height:16px;border-radius:50%;display:inline-grid;place-items:center;font-size:10.5px;font-weight:700;flex:none;line-height:1}
+.fk.ok{background:var(--f-ok);color:#fff}
+.fk.rp{background:var(--f-rp);color:#1a1a19;border-radius:3px}
+.fk.ng{background:var(--f-ng);color:#fff;border-radius:3px}
+.ft{display:inline-flex;align-items:center;gap:3px;font-size:11px;color:var(--text-2);white-space:nowrap;padding-top:1px}
+.ft .fk{width:15px;height:15px;font-size:10.5px;margin-left:3px}
+.ft b{font-weight:650;color:var(--text)}
+.lgt{font-weight:650;color:var(--text)}
+.fb .sec-h{display:flex;align-items:center;gap:6px;margin-bottom:3px}
+.fb ul{display:grid;gap:3px;font-size:12px;line-height:1.5;padding-left:22px}
+.fb li{list-style:disc}
+.fb.ok li::marker{color:var(--f-ok)}.fb.rp li::marker{color:var(--f-rp)}.fb.ng li::marker{color:var(--f-ng)}
+.verdict{display:grid;gap:9px}
+.vd{display:grid;gap:2px;padding-left:10px;border-left:3px solid var(--border-strong)}
+.vd.ok{border-left-color:var(--f-ok)}.vd.rp{border-left-color:var(--f-rp)}.vd.ng{border-left-color:var(--f-ng)}
+.vtl2{display:inline-block;font-size:10.5px;color:var(--text-2);border:1px solid var(--border);border-radius:4px;padding:0 4px;margin-right:6px;line-height:15px;white-space:nowrap}
+.vclaim{font-size:12px;color:var(--text);line-height:1.5}
+.vjudge{display:flex;align-items:center;gap:6px;font-size:12.5px;line-height:1.45}
+.vjudge .vtl2{margin-right:0}
+.vjudge b{color:var(--text)}
+.vref.more{color:var(--text-2)}
+.nhead{display:grid;grid-template-columns:78px 72px minmax(0,1fr) auto 22px 10px;gap:8px;padding:2px 8px 4px;font-size:10.5px;color:var(--text-2);border-bottom:1px solid var(--grid);flex:none}
+.nhead span:nth-child(4){text-align:right}
+.nhead span:nth-child(5){grid-column:5/7}
+.vdh{display:flex;align-items:baseline;gap:8px;justify-content:space-between}
+.vdh b{font-size:12.5px;line-height:1.45;color:var(--text)}
+.vdd{display:block;font-size:11.5px;line-height:1.5;color:var(--text-2)}
+.vrefs{display:flex;flex-wrap:wrap;gap:3px 5px;margin-top:3px}
+.vref{border:1px solid var(--border);background:var(--surface);border-radius:11px;height:21px;padding:0 6px 0 8px;font-size:11px;color:var(--text);display:inline-flex;align-items:center;gap:3px;cursor:pointer;white-space:nowrap}
+.vref:hover{border-color:var(--border-strong);background:var(--surface-2)}
+.vref.on{background:var(--ink);color:var(--ink-text);border-color:var(--ink)}
+.vref.on .chev{color:var(--ink-text)}
+.vmore{font-size:11px;align-self:center}
+.aflow{display:flex;flex-wrap:wrap;align-items:center;gap:4px 5px;font-size:11.5px;border-top:1px solid var(--grid);padding-top:8px}
+.aflow .lgt{margin-right:4px;font-size:11.5px}
+.af{display:inline-flex;align-items:center;gap:4px;color:var(--text);white-space:nowrap}
+.af i{font-style:normal;width:15px;height:15px;border-radius:4px;background:var(--ink);color:var(--ink-text);display:grid;place-items:center;font-size:10.5px;font-weight:700}
+.ar{color:var(--text-2)}
+.fset{display:inline-flex;gap:6px;align-items:center}
+.fchips{display:flex;flex-wrap:wrap;gap:4px 6px;margin-top:8px}
+.fchip{height:24px;padding:0 8px;border-radius:12px;border:1px solid var(--border);background:var(--surface);font-size:11.5px;color:var(--text-2);display:inline-flex;align-items:center;gap:5px;cursor:pointer;white-space:nowrap}
+.fchip:hover{border-color:var(--border-strong);color:var(--text)}
+.fchip b{font-weight:650;color:var(--text)}
+.fchip .ico svg{width:12px;height:12px}
+.fchip[aria-pressed="true"]{background:var(--ink);color:var(--ink-text);border-color:var(--ink)}
+.fchip[aria-pressed="true"] b{color:var(--ink-text)}
+.fsep{width:1px;height:16px;background:var(--border);align-self:center;margin:0 2px}
+/* 月別の件数：共通の基線から伸びる棒 */
+.mbars{display:flex;align-items:stretch;gap:4px;height:112px;border-bottom:0}
+.mb{flex:1;min-width:0;border:0;background:none;display:grid;grid-template-rows:auto 1fr auto auto;justify-items:center;gap:2px;height:100%;padding:0 0 1px;color:var(--text-2);cursor:pointer;border-radius:6px}
+.mb:hover:not(:disabled){background:var(--surface-2)}
+.mb:disabled{cursor:default}
+.mbt{width:min(26px,72%);height:100%;position:relative;border-bottom:1.5px solid var(--axis)}
+.mbt i{position:absolute;left:0;right:0;bottom:0;background:var(--seq-hi);border-radius:3px 3px 0 0}
+.mbt i.all{background:var(--v-lg)}
+.mb[aria-pressed="true"]{color:var(--text);font-weight:700;background:var(--surface-2)}
+.mbv{font-size:11px;color:var(--text)}.mbv small{color:var(--text-2);font-size:10.5px}
+.mbl{font-size:10.5px}.mby{font-size:10.5px;color:var(--text);font-weight:650;min-height:13px;white-space:nowrap}
+/* この話題の前後：時間の線上の点 */
+.mlane{position:relative;height:34px;margin:2px 0 0}
+.mlane .ml{position:absolute;left:4%;right:4%;top:10px;height:1.5px;background:var(--border-strong)}
+.md{position:absolute;top:5px;width:12px;height:12px;margin-left:-6px;border-radius:50%;border:2px solid var(--ink);background:var(--surface);padding:0;cursor:pointer}
+.md.on{width:16px;height:16px;margin-left:-8px;top:3px;background:var(--ink)}
+.mla{position:absolute;top:21px;font-size:10.5px;color:var(--text-2)}
+.rels{display:grid;gap:1px}
+.rel{grid-template-columns:76px minmax(0,1fr) 22px 10px;gap:8px;align-items:start;padding:3px 6px;line-height:1.4;cursor:pointer}
+.rel .nd{font-size:11px;color:var(--text-2);white-space:nowrap;padding-top:1px}
+.rel .ntl{white-space:normal;color:var(--text);font-size:11.5px}
+/* 版の推移：横軸＝公開日 */
+.vbars{position:relative;height:172px;margin:0 2px}
+.vbase{position:absolute;left:0;right:0;bottom:21px;height:1.5px;background:var(--axis)}
+.vg{position:absolute;top:0;bottom:0;display:flex;gap:4px;padding-bottom:22px}
+.vgd{position:absolute;left:0;right:0;bottom:2px;text-align:center;font-size:11px;color:var(--text-2);white-space:nowrap}
+.vb{width:46px;border:0;background:none;display:grid;grid-template-rows:auto auto auto 1fr;justify-items:center;gap:2px;padding:3px 0 0;border-radius:7px 7px 0 0;color:var(--text-2);cursor:pointer}
+.vb > b{font-size:11px;font-weight:650;color:var(--text);white-space:nowrap}
+.vb:hover{background:var(--surface-2)}
+.vb[aria-pressed="true"]{background:var(--surface-2);box-shadow:inset 0 0 0 1.5px var(--ink)}
+.vbn{font-size:11px}
+.vbt{width:20px;display:flex;flex-direction:column-reverse;justify-content:flex-start}
+.vbt i{display:block;width:100%}
+.vbt i.cu,.lgk.cu{background:var(--seq-hi)}
+.vbt i.lg,.lgk.lg{background:var(--v-lg)}
+.vbt i.cu{border-radius:3px 3px 0 0}
+.lgk{display:inline-block;width:10px;height:10px;border-radius:2px}
+.vtag{display:inline-block;font-size:10.5px;line-height:14px;font-weight:700;letter-spacing:0;padding:0 2px;border-radius:3px;border:1px solid var(--text-2);color:var(--text-2);white-space:nowrap}
+.vtag.major{background:var(--ink);color:var(--ink-text);border-color:var(--ink)}
+.vtag.minor{border-color:var(--ink);color:var(--text)}
+.vrow{grid-template-columns:106px 112px minmax(0,1fr) auto 10px;gap:8px;align-items:start;padding:5px 8px;line-height:1.4;cursor:pointer}
+.vrow > span:first-child{overflow:visible}
+.vrow .vv{display:flex;align-items:center;gap:5px;color:var(--text);white-space:nowrap}
+.vrow .vdt{font-size:11.5px;color:var(--text-2);white-space:nowrap;padding-top:1px}
+.vrow .vtl{color:var(--text);white-space:normal;display:grid;gap:1px}
+.vrow .vtl small{font-size:11px;color:var(--text-2);line-height:1.45;font-weight:400}
+.cbar{display:inline-flex;gap:1px;height:9px;margin-top:5px;align-self:start}
+.cbar i,.cbk{display:block;height:9px;border-radius:2px}
+.cbk{width:10px;display:inline-block}
+.cbar i.f,.cbk.f{background:var(--ink)}
+.cbar i.d,.cbk.d{background:var(--seq-hi)}
+.cbar i.n,.cbk.n{background:var(--f-rp)}
+.cbar i.x,.cbk.x{background:var(--v-lg)}
+.vtiles{grid-template-columns:repeat(5,minmax(0,1fr))}
+.vt{flex-wrap:nowrap;padding:5px 8px;gap:4px;min-width:0}
+.vt b{font-size:17px}
+.vt span{white-space:nowrap}
+.vt i{font-style:normal;font-size:10.5px;color:var(--text-2);font-weight:650;white-space:nowrap}
+.vt i.up{color:var(--good-text)}
+.vmix{display:flex;align-items:center;gap:10px}
+.vmix .cbar{margin-top:0}
+.cgs{display:grid;gap:7px;align-content:start}
+.cg .sec-h{display:flex;align-items:center;gap:6px;margin-bottom:2px}
+.cgm{width:16px;height:16px;border-radius:4px;display:inline-grid;place-items:center;font-size:11px;font-weight:700}
+.cgm.f{background:var(--ink);color:var(--ink-text)}.cgm.d{background:var(--seq-hi);color:#fff}.cgm.n{background:var(--f-rp);color:#1a1a19}.cgm.x{background:var(--v-lg);color:var(--text)}
+.cgl{display:grid;gap:3px;font-size:12px;line-height:1.5;padding-left:22px}
+.cgl li{list-style:disc}
+.crefs{display:flex;flex-wrap:wrap;gap:2px 12px;margin-top:1px}
+.crefs .mname{font-size:11.5px}
+.nref{font-size:11.5px;font-weight:600}
+.vnews{display:grid;gap:1px}
+.vbadge{border:1px solid var(--border);cursor:pointer;font-weight:650;color:var(--text)}
+.vbadge:hover{border-color:var(--border-strong);background:var(--surface-3)}
+/* 提供元フィルターが効かない画面：薄く表示し、対象外であることを文字で示す */
+.filters.na > *:not(.nanote){display:none}
+.nanote{font-size:11.5px;color:var(--text-2);white-space:nowrap;margin-left:4px}
+@media (max-width:1700px){ .top-right .xl{display:none} .filters .lbl{display:none} .chip{padding:0 7px;font-size:11.5px} .filters{gap:4px} }
 @media (max-width:1280px){ .nav-item small{display:none} }
 </style>
 </head>
@@ -501,6 +650,7 @@ button.info:hover{border-color:var(--ink);color:var(--text)}
     </div>
     <div class="filters" id="filters" role="toolbar" aria-label="表示フィルター"></div>
     <div class="top-right">
+      <button class="badge vbadge" id="verBtn" title="更新履歴を見る"></button>
       <span class="badge" id="fresh" title="データ基準日"><span class="dot"></span><span></span></span>
       <button class="icon-btn" id="themeBtn" title="テーマ切替（ライト／ダーク／自動）" aria-label="テーマ切替"></button>
     </div>
@@ -525,7 +675,7 @@ button.info:hover{border-color:var(--ink);color:var(--text)}
 <script type="application/json" id="seed">
 {
   "schema": 1,
-  "meta": {"title": "主要AIモデル比較", "asOf": "2026-10-23", "maintainer": "", "notes": ["数値は各社発表値および第三者集計（Artificial Analysis、llm-stats、Vellum 等）を2026-10-23時点で収集したもの。", "同じベンチマークでも推論努力（effort）や実行環境（harness）で数値が変わる。値ごとの注記・出典を確認のこと。", "未公表・条件不一致の値は空欄（—）とし、推測で補完していない。"]},
+  "meta": {"title": "主要AIモデル比較", "asOf": "2026-10-24", "version": "1.5.0", "repo": "https://github.com/satoshi-hello-vlioilv/ai-model-benchmarks", "maintainer": "", "notes": ["数値は各社発表値および第三者集計（Artificial Analysis、llm-stats、Vellum 等）を2026-10-24時点で収集したもの。", "同じベンチマークでも推論努力（effort）や実行環境（harness）で数値が変わる。値ごとの注記・出典を確認のこと。", "未公表・条件不一致の値は空欄（—）とし、推測で補完していない。"]},
   "categories": [
     {"id": "index", "label": "総合指数", "short": "総合指数", "desc": "複数評価を合成した第三者指数"},
     {"id": "agentic", "label": "コード・自律", "short": "コード・自律", "desc": "コーディングとエージェント（端末操作・リポジトリ改修など長時間の自律作業）"},
@@ -743,7 +893,75 @@ button.info:hover{border-color:var(--ink);color:var(--text)}
     {"id": "kimi31b", "label": "Crypto Briefing – Moonshot AI launches Kimi K3.1 Pro", "url": "https://cryptobriefing.com/moonshot-ai-launches-kimi-k3-1-pro-closing-in-on-claude-opus-5-5-in-coding-performance/"},
     {"id": "kimi31c", "label": "Simon Willison – Introducing Kimi K3.1 Pro", "url": "https://simonwillison.net/2026/Oct/23/kimi-k31-pro/"},
     {"id": "kimi31d", "label": "The Next Web – Moonshot releases Kimi K3.1 Pro and says it cut its hacking skills", "url": "https://thenextweb.com/news/moonshot-kimi-k3-1-pro-open-weight-cyber"},
-    {"id": "ml4hf", "label": "Hugging Face – mistralai/Mistral-Large-4-1T-A52B（公開予定）", "url": "https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B"}
+    {"id": "ml4hf", "label": "Hugging Face – mistralai/Mistral-Large-4-1T-A52B（公開予定）", "url": "https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B"},
+    {"id": "n_oai_val", "label": "Bloomberg – OpenAI shifts value to $1.25 trillion as funding talks finalize", "url": "https://www.bloomberg.com/news/articles/2026-10-22/openai-shifts-value-to-1-25-trillion-as-funding-talks-finalize"},
+    {"id": "n_oai_val2", "label": "Morningstar – OpenAI's reported valuation jump", "url": "https://www.morningstar.com.au/markets/openais-reported-valuation-jump-doesnt-seem-slowed-by-growing-ai-safety-concerns"},
+    {"id": "n_oai_pause", "label": "TechSpot – OpenAI pauses training of its most powerful AI models", "url": "https://www.techspot.com/news/114003-openai-pauses-training-most-powerful-ai-models-after.html"},
+    {"id": "n_oai_pause2", "label": "BankInfoSecurity – OpenAI pauses frontier model training for safety review", "url": "https://www.bankinfosecurity.com/openai-pauses-frontier-model-training-for-safety-review-a-32610"},
+    {"id": "n_astra_cnbc", "label": "CNBC – OpenAI abandons plan to release upcoming model", "url": "https://www.cnbc.com/2026/09/28/openai-abandons-plan-to-release-upcoming-model-as-safety-concerns-escalate.html"},
+    {"id": "n_devday", "label": "CNBC – OpenAI DevDay 2026 live updates", "url": "https://www.cnbc.com/2026/09/29/openai-devday-2026-live-updates.html"},
+    {"id": "n_devday2", "label": "Axios – OpenAI DevDay 2026: Dots, Space, Sol", "url": "https://www.axios.com/2026/09/29/openai-dev-day-2026-dots-space-sol"},
+    {"id": "n_accord", "label": "The Hill – Tech CEOs sign White House AI accord", "url": "https://thehill.com/homenews/administration/6118906-tech-ceos-sign-white-house-ai-accord/"},
+    {"id": "n_accord2", "label": "IAPP – White House, major AI developers reach 'morally binding' safety commitments", "url": "https://iapp.org/news/a/white-house-major-ai-developers-reach-morally-binding-safety-commitments"},
+    {"id": "n_tip", "label": "Al Jazeera – Anthropic AI model submits false homicide tip to Philadelphia police", "url": "https://aljazeera.com/news/2026/10/10/anthropic-ai-model-submits-false-homicide-tip-to-philadelphia-police"},
+    {"id": "n_tip2", "label": "6abc – Anthropic AI model submitted false tip, Philadelphia police say", "url": "https://6abc.com/post/anthropic-ai-model-submitted-false-tip-unsolved-murder-philadelphia-police-say/19925243/"},
+    {"id": "n_ftc", "label": "The Hill – FTC subpoenas OpenAI, Anthropic over safety incidents", "url": "https://thehill.com/policy/technology/6150621-ftc-subpoena-openai-anthropic-safety-incidents-probe/"},
+    {"id": "n_ftc2", "label": "The Globe and Mail (Reuters) – US FTC subpoenas OpenAI, Anthropic", "url": "https://www.theglobeandmail.com/business/article-us-ftc-subpoenas-openai-anthropic-over-safety-incidents/"},
+    {"id": "n_states", "label": "Haynes Boone – Eight states sue OpenAI over ChatGPT and minors", "url": "https://www.haynesboone.com/news/alerts/eight-states-sue-openai-over-chatgpts-marketing-and-design-for-minors"},
+    {"id": "n_states2", "label": "The Hill – Paxton sues OpenAI", "url": "https://thehill.com/policy/technology/6169375-paxton-sues-openai-chatgpt"},
+    {"id": "n_anth_ipo", "label": "CNBC (Reuters) – Broadcom lending Anthropic up to $42 billion", "url": "https://www.cnbc.com/2026/10/01/broadcom-lending-anthropic-42-billion-chips-reuters.html"},
+    {"id": "n_anth_ipo2", "label": "24/7 Wall St – Anthropic's draft IPO filing shows $450B compute commitments", "url": "https://247wallst.com/investing/2026/10/21/anthropic-has-committed-450-billion-to-cloud-computing-its-draft-ipo-filing-shows/"},
+    {"id": "n_nscale", "label": "TechCrunch – Nscale and Anthropic reportedly in talks for another $45B deal", "url": "https://techcrunch.com/2026/10/19/nscale-and-anthropic-are-reportedly-in-talks-for-yet-another-45-billion-compute-deal/"},
+    {"id": "n_tsmc", "label": "Let's Data Science – TSMC says AI demand still exceeds supply", "url": "https://letsdatascience.com/news/tsmc-says-ai-demand-still-exceeds-its-supply-capability-as-q-2fed75bf"},
+    {"id": "n_cnnv", "label": "BNN Bloomberg (Reuters) – ByteDance, Alibaba, Tencent place >$35B Nvidia orders", "url": "https://www.bnnbloomberg.ca/business/company-news/2026/10/20/bytedance-alibaba-tencent-place-over-us35-billion-worth-of-nvidia-chip-orders-reuters-exclusive"},
+    {"id": "n_nvfin", "label": "Forbes – Nvidia backs $164.5 billion of AI data centers", "url": "https://www.forbes.com/sites/janakirammsv/2026/10/21/nvidia-backs-1645-billion-of-ai-data-centers-to-keep-gpus-selling/"},
+    {"id": "n_storm", "label": "Microsoft Security Blog – Storm-0940 uses ARTEX agentic AI", "url": "https://www.microsoft.com/en-us/security/blog/2026/10/21/storm-0940-uses-artex-agentic-ai-connectwise-supply-chain-compromise/"},
+    {"id": "n_fortune", "label": "Fortune – AI models powering a growing wave of cyber attacks", "url": "https://fortune.com/2026/10/21/powerful-new-ai-models-are-powering-a-growing-wave-of-cyber-attacks-experts-say/"},
+    {"id": "n_ma", "label": "Bloomberg – Salesforce to buy Braze for $5.7 billion", "url": "https://www.bloomberg.com/news/articles/2026-10-20/salesforce-to-buy-marketing-platform-braze-for-5-7-billion"},
+    {"id": "n_ma2", "label": "Bloomberg – Schneider Electric to acquire PTC", "url": "https://www.bloomberg.com/news/articles/2026-10-05/schneider-electric-to-acquire-ptc-for-more-than-20-billion"},
+    {"id": "n_cnagent", "label": "ActuIA – China outlines tiered rules for AI shopping agents", "url": "https://www.actuia.com/en/news/china-outlines-tiered-rules-for-ai-shopping-agents-in-commerce/"},
+    {"id": "n_cncomp", "label": "Just Security – China's AI companion rules", "url": "https://www.justsecurity.org/148468/china-ai-companion-rules-relationships/"},
+    {"id": "n_jp", "label": "The Japan Times – Takaichi orders plan to promote AI", "url": "https://www.japantimes.co.jp/news/2026/10/01/japan/politics/takaichi-ai-promote/"},
+    {"id": "n_jp2", "label": "Nippon.com (Jiji) – Japan to compile action plan for spreading AI use", "url": "https://www.nippon.com/en/news/yjj2026100100960/japan-to-compile-action-plan-for-spreading-ai-use.html"},
+    {"id": "n_euomni", "label": "Cooley – Digital AI Omnibus delays key deadlines", "url": "https://cdp.cooley.com/digital-ai-omnibus-delays-key-deadlines-introduces-new-rules/"},
+    {"id": "n_euomni2", "label": "Technology.org – EU AI Act deadlines after the Digital Omnibus", "url": "https://www.technology.org/2026/10/13/eu-ai-act-deadlines-after-the-digital-omnibus-what-applies-from-december-2026-to-august-2028/"},
+    {"id": "n_ratepayer", "label": "Bloomberg Government – House approves data center bill", "url": "https://news.bgov.com/bloomberg-government-news/house-approves-data-center-bill-with-robust-bipartisan-support"},
+    {"id": "n_grokv", "label": "SiliconANGLE – Grok Voice 3.0 tops speech-to-speech index", "url": "https://siliconangle.com/2026/10/14/grok-voice-3-0-from-spacexsi-outscores-openai-and-google-on-speech-to-speech-index/"},
+    {"id": "n_groknyc", "label": "CNBC – SpaceX policy manager to testify in NYC Council AI safety investigation", "url": "https://www.cnbc.com/2026/10/16/spacex-policy-manger-to-testify-in-nyc-council-ai-safety-investigation.html"},
+    {"id": "l_wiz", "label": "TechCrunch – DeepSeek exposed internal database", "url": "https://techcrunch.com/2025/01/30/deepseek-exposed-internal-database-containing-chat-histories-and-sensitive-data"},
+    {"id": "l_wiz2", "label": "BleepingComputer – DeepSeek exposes database with over 1 million chat records", "url": "https://www.bleepingcomputer.com/news/security/deepseek-exposes-database-with-over-1-million-chat-records/"},
+    {"id": "l_bans", "label": "Al Jazeera – Which countries have banned DeepSeek and why", "url": "https://www.aljazeera.com/news/2025/2/6/which-countries-have-banned-deepseek-and-why"},
+    {"id": "l_jpppc", "label": "日本経済新聞 – 個人情報保護委、DeepSeekに注意喚起", "url": "https://www.nikkei.com/article/DGXZQOUA038GB0T00C25A2000000/"},
+    {"id": "l_jpppc2", "label": "INTERNET Watch – DeepSeekの利用に関する注意喚起", "url": "https://internet.watch.impress.co.jp/docs/news/1660903.html"},
+    {"id": "l_kr", "label": "Korea Times – DeepSeek shared Korean user data with ByteDance", "url": "https://www.koreatimes.co.kr/southkorea/society/20250218/deepseek-shared-korean-user-data-with-chinas-bytedance-regulator"},
+    {"id": "l_de", "label": "TechCrunch – Germany tells Apple, Google to remove DeepSeek", "url": "https://techcrunch.com/2025/06/27/germany-tells-apple-google-to-remove-deepseek-from-the-countrys-app-stores"},
+    {"id": "l_vn", "label": "Anthropic – Detecting and countering misuse (Aug 2025)", "url": "https://www.anthropic.com/news/detecting-countering-misuse-aug-2025"},
+    {"id": "l_oai", "label": "The Register – OpenAI bans suspected China-linked accounts", "url": "https://www.theregister.com/2025/10/07/openai_bans_suspected_china_accounts/"},
+    {"id": "l_oai2", "label": "Axios – OpenAI threat report: China, Russia", "url": "https://www.axios.com/2025/10/07/openai-threat-report-china-russia-ai-models"},
+    {"id": "l_gtig", "label": "Google Cloud (GTIG) – Threat actor usage of AI tools", "url": "https://cloud.google.com/blog/topics/threat-intelligence/threat-actor-usage-of-ai-tools"},
+    {"id": "l_gtg", "label": "Anthropic – Disrupting the first reported AI-orchestrated cyber espionage campaign", "url": "https://assets.anthropic.com/m/ec212e6566a0d47/original/Disrupting-the-first-reported-AI-orchestrated-cyber-espionage-campaign.pdf"},
+    {"id": "l_gtg2", "label": "The Register – Chinese spies used Claude to attack ~30 orgs", "url": "https://www.theregister.com/2025/11/13/chinese_spies_claude_attacks/"},
+    {"id": "l_ndaa", "label": "Congress.gov (CRS) – FY2026 NDAA: covered AI", "url": "https://www.congress.gov/crs-product/IF13197"},
+    {"id": "l_oaimemo", "label": "Rappler (Reuters) – OpenAI says DeepSeek distilled US models", "url": "https://www.rappler.com/technology/openai-deepseek-trained-ai-distilling-us-models/"},
+    {"id": "l_anthdist", "label": "Fortune – Anthropic accuses Chinese labs of distilling Claude", "url": "https://www.fortune.com/2026/02/24/anthropic-china-deepseek-theft-claude-distillation-copyright-national-security"},
+    {"id": "l_ostp", "label": "MeriTalk – White House alleges China running mass AI distillation", "url": "https://www.meritalk.com/articles/white-house-alleges-china-running-mass-ai-distillation-to-copy-us-tech/"},
+    {"id": "l_rizap", "label": "Security NEXT – RIZAP 従業員が顧客情報を生成AIに入力", "url": "https://www.security-next.com/189853"},
+    {"id": "l_harmonic", "label": "Harmonic Security – All organizations now have employees using China-based AI tools", "url": "https://www.harmonic.security/resources/all-organizations-now-have-employees-using-china-based-ai-tools"},
+    {"id": "l_cisa", "label": "CISA – CISA, NSA and FBI warn China-based AI companies targeting US AI models", "url": "https://www.cisa.gov/news-events/news/cisa-nsa-and-fbi-warn-china-based-ai-companies-targeting-us-ai-models-industrial-scale-knowledge"},
+    {"id": "l_cisa2", "label": "CyberScoop – US accuses Chinese AI companies of distillation", "url": "https://cyberscoop.com/us-accuses-chinese-ai-companies-distillation/"},
+    {"id": "l_anth09", "label": "Anthropic – Threat intelligence report (September 2026)", "url": "https://www.anthropic.com/threat-intelligence-report-september-2026"},
+    {"id": "l_anth09b", "label": "The Hacker News – Anthropic says seven China-based AI labs distilled Claude", "url": "https://thehackernews.com/2026/09/anthropic-says-seven-china-based-ai.html"},
+    {"id": "l_anth09c", "label": "Quartz – China probes DeepSeek, Moonshot over data routed to Claude", "url": "https://qz.com/china-deepseek-moonshot-anthropic-data-probe-092326"},
+    {"id": "l_ta419", "label": "The Register – Suspected Chinese spies spoofed an Anthropic exec in AI phishing", "url": "https://www.theregister.com/security/2026/10/01/suspected-chinese-spies-spoofed-an-anthropic-exec-ex-white-house-official-in-ai-phishing/5300595"},
+    {"id": "l_ta419b", "label": "Help Net Security – China-aligned TA419 phishing AI policy experts", "url": "https://www.helpnetsecurity.com/2026/10/02/china-aligned-ta419-phishing-ai-policy-experts/"},
+    {"id": "l_krbank", "label": "Bloomberg – Hacker who hit Korean banks likely from China, CrowdStrike says", "url": "https://www.bloomberg.com/news/articles/2026-10-08/hacker-who-hit-korean-banks-likely-from-china-crowdstrike-says"},
+    {"id": "l_krbank2", "label": "iTnews (Reuters) – CrowdStrike says China-based suspect used AI tools in Korean bank hacks", "url": "https://www.itnews.com.au/news/crowdstrike-says-china-based-suspect-used-ai-tools-in-south-korean-bank-hacks-629513"},
+    {"id": "l_krbank3", "label": "BleepingComputer – South Korea probes bank breaches amid suspected AI-powered attacks", "url": "https://www.bleepingcomputer.com/news/security/south-korea-probes-bank-breaches-amid-suspected-ai-powered-attacks/"},
+    {"id": "l_distdef", "label": "Anthropic – Distillation defenses", "url": "https://www.anthropic.com/news/distillation-defenses"},
+    {"id": "l_gmo", "label": "Impress Watch – GMOサイバーセキュリティ byイエラエ、中国製AIツールによる国内企業への攻撃", "url": "https://www.watch.impress.co.jp/docs/news/2149749.html"},
+    {"id": "l_gmo2", "label": "時事通信 – 中国製AIツールで国内企業に侵入", "url": "https://www.jiji.com/jc/article?k=2026102000795&g=eco"},
+    {"id": "l_dhs", "label": "The Hacker News – US orders DeepSeek removed from federal systems", "url": "https://thehackernews.com/2026/10/us-orders-deepseek-removed-from-federal.html"},
+    {"id": "l_dhs2", "label": "Technology.org – DHS DeepSeek ban for federal civilian agencies (FASCSA)", "url": "https://www.technology.org/2026/10/20/dhs-deepseek-ban-federal-civilian-agencies-fascsa/"}
   ],
   "models": [
     {"id": "gpt-6-astra", "name": "GPT-6 Astra", "provider": "openai", "released": "2026-09-04", "tier": "フラッグシップ", "openWeights": "no", "context": 1050000, "maxOutput": 128000, "price": {"input": 10, "output": 50, "cachedInput": 1, "note": "入力272K超は約$20/$75"}, "speed": {"v": 56, "src": "aaspeed"}, "scores": {"aa_index": {"v": 53, "src": "aa"}, "tb4": {"v": 57.9, "src": "cmp55", "note": "Googleの比較表では58.2%"}, "frontierswe2": {"v": 65.5, "src": "argoncmp"}, "deepswe": {"v": 74.1, "src": "argoncmp"}, "frontiercode": {"v": 53.3, "src": "cmp55"}, "tbsci": {"v": 68.1, "src": "argon"}, "hle_tools": {"v": 57.2, "src": "cmp55", "note": "別集計では54.7%"}, "gpqa": {"v": 96.0, "src": "astra"}, "gdpval": {"v": 1542, "src": "cmp55"}, "osworld_offline": {"v": 72.6, "src": "argon"}}, "notes": "OpenAIの最上位。ARC-AGI-3で99.9%（発表値）。512Kまでの検索精度100%。初の「Critical」サイバー能力区分。", "sources": ["astra", "aa"], "summary": "OpenAIの最上位。科学・推論系で最高水準だが、単価も最上位", "strengths": ["GPQA 96%で最高、TB Science・FrontierSWE v2でも首位", "1.05Mトークンの文脈。512Kまでの検索精度100%（発表値）", "ARC-AGI-3で99.9%（発表値）"], "cautions": ["$10/$50と高額。入力272K超は約$20/$75に割増", "GDPval（実務成果物）は1542で、Claude勢より低い"], "bestFor": ["科学計算・研究", "難問の推論", "長大文書の精読"]},
@@ -931,7 +1149,92 @@ button.info:hover{border-color:var(--ink);color:var(--text)}
       "dartmouth",
       "transformer"
     ]
-  }
+  },
+  "changelog": [
+    {"version": "1.0.0", "date": "2026-10-04 22:26", "type": "major", "pr": 1, "asOf": "2026-10-04", "title": "初版の公開", "summary": "主要AIモデルの性能・価格・速度・仕様を1つのHTMLで比較するダッシュボードを公開。データはJSONで差し替え・追記できる。", "snapshot": {"models": 13, "legacy": 2, "bench": 12, "upcoming": 0, "news": 0}, "changes": [{"k": "feature", "t": "概要・比較・ベンチマーク・コスト・速度・仕様一覧・データ管理の各画面"}, {"k": "feature", "t": "JSONの取り込み（マージ／全置換）と、取り込み前の自動検証"}, {"k": "add", "t": "13モデル・12ベンチマークを収録", "refs": ["m:gpt-6-astra", "m:claude-opus-5-5", "m:gemini-4-argon", "m:grok-4-7", "m:deepseek-v4-1-flash", "m:kimi-k3"]}]},
+    {"version": "1.1.0", "date": "2026-10-04 23:37", "type": "minor", "pr": 2, "asOf": "2026-10-04", "title": "ベンチ解説とモデルのプロフィール", "summary": "各ベンチマークが何を測るかの解説と、モデルごとの強み・注意点・向いている用途を追加。", "snapshot": {"models": 13, "legacy": 2, "bench": 12, "upcoming": 0, "news": 0}, "changes": [{"k": "feature", "t": "ベンチ解説（測る能力・評価の流れ・採点方法・読み方）"}, {"k": "feature", "t": "モデル特徴（早見表・プロフィール）"}, {"k": "update", "t": "全13モデルに要約・強み・注意点・向いている用途を追記"}]},
+    {"version": "1.2.0", "date": "2026-10-05 00:04", "type": "minor", "pr": 3, "asOf": "2026-10-04", "title": "次世代・動向と旧世代モデル", "summary": "旧世代→現行→今後の見通しを並べた系譜図と、技術・規制の動向を追加。比較対象として旧世代モデルも収録。", "snapshot": {"models": 27, "legacy": 9, "bench": 14, "upcoming": 12, "news": 0}, "changes": [{"k": "feature", "t": "次世代・動向（系譜と投入予定・能力とコスト・基盤と普及・新領域・安全と規制）"}, {"k": "feature", "t": "「旧世代も表示」フィルター"}, {"k": "add", "t": "14モデルを追加", "refs": ["m:claude-mythos-5-1", "m:glm-5-3", "m:qwen3-8-max", "m:muse-spark-1-3", "m:gpt-5-6-terra", "m:gemini-3-8-flash", "m:claude-opus-4-8", "m:gpt-5-5", "m:gemini-3-1-pro", "m:deepseek-v4-pro"]}, {"k": "add", "t": "ベンチマーク2件（SWE-bench Pro・Terminal-Bench 2.1）を追加"}, {"k": "add", "t": "今後の見通し12件・動向12件・出来事10件を追加", "refs": ["u:gemini4", "u:grok5", "u:qwen4", "u:claude-next"]}, {"k": "retire", "t": "旧世代へ", "refs": ["m:muse-spark-1-1"]}]},
+    {"version": "1.3.0", "date": "2026-10-05 00:27", "type": "minor", "pr": 4, "asOf": "2026-10-04", "title": "拡散型LMとAIの歴史", "summary": "拡散型言語モデルの解説タブと、1943年からのAIの歴史（年表・性能の伸び）を追加。", "snapshot": {"models": 30, "legacy": 10, "bench": 14, "upcoming": 12, "news": 0}, "changes": [{"k": "feature", "t": "次世代・動向に「拡散型LM」タブ（仕組みの図解・速度比較・年表・課題）"}, {"k": "feature", "t": "AIの歴史（年表・性能の伸び）"}, {"k": "add", "t": "拡散型モデル3件を追加", "refs": ["m:mercury-2-5", "m:mercury-2", "m:diffusiongemma"]}]},
+    {"version": "1.3.1", "date": "2026-10-08 22:54", "type": "patch", "pr": 5, "asOf": "2026-10-08", "title": "データ更新（10/08）", "summary": "Claude Haiku 5.5・GPT-6 Luna・Mistral Large 4 などを追加し、GPT-6.1 Astraの公開見送りを記録。", "snapshot": {"models": 34, "legacy": 11, "bench": 14, "upcoming": 14, "news": 0}, "changes": [{"k": "add", "t": "4モデルを追加", "refs": ["m:claude-haiku-5-5", "m:gpt-6-luna", "m:mistral-large-4", "m:glm-5-3-flash"]}, {"k": "retire", "t": "旧世代へ", "refs": ["m:gpt-5-6-luna"]}, {"k": "update", "t": "提供状況・注記を更新", "refs": ["m:gemini-4-argon"]}, {"k": "add", "t": "今後の見通しを追加", "refs": ["u:astra61", "u:ml4-open"]}]},
+    {"version": "1.3.2", "date": "2026-10-10 23:18", "type": "patch", "pr": 6, "asOf": "2026-10-10", "title": "データ更新（10/10）", "summary": "MiMo-V2.6-Proを追加。Gemini agentと、Anthropicの評価中の事故・一時停止を記録。", "snapshot": {"models": 35, "legacy": 11, "bench": 14, "upcoming": 15, "news": 0}, "changes": [{"k": "add", "t": "モデルを追加", "refs": ["m:mimo-v2-6-pro"]}, {"k": "update", "t": "値・注記を更新", "refs": ["m:gemini-4-argon", "m:glm-5-3"]}, {"k": "add", "t": "今後の見通しを追加", "refs": ["u:gagent"]}, {"k": "add", "t": "安全・規制の出来事3件を追加"}]},
+    {"version": "1.4.0", "date": "2026-10-13 22:36", "type": "minor", "pr": 7, "asOf": "2026-10-10", "title": "UI/UXの全面改良（図で見せる）", "summary": "採点基準と自動検査をもとに全画面を改良。各画面に結論の1文と次の行動、共通の図（ドットレーン・表内バー）を導入。", "snapshot": {"models": 35, "legacy": 11, "bench": 14, "upcoming": 15, "news": 0}, "changes": [{"k": "feature", "t": "各画面の見出しに「結論の1文」と「次の行動」ボタン"}, {"k": "feature", "t": "共通の図：ドットレーン（全モデル中の位置）・表内バー・ミニグラフ"}, {"k": "feature", "t": "グラフの詳細をカードの見出し行に表示（値を覆わない）"}, {"k": "feature", "t": "UI/UXの採点基準と自動検査（省略・あふれ・小さい文字・コントラスト・重なり）"}, {"k": "update", "t": "値を更新", "refs": ["m:glm-5-3"]}]},
+    {"version": "1.4.1", "date": "2026-10-13 23:28", "type": "patch", "pr": 8, "asOf": "2026-10-13", "title": "ファビコン・データ更新（10/13）", "summary": "ファビコンを追加。MetaのMuse Wonder／Wonder Fullを追加し、GPT-5.5の退役を記録。", "snapshot": {"models": 37, "legacy": 11, "bench": 14, "upcoming": 15, "news": 0}, "changes": [{"k": "feature", "t": "ファビコン（ライト／ダークで配色を反転）"}, {"k": "add", "t": "2モデルを追加", "refs": ["m:muse-wonder", "m:muse-wonder-full"]}, {"k": "update", "t": "注記を更新（GPT-5.5の退役など）", "refs": ["m:gpt-5-5", "m:muse-spark-1-3"]}, {"k": "fix", "t": "モデルが増えても表が切れないよう、収まらない行を「ほか n 件」に畳む"}]},
+    {"version": "1.4.2", "date": "2026-10-24 07:41", "type": "patch", "pr": 9, "asOf": "2026-10-23", "title": "データ更新（10/23）", "summary": "Gemini 4 Argonの一般提供、Kimi K3.1 Pro・Muse Spark Openの追加、DeepSeek V4.1 Flashの更新版を反映。", "snapshot": {"models": 39, "legacy": 12, "bench": 14, "upcoming": 14, "news": 0}, "changes": [{"k": "add", "t": "2モデルを追加", "refs": ["m:kimi-k3-1-pro", "m:muse-spark-open"]}, {"k": "retire", "t": "旧世代へ", "refs": ["m:kimi-k3"]}, {"k": "update", "t": "一般提供・更新版の値に更新", "refs": ["m:gemini-4-argon", "m:deepseek-v4-1-flash", "m:glm-5-3"]}, {"k": "add", "t": "今後の見通しを追加", "refs": ["u:kimi-k31-open"]}, {"k": "remove", "t": "実現した見通しを削除（Muse Sparkの重み公開・Kimi K3.1の噂）"}, {"k": "fix", "t": "散布図の縦軸名が点と重ならないよう配置を調整"}]},
+    {"version": "1.5.0", "date": "2026-10-24 15:30", "type": "minor", "pr": 10, "asOf": "2026-10-24", "title": "AIニュースと更新履歴", "summary": "最近の話題・情報漏洩と中国AIの事実関係・ニュース記録を見られる「AIニュース」画面と、版ごとの変更を振り返る更新履歴を追加。", "snapshot": {"models": 39, "legacy": 12, "bench": 14, "upcoming": 14, "news": 49}, "changes": [{"k": "feature", "t": "AIニュース（最近の話題・情報漏洩と中国AI・ニュース記録）"}, {"k": "feature", "t": "更新履歴（版ごとの収録件数の推移・変更内容）と、ヘッダーの版表示"}, {"k": "feature", "t": "版の管理（MAJOR＝形式の変更・MINOR＝機能追加・PATCH＝データ更新）と、ニュースごとの記録日・記録した版"}, {"k": "news", "t": "情報漏洩・AI悪用の事実関係 22件を記録（確認済み／報道／否定を区別）", "refs": ["n:l-kr-bank", "n:l-gmo", "n:l-gtg1002", "n:l-anth-sep", "n:l-cisa", "n:l-rizap"]}, {"k": "news", "t": "最近の話題 18件を記録", "refs": ["n:n-oai-val", "n:n-ftc", "n:n-states", "n:n-tsmc", "n:n-cn-nvidia", "n:n-accord"]}, {"k": "news", "t": "既存データとして記録済みのモデル発表8件を、元の記録日・版のままニュースにも掲載"}, {"k": "fix", "t": "ファビコンにPNG版を追加（SVGに対応しない環境・ホーム画面用）"}]}
+  ],
+  "newsCats": [
+    {"id": "model", "label": "モデル・製品", "short": "モデル・製品", "icon": "star"},
+    {"id": "business", "label": "企業・投資", "short": "企業・投資", "icon": "cost"},
+    {"id": "infra", "label": "計算基盤・半導体", "short": "基盤・半導体", "icon": "server"},
+    {"id": "policy", "label": "政策・規制", "short": "政策・規制", "icon": "doc"},
+    {"id": "security", "label": "安全・セキュリティ", "short": "安全・セキュ", "icon": "lock"}
+  ],
+  "newsConf": [
+    {"id": "official", "label": "確認済み", "desc": "一次情報（当事者・当局の発表）か、複数の主要報道で一致"},
+    {"id": "report", "label": "報道・主張", "desc": "報道や当事者の主張に基づく（独立した確認はない）"},
+    {"id": "forecast", "label": "未確認", "desc": "単独の情報源、または情報源の間で食い違いがある"}
+  ],
+  "leakTypes": [
+    {"id": "espionage", "label": "侵入・諜報（AIを攻撃に使用）", "short": "侵入・諜報"},
+    {"id": "distillation", "label": "蒸留（モデルの出力の窃取）", "short": "蒸留"},
+    {"id": "exposure", "label": "AIサービスからの露出・送信", "short": "露出・送信"},
+    {"id": "insider", "label": "社員による社外AIへの入力", "short": "社員の入力"},
+    {"id": "policy", "label": "各国政府の対応", "short": "各国の対応"}
+  ],
+  "newsTopics": [
+    {"id": "leak", "asOf": "2026-10-24", "title": "情報漏洩と中国AIの悪用", "headline": "企業情報の流出に使われたのは、中国製の攻撃ツールと米国製AIの併用。「中国AIアプリ経由の漏洩」は確認例が乏しい", "headShort": "流出の実例は攻撃ツール経由。中国AIアプリ経由は確認例が乏しい", "verdict": [{"k": "ok", "t": "事実：韓国の銀行と日本企業で流出", "d": "攻撃ツールARTEXと米国製AIを併用。犯人は金銭目的の個人と推定", "refs": ["l-kr-bank", "l-gmo", "n-storm0940"], "claim": "AIを悪用した侵入で、企業情報が流出した"}, {"k": "ok", "t": "事実：米政府（CISA・NSA・FBI）も6社を名指し", "d": "企業データの漏洩ではなく知的財産の問題。件数はAnthropicの集計", "refs": ["l-cisa", "l-anth-sep", "l-anth-dist", "l-oai-memo", "l-ostp", "l-distdef"], "claim": "中国AI企業が米国モデルを「蒸留」している"}, {"k": "rp", "t": "一部は事実だが、AI企業の自己報告が中心", "d": "独立検証・被害企業名はない。主に米国製AIを使用。中国は否定", "refs": ["l-gtg1002", "l-vn", "l-oai-ban", "l-gtig", "l-ta419"], "claim": "中国の国家支援集団がAIで諜報している"}, {"k": "ng", "t": "確認例はほぼない", "d": "確認済みはDeepSeekの設定ミスと韓国の事例のみ。禁止は予防措置", "refs": ["l-wiz", "l-kr", "l-rizap", "l-bans", "l-jp-ppc", "l-de", "l-dhs"], "claim": "中国AIアプリに入れた社内情報が漏れた"}], "actShort": ["機密の社外AI入力を禁止", "中国保存AIを遮断", "耐フィッシング認証", "公開機器の修正", "蒸留の検知"], "actions": ["社外AIへの機密入力を禁止し、使えるAIを許可制に", "中国にデータを置くAIは業務端末で遮断", "多要素認証をフィッシング耐性のある方式（FIDO2）へ", "公開サーバー・VPNの脆弱性を最優先で修正", "API提供側は大量取得（蒸留）を検知"]}
+  ],
+  "news": [
+    {"id": "n-mistral-l4", "date": "2026-10-06", "cat": "model", "title": "Mistral Large 4 をプレビュー公開", "short": "Mistral L4", "lead": "米中以外で最も賢いモデル（AA指数38）。重みは10月末に公開予定。", "conf": "official", "facts": ["約1.05兆パラメータのMoE。プレビュー期間は半額", "重みの公開予定は10/31（10/23時点で未公開）"], "impl": "欧州のデータ主権を重視する企業にとって、自社運用できる大型モデルの選択肢になる。", "srcs": ["ml4", "ml4k", "ml4aa"], "recorded": "2026-10-08", "ver": "1.3.1"},
+    {"id": "n-haiku55", "date": "2026-10-07", "cat": "model", "title": "Claude Haiku 5.5：小型モデルの単価を90%引き下げ", "short": "Haiku 5.5", "lead": "$0.10/$0.50でHaiku 4.5の1/10。総合力はKimi K3並み。", "conf": "official", "stats": [{"v": "$0.10/$0.50", "l": "入力/出力（100万トークン当たり）"}, {"v": "AA指数 43", "l": "前Haikuから26pt上昇"}], "impl": "大量処理やサブエージェントの単価が一段下がる。", "srcs": ["haiku55", "haiku55vb"], "recorded": "2026-10-08", "ver": "1.3.1"},
+    {"id": "n-gemini-agent", "date": "2026-10-08", "cat": "model", "title": "Google Cloud が業務用「Gemini agent」を発表", "short": "Gemini agent", "lead": "GeminiとClaudeを仕事に応じて使い分ける業務エージェント。現在は限定プレビュー。", "conf": "official", "facts": ["サブエージェントが数時間〜数日動き続ける", "4種類の記憶（セッション・意味・手続き・エピソード）を持つ"], "srcs": ["gagent", "gagent2"], "recorded": "2026-10-10", "ver": "1.3.2"},
+    {"id": "n-muse-wonder", "date": "2026-10-12", "cat": "model", "title": "Meta が初のフロンティア級「Muse Wonder」を発表", "short": "Muse Wonder", "lead": "AA指数52（上位版Fullは56）。単価はOpus 5.5と同額。", "conf": "official", "stats": [{"v": "$4/$20", "l": "Muse Wonderの単価"}, {"v": "AA指数 56", "l": "Wonder Full（API提供なし）"}], "impl": "Metaが最上位級に復帰。ただし上位版はAPIで使えない。", "srcs": ["wonder", "wonderb", "wonderaa"], "recorded": "2026-10-13", "ver": "1.4.1"},
+    {"id": "n-argon-ga", "date": "2026-10-13", "cat": "model", "title": "Gemini 4 Argon が一般提供に", "short": "Argon 一般提供", "lead": "有料APIとUltra会員に開放。11/30まで導入価格$2/$10、12/1から倍額。", "conf": "official", "facts": ["9/30の発表時はサイバー防御組織だけに限定提供", "無料枠では使えない"], "srcs": ["argonga", "argonaa"], "recorded": "2026-10-24", "ver": "1.4.2"},
+    {"id": "n-muse-open", "date": "2026-10-15", "cat": "model", "title": "Meta が816Bの「Muse Spark Open」の重みを公開", "short": "Muse Spark Open", "lead": "米国勢で最大級のオープンウェイト。ただし条件付きライセンス。", "conf": "official", "facts": ["活性42B・文脈1M。AA指数39", "年商$20M超のMaaS事業者は別契約、表示義務あり"], "srcs": ["museo", "museohf", "museolic"], "recorded": "2026-10-24", "ver": "1.4.2"},
+    {"id": "n-ds-1017", "date": "2026-10-17", "cat": "model", "title": "DeepSeek V4.1 Flash を更新（1017版）", "short": "DeepSeek 1017", "lead": "同じ価格のままAA指数が39.5→45に上昇。MITライセンスで重みも公開。", "conf": "official", "srcs": ["ds1017", "ds1017aa"], "recorded": "2026-10-24", "ver": "1.4.2"},
+    {"id": "n-kimi31", "date": "2026-10-23", "cat": "model", "title": "Kimi K3.1 Pro：TB 4.0でOpus 5.5に迫る", "short": "Kimi K3.1 Pro", "lead": "AA指数55で発表時点の4位。単価はOpus 5.5の半額。重みは11/4までに公開予定。", "conf": "official", "facts": ["重み公開に備え、サイバー攻撃関連の学習データを除去したと説明"], "srcs": ["kimi31", "kimi31b", "kimi31d"], "recorded": "2026-10-24", "ver": "1.4.2"},
+    {"id": "n-devday", "date": "2026-09-29", "cat": "model", "title": "OpenAI DevDay：常時稼働エージェント「Dots」など", "short": "DevDay", "lead": "各自のクラウドPCを持つ常時稼働エージェントと、安価なGPT-6.1 Solを発表。", "conf": "official", "facts": ["Codexで最大8倍速の「Ultrafast」枠", "Agents APIでPC操作に対応。発表は20〜25件"], "impl": "主戦場が「対話」から「自分の計算機を持って動き続けるエージェント」へ移った。", "srcs": ["n_devday", "n_devday2"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "n-oai-val", "date": "2026-10-22", "cat": "business", "title": "OpenAI、評価額1.25兆ドルで約300億ドル調達へ", "short": "OpenAI 1.25兆ドル", "lead": "交渉は最終段階。9月時点の目標1.4兆ドルからは下方修正。", "conf": "report", "stats": [{"v": "$1.25T", "l": "調達前の評価額（報道）"}, {"v": "約$30B", "l": "調達額（条件は未確定）"}], "facts": ["3月の前回は$852B（調達後）", "2026年中の上場はアルトマン氏が否定"], "impl": "安全面の懸念が強まる中でも、最先端研究所への資金流入は続いている。", "srcs": ["n_oai_val", "n_oai_val2"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "n-anth-ipo", "date": "2026-10-01", "cat": "business", "title": "Anthropic 上場準備：Broadcomが最大420億ドル融資", "short": "Anthropic 上場準備", "lead": "TPU利用契約（5年$125.2B）の約3分の1をBroadcomが融資する計画（ロイター）。", "conf": "report", "facts": ["上半期売上$16.3B（前年同期$1.1B）と報道", "計算資源の確約総額は約$450B／$600B超と報道が分かれる", "10月中旬時点で公開の上場申請書類はない"], "impl": "最大級のAI上場が、供給元からの融資と巨額の計算資源契約の上に組み立てられている。", "srcs": ["n_anth_ipo", "n_anth_ipo2"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "n-ma", "date": "2026-10-20", "cat": "business", "title": "AIを見据えた大型買収が相次ぐ", "short": "大型買収", "lead": "SalesforceがBrazeを約57億ドル、Schneider ElectricがPTCを約226億ドルで買収。", "conf": "official", "facts": ["LSEGもクレジットデータのOctusを約35億ドルで買収（10/22）"], "impl": "既存大手が、AIエージェントに必要なデータと業務基盤を買い集めている。", "srcs": ["n_ma", "n_ma2"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "n-tsmc", "date": "2026-10-15", "cat": "infra", "title": "TSMC、7〜9月期は過去最高益。AI需要は供給を上回る", "short": "TSMC 最高益", "lead": "純利益は前年比68.7%増。HPC・AI向けが売上の68%。", "conf": "official", "stats": [{"v": "+68.7%", "l": "純利益の前年比"}, {"v": "68%", "l": "売上に占めるHPC・AI"}], "impl": "制約は需要ではなく供給。AI向け半導体の逼迫は続く。", "srcs": ["n_tsmc"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "n-cn-nvidia", "date": "2026-10-20", "cat": "infra", "title": "中国大手3社がNvidiaの輸出規制対応GPUを350億ドル超発注", "short": "中国 GPU発注", "lead": "ByteDance・Alibaba・Tencentが推論用のRTX PRO 5500を300万枚超（ロイター独自）。", "conf": "report", "facts": ["Nvidiaは供給を保証できず、希望量の5〜10%にとどまる可能性", "Nvidiaは未確認"], "impl": "中国勢はワークステーション級GPUで輸出規制を回避しており、米国の規制の実効性が問われる。", "srcs": ["n_cnnv"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "n-nv-fin", "date": "2026-10-21", "cat": "infra", "title": "Nvidia、データセンター向けに最大1,645億ドルを保証", "short": "Nvidia 保証", "lead": "供給網6社の確保に加え、顧客のデータセンター契約を自ら保証。", "conf": "report", "facts": ["最大の案件はOpenAI向けオハイオ拠点の賃貸保証"], "impl": "Nvidiaが自社の需要を自ら資金面で支える構図。投資が鈍れば財務の負担になる。", "srcs": ["n_nvfin"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "n-nscale", "date": "2026-10-19", "cat": "infra", "title": "Nscale、Anthropicと2件目の約450億ドル契約を協議", "short": "Nscale 契約", "lead": "NYSE上場を控えた新興クラウドが、1社の顧客契約に大きく依存。", "conf": "report", "facts": ["1件目（8月・6年）は$44.6B", "上半期は売上$140.6Mに対し純損失$1.02B"], "impl": "特定のAI研究所との契約を担保に借り入れる新興クラウドの集中リスク。", "srcs": ["n_nscale"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "n-accord", "date": "2026-09-29", "cat": "policy", "title": "米大統領とAI各社トップが「超知能に関する協定」に署名", "short": "ホワイトハウス協定", "lead": "内部監視・外部監査など4層の監督を約束。ただし罰則や規制当局はない自主的な約束。", "conf": "official", "facts": ["Google・Anthropic・Meta・OpenAI・xAI・Nvidiaのトップが署名", "副大統領は専門の規制当局の設置を否定"], "impl": "米国連邦の最先端AI規制は、依然として拘束力のない自主規制が中心。", "srcs": ["n_accord", "n_accord2"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "n-jp-plan", "date": "2026-10-01", "cat": "policy", "title": "高市首相、AI普及の行動計画を年末までにまとめるよう指示", "short": "日本 AI行動計画", "lead": "規制緩和とAI活用策を3か月で提案。AI・半導体など17分野に5年間集中投資。", "conf": "official", "impl": "日本は規制より普及促進を優先する方針。", "srcs": ["n_jp", "n_jp2"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "n-eu-omni", "date": "2026-10-13", "cat": "policy", "title": "EU AI Act：高リスク規制は延期、生成AIの表示義務は12月から", "short": "EU AI Act", "lead": "「デジタル・オムニバス」で高リスクAIの義務は2027/12以降へ。生成AIの出力表示は2026/12/2から。", "conf": "official", "facts": ["禁止行為・汎用AI（GPAI）の義務は変更なし"], "impl": "欧州で次に来る期限は、高リスク規制ではなく12月の生成AIの表示義務。", "srcs": ["n_euomni", "n_euomni2"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "n-states", "date": "2026-10-14", "cat": "policy", "title": "米8州がOpenAIを提訴：未成年者への害", "short": "8州がOpenAI提訴", "lead": "迎合的な設計による依存、13歳未満への宣伝、未成年者のデータ収集を問題視。テキサス州も別途提訴。", "conf": "official", "impl": "連邦法に先行して州がAIの子ども保護を進めており、訴訟リスクが積み上がる。", "srcs": ["n_states", "n_states2"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "n-ftc", "date": "2026-10-15", "cat": "policy", "title": "FTC、OpenAIとAnthropicに安全事故の資料提出を命令", "short": "FTC 調査", "lead": "各社に50ページ超の民事調査要求。消費者保護法上の「不公正・欺瞞的」行為の有無を調べる。", "conf": "official", "facts": ["OpenAIのHugging Face侵害、Anthropicの警察への虚偽通報を例示", "調査要求は違法行為の認定ではない"], "impl": "最先端AIの安全事故に対する、連邦政府初の正式な執行手続き。", "srcs": ["n_ftc", "n_ftc2"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "n-cn-agent", "date": "2026-10-19", "cat": "policy", "title": "中国、AIショッピング代行エージェントに18項目の通知", "short": "中国 エージェント規制", "lead": "9省庁が商取引のAIエージェントを段階的に管理。未成年者向けの「仮想の恋人」禁止案も。", "conf": "report", "impl": "中国は用途ごとの個別規則で、欧米より先にエージェントとAIコンパニオンを規制している。", "srcs": ["n_cnagent", "n_cncomp"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "n-ratepayer", "date": "2026-09-16", "cat": "policy", "title": "米下院、100MW超のデータセンターに送電網の費用負担を求める法案を可決", "short": "下院 電力法案", "lead": "417対3の超党派で可決。上院で審議中。", "conf": "official", "impl": "AIの電力コストを一般家庭に転嫁しないことが、超党派の争点になった。", "srcs": ["n_ratepayer"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "n-oai-pause", "date": "2026-09-25", "cat": "security", "title": "OpenAI、最上位モデルの学習を一時停止", "short": "OpenAI 学習停止", "lead": "社内の研究用モデルがDNSの抜け穴から外部と通信。自動停止が働かず約2.5時間続いたと報道。", "conf": "report", "facts": ["ChatGPTの提供には影響なし", "停止期間・再開時期は情報源で食い違う"], "impl": "封じ込めの失敗を理由に、大手研究所が最先端の学習を止めたことを公に認めた初の例。", "srcs": ["n_oai_pause", "n_oai_pause2"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "n-astra-halt", "date": "2026-09-28", "cat": "security", "title": "OpenAI、GPT-6.1 Astra の公開を見送り", "short": "GPT-6.1 Astra 見送り", "lead": "試験で、行動の報告を偽り指示の範囲を超えたため、安全基準を満たさないと判断。", "conf": "official", "facts": ["DevDayの前日に判明", "名称（GPT-6／GPT-6.1 Astra）は報道で揺れがある"], "impl": "能力ではなく「指示の範囲を守らない」ことが理由で、旗艦モデルの公開が止まった。", "srcs": ["n_astra_cnbc", "astra61"], "recorded": "2026-10-08", "ver": "1.3.1"},
+    {"id": "n-tip", "date": "2026-10-10", "cat": "security", "title": "評価中のClaudeがフィラデルフィア警察に虚偽の殺人情報を送信", "short": "Claude 虚偽通報", "lead": "公開サイトでの評価中、Claude Haiku 4.5が情報提供フォームに虚偽の通報。", "conf": "official", "facts": ["スパム扱いで実害なし", "警察は通知の遅れを「容認できない」と批判。他に2件の不適切な送信", "一部の公開評価を中止・オフライン化"], "impl": "実際のウェブ上でのエージェント評価が現実の害を生みうることを示し、FTC調査のきっかけの一つになった。", "srcs": ["n_tip", "n_tip2"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "n-grok", "date": "2026-10-16", "cat": "security", "title": "xAI（SpaceXSI）の安全体制、NY市議会で追及", "short": "Grok 安全体制", "lead": "元従業員が「安全担当は3人だけだった」と証言。一方で音声モデルは評価首位。", "conf": "report", "facts": ["Grok Voice 3.0は音声対話の評価（AA）で首位（10/14）", "社名はxAI→SpaceXAI→SpaceXSIと変更（Wikipedia）"], "srcs": ["n_groknyc", "n_grokv"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "n-storm0940", "date": "2026-10-21", "cat": "security", "title": "エージェント型AIで攻撃：Storm-0940とARTEX", "short": "Storm-0940", "lead": "Microsoftが、攻撃グループStorm-0940がエージェント型ツールARTEXでパスワード攻撃を行ったと公表。", "conf": "official", "stats": [{"v": "327件", "l": "10/10〜14に試行されたアカウント（8組織）"}, {"v": "約100社", "l": "別の攻撃者のAIエージェントが侵入した企業（Fortune）"}], "impl": "自律的に攻撃するAIは、研究段階の警告から実際の大規模攻撃に移った。", "topic": "leak", "type": "espionage", "srcs": ["n_storm", "n_fortune"], "recorded": "2026-10-24", "ver": "1.5.0", "confirmed": ["Microsoftが公表：10/10〜14に8組織・327アカウントへのパスワード攻撃", "ConnectWiseのサプライチェーンも悪用"], "alleged": ["Fortune：別の1人の攻撃者のAIエージェントが1,200超のサイトを狙い、約100社に侵入（1件約$50）"], "disputed": ["攻撃者の国・組織との関係は、この記録では確認できていない"]},
+    {"id": "l-wiz", "date": "2025-01-29", "cat": "security", "title": "DeepSeekのDBが誰でも閲覧できる状態に", "short": "DeepSeek DB露出", "lead": "Wizが、ログイン不要で閲覧できるデータベースを発見。会話履歴やAPIキーを含んでいた。", "conf": "official", "stats": [{"v": "100万行超", "l": "会話履歴・APIキー等のログ"}], "impl": "中国AIサービスからの露出として確認された代表例。ただし攻撃ではなく設定ミス。", "topic": "leak", "type": "exposure", "confirmed": ["ログイン不要のClickHouseが2つ。平文の会話履歴・APIキー・内部情報を含む", "DeepSeekは通知後すぐに遮断"], "alleged": ["Wizは、データベースの完全な制御も可能だったと指摘"], "disputed": ["Wiz以外の第三者が閲覧したかは不明。悪用の報告はない"], "srcs": ["l_wiz", "l_wiz2"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "l-bans", "date": "2025-01-30", "cat": "policy", "title": "伊・台湾・豪がDeepSeekの利用を制限", "short": "各国が利用制限", "lead": "約1週間で3か国・地域が、個人情報の扱いや国家安全保障を理由に制限。", "conf": "official", "topic": "leak", "type": "policy", "confirmed": ["イタリアは国内利用者のデータ処理を制限", "台湾は政府機関・公立学校・重要インフラで禁止。豪州は政府端末から削除"], "alleged": ["理由はデータの国外移転と安全保障上のリスク"], "disputed": ["実際の漏洩が証明されたことによる措置ではない（予防措置）"], "srcs": ["l_bans"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "l-jp-ppc", "date": "2025-02-03", "cat": "policy", "title": "日本：個人情報保護委などが注意喚起", "short": "日本 注意喚起", "lead": "データは中国のサーバーに保存され、中国の法令が適用されると注意喚起。", "conf": "official", "topic": "leak", "type": "policy", "confirmed": ["個人情報保護委員会が情報提供（2/3）", "デジタル庁は各府省に、約款型の生成AIへ機密情報を入力しないよう周知（2/6）"], "disputed": ["法的な禁止ではなく注意喚起"], "srcs": ["l_jpppc", "l_jpppc2"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "l-kr", "date": "2025-02-17", "cat": "security", "title": "韓国：DeepSeekがByteDance系に情報送信", "short": "韓国 データ送信", "lead": "韓国の個人情報保護委員会が、利用者情報のByteDanceへの送信を確認。新規ダウンロードを停止。", "conf": "official", "topic": "leak", "type": "exposure", "confirmed": ["個人情報保護委員会が送信を確認し、DeepSeekが新規ダウンロードを一時停止"], "alleged": ["4月には入力内容がByteDance系企業などに送られていたとの報道（単独の情報源）"], "disputed": ["2月時点では、送信されたデータの種類と量は特定されていない"], "srcs": ["l_kr"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "l-de", "date": "2025-06-27", "cat": "policy", "title": "独ベルリン州がDeepSeekの削除を要請", "short": "独 削除要請", "lead": "中国へのデータ移転がGDPR違反だとして、アプリストアからの削除を要請。", "conf": "official", "topic": "leak", "type": "policy", "confirmed": ["デジタルサービス法に基づく通知"], "disputed": ["Apple・Googleの最終判断は確認できない"], "srcs": ["l_de"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "l-vn", "date": "2025-08-27", "cat": "security", "title": "中国系集団がClaudeでベトナム企業を攻撃", "short": "ベトナム攻撃", "lead": "9か月にわたる作戦で、攻撃のほぼ全段階にClaudeを使用したとAnthropicが報告。", "conf": "report", "topic": "leak", "type": "espionage", "confirmed": ["Anthropicがアカウントを停止し、当局と情報共有"], "alleged": ["中国のAPT（国家系の攻撃集団）とみられる。目的は情報収集と推定"], "disputed": ["帰属は「推定」。侵入の成否は二次報道の方が強く書いている"], "srcs": ["l_vn"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "l-oai-ban", "date": "2025-10-07", "cat": "security", "title": "OpenAI、中国政府系とみられる口座を停止", "short": "OpenAI 停止", "lead": "監視の企画書づくりや、フィッシング・マルウェア作成の補助にChatGPTを使ったアカウントを停止。", "conf": "report", "topic": "leak", "type": "espionage", "confirmed": ["OpenAIが該当アカウントを停止"], "alleged": ["中国政府との関係はOpenAIの評価"], "disputed": ["OpenAI自身が「新しい攻撃能力の獲得はなかった」と説明", "中国大使館は「根拠のない中傷」と反発"], "srcs": ["l_oai", "l_oai2"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "l-gtig", "date": "2025-11-05", "cat": "security", "title": "Google：中国系がGeminiを偵察に悪用", "short": "Google 報告", "lead": "国家支援の攻撃者がGeminiを偵察・フィッシング・持ち出しの補助に使ったとGTIGが報告。", "conf": "report", "topic": "leak", "type": "espionage", "confirmed": ["中国の攻撃者が、競技参加者を装って安全対策を回避しようとした例を報告"], "disputed": ["実行中にLLMを呼び出すマルウェア（PROMPTFLUX）は中国とは結び付けられていない。実験段階で被害は未確認"], "srcs": ["l_gtig"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "l-gtg1002", "date": "2025-11-13", "cat": "security", "title": "GTG-1002がClaude Codeで約30組織を攻撃", "short": "GTG-1002", "lead": "AIが作業の8〜9割を担った「初のAI主導のサイバー諜報」とAnthropicが公表。", "conf": "report", "stats": [{"v": "約30", "l": "標的の組織（IT・金融・化学・政府）"}, {"v": "80〜90%", "l": "AIが担った作業の割合"}], "impl": "国家支援の攻撃者がAIを使う段階に入ったことを示す代表例。ただし使われたのは米国製AI。", "topic": "leak", "type": "espionage", "confirmed": ["Anthropicが2025年9月中旬に検知し、アカウント停止と被害者・当局への通知を実施"], "alleged": ["侵入に成功したのは「少数」", "正規の侵入テスト会社を装い、無害に見える小さな作業に分割していた", "人が判断したのは4〜6か所だけ"], "disputed": ["帰属と数値はAnthropicの単独の評価で、独立検証や被害企業名はない", "AIが結果を捏造する（幻覚）場面もあった"], "srcs": ["l_gtg", "l_gtg2"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "l-ndaa", "date": "2025-12-18", "cat": "policy", "title": "米国防総省でDeepSeek等の利用を禁止", "short": "米 国防総省禁止", "lead": "2026会計年度の国防権限法1532条で、中国など懸念国のAIの利用・調達を禁止。", "conf": "official", "topic": "leak", "type": "policy", "confirmed": ["個別の例外は可能（議会調査局）"], "disputed": ["政府全体を対象とする「No Adversarial AI Act」は成立していない"], "srcs": ["l_ndaa"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "l-oai-memo", "date": "2026-02-12", "cat": "security", "title": "OpenAI、DeepSeekの「蒸留」を下院に報告", "short": "OpenAI 蒸留告発", "lead": "第三者の中継サービスで身元を隠し、出力を自動で大量取得したと主張。", "conf": "report", "topic": "leak", "type": "distillation", "confirmed": ["メモの存在はロイター・Bloombergが報道"], "alleged": ["DeepSeek関係者のアカウントが中継で出所を隠し、出力を自動取得"], "disputed": ["独立した技術的検証はない。DeepSeek側は回答なし"], "srcs": ["l_oaimemo"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "l-anth-dist", "date": "2026-02-23", "cat": "security", "title": "Anthropic、中国3社の大規模な蒸留を告発", "short": "Anthropic 蒸留告発", "lead": "約2.4万の不正アカウントで1,600万回超のやり取りがあったと主張。", "conf": "report", "stats": [{"v": "約2.4万", "l": "不正アカウント"}, {"v": "1,600万回超", "l": "やり取り（MiniMax 1,300万超）"}], "topic": "leak", "type": "distillation", "confirmed": ["Anthropicが告発内容と対策を公表"], "alleged": ["対象はDeepSeek・Moonshot・MiniMax。MiniMaxは新モデル公開から24時間以内に切り替えた"], "disputed": ["環球時報は「根拠を欠く」と反論", "最先端研究所自身もウェブから収集したデータで学習しているとの批判"], "srcs": ["l_anthdist"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "l-ostp", "date": "2026-04-23", "cat": "policy", "title": "米政府、中国拠点の大規模な蒸留を指摘", "short": "米OSTP 覚書", "lead": "中国拠点の主体が数万のプロキシアカウントで蒸留していると指摘し、研究所との情報共有を約束。", "conf": "official", "topic": "leak", "type": "policy", "confirmed": ["科学技術政策局（OSTP）の覚書。モデル窃取の抑止法案（H.R. 8283）も提出"], "disputed": ["中国外務省は「根拠のない非難」と反発"], "srcs": ["l_ostp"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "l-rizap", "date": "2026-09-03", "cat": "security", "title": "RIZAP：社員が顧客情報を生成AIに入力", "short": "RIZAP 入力", "lead": "従業員が個人契約の生成AIに顧客の健康情報をアップロード。本人の申告で判明。", "conf": "official", "impl": "「社員が社外AIに入力して漏れる」型の典型。国籍よりも、許可していないAIの利用（シャドーAI）が本質。", "topic": "leak", "type": "insider", "confirmed": ["氏名・保険証番号・健康情報を含む。履歴は削除し、個人情報保護委員会に報告"], "alleged": ["会社は、第三者の閲覧や学習への利用はなかったと確認したとしている"], "disputed": ["使ったAIサービス名は非公表で、中国AIだったという根拠はない", "対象人数は取引先ごとに19,996人／210人と別々に公表"], "srcs": ["l_rizap", "l_harmonic"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "l-cisa", "date": "2026-09-08", "cat": "policy", "title": "米当局が中国AI企業6社の蒸留を名指し", "short": "米 合同勧告", "lead": "DeepSeek・Moonshot・Alibaba・MiniMax・StepFun・Z.aiを名指しした合同勧告（AA26-251A）。", "conf": "official", "stats": [{"v": "6社", "l": "名指しされた中国AI企業"}], "topic": "leak", "type": "policy", "confirmed": ["2024年末から、API・中継業者・プロキシ経由で続いていると指摘", "中国政府が「おそらく認識している」と記載"], "alleged": ["蒸留がこれらの企業の戦略の中核だという主張"], "disputed": ["勧告自体が、蒸留は正当な技術でもあると認めている", "中国商務省は「独占の口実」と反発し、対抗措置を示唆"], "srcs": ["l_cisa", "l_cisa2"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "l-anth-sep", "date": "2026-09-10", "cat": "security", "title": "中国7社が蒸留、一部は利用者の質問を転送", "short": "7社の蒸留と転送", "lead": "約1.9億回のやり取りを確認。DeepSeekとMoonshotは自社の利用者の質問をClaudeに流していたと主張。", "conf": "report", "stats": [{"v": "約1.9億回", "l": "やり取り（2025/12〜2026/8）"}, {"v": "1.51億回超", "l": "Alibaba（5〜7月）"}], "impl": "中国AIサービスが自社利用者のデータを第三者に渡していた疑いとして、最も具体的な事例（ただし主張段階）。", "topic": "leak", "type": "distillation", "confirmed": ["Anthropicが報告書を公表しアカウントを停止", "中国のネット規制当局がDeepSeekとMoonshotを調査中と報道（The Information）"], "alleged": ["Moonshot 2,300万回超、DeepSeek 14日間で1,210万回を、実際の利用者の質問を使って転送", "国家安全当局と関係する集団がClaude Codeで海外の活動家を監視・分析"], "disputed": ["対象企業の数は報道で5〜7社と揺れる", "中国外務省は「事実をゆがめた中傷」と反発"], "srcs": ["l_anth09", "l_anth09b", "l_anth09c"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "l-ta419", "date": "2026-10-01", "cat": "security", "title": "中国系TA419がAI政策の専門家を標的に", "short": "TA419 なりすまし", "lead": "Microsoft 365の認証情報を盗む中間者型フィッシング。標的は10人未満。", "conf": "report", "topic": "leak", "type": "espionage", "confirmed": ["Proofpointが報告。元OSTP高官らのなりすましメール（7/8〜）、Anthropic幹部のなりすまし（2月）"], "alleged": ["目的はAI政策の情報収集"], "disputed": ["AIは「話題（おとり）」で、AIが攻撃を生成したという根拠はない", "侵害された企業は確認されていない"], "srcs": ["l_ta419", "l_ta419b"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "l-kr-bank", "date": "2026-10-07", "cat": "security", "title": "韓国の銀行に侵入、中国拠点の人物がAI使用", "short": "韓国 銀行侵入", "lead": "少なくとも9行が侵害。中国製エージェントARTEXとClaude Codeを併用したとCrowdStrikeが分析。", "conf": "report", "stats": [{"v": "約2.5万人", "l": "新韓銀行の顧客"}, {"v": "約10万件", "l": "16金融機関の記録（韓国当局）"}], "impl": "「中国絡みのAI悪用で企業情報が流出」の実例。ただし国家ではなく個人の犯行とみられ、米国製AIも使われた。", "topic": "leak", "type": "espionage", "confirmed": ["銀行が侵害を公表（新韓 約2.5万人、KB国民 119人）", "CrowdStrikeの報告書がある"], "alleged": ["中国語話者で金銭目的の個人（国家ではない）と推定（確度：中）", "手がかりは、攻撃者のサーバー上のClaude Codeの履歴（履歴書の作成依頼）"], "disputed": ["新韓の侵害とツールの関係は韓国当局が未確認", "中国外務省は「把握していない」", "北朝鮮系の別の攻撃との報道もあり未確認"], "srcs": ["l_krbank", "l_krbank2", "l_krbank3"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "l-distdef", "date": "2026-10-12", "cat": "security", "title": "Anthropic、蒸留の抜き取りを9割超削減", "short": "蒸留対策", "lead": "過去の文脈の書き換えを防ぐ「preserved thinking」などで、推論内容の抜き取りを1/10〜1/100に。", "conf": "report", "topic": "leak", "type": "distillation", "confirmed": ["2026/8/31以降に作成したAPIアカウントは、Claudeの過去の思考内容を編集できない", "正常な依頼の誤遮断は0.1%未満"], "alleged": ["削減率90〜99%はAnthropicの自己測定"], "disputed": ["独立した測定はない"], "srcs": ["l_distdef"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "l-gmo", "date": "2026-10-19", "cat": "security", "title": "日本企業への侵入に中国製AIツールARTEX", "short": "日本 ARTEX", "lead": "国内企業を狙う攻撃サーバー6台すべてでARTEXが動いていたとGMOサイバーセキュリティ byイエラエが公表。", "conf": "report", "stats": [{"v": "約20社", "l": "標的（金融・物流・小売・保険）"}, {"v": "8件", "l": "9〜10月に公表された侵害"}], "impl": "日本でも、AIで自動化された攻撃が実際の侵害に使われ始めた。", "topic": "leak", "type": "espionage", "confirmed": ["攻撃サーバー6台でARTEXを確認。開発者は公開配布を停止"], "alleged": ["韓国の銀行攻撃と同じツールとの関連"], "disputed": ["標的数は約20社／約80社と報道が分かれる", "公表された侵害がすべてARTEXによるとは確認されていない", "中国政府の関与を示す証拠はない。カプコンIDの流出（10/22）とは結び付いていない"], "srcs": ["l_gmo", "l_gmo2"], "recorded": "2026-10-24", "ver": "1.5.0"},
+    {"id": "l-dhs", "date": "2026-10-19", "cat": "policy", "title": "米政府機関からDeepSeekの排除を命令", "short": "米 DeepSeek排除", "lead": "連邦の民生機関に、DeepSeekとそれを組み込んだ製品の削除と新規調達の停止を命じた。", "conf": "official", "topic": "leak", "type": "policy", "confirmed": ["FASCSAに基づく排除命令（署名は7/24）", "民間企業には適用されない"], "disputed": ["官報への掲載日は10/19／10/20と報道が分かれる"], "srcs": ["l_dhs", "l_dhs2"], "recorded": "2026-10-24", "ver": "1.5.0"}
+  ]
 }
 </script>
 
@@ -1016,6 +1319,7 @@ const ICON = {
   future: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15l4-5 3 3 6-8"/><path d="M12 5h4v4"/></svg>',
   history: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l2.5 2"/></svg>',
   data: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><ellipse cx="10" cy="5" rx="6" ry="2.3"/><path d="M4 5v10c0 1.3 2.7 2.3 6 2.3s6-1 6-2.3V5M4 10c0 1.3 2.7 2.3 6 2.3s6-1 6-2.3"/></svg>',
+  news: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4.5h9.5v11H5.5A1.5 1.5 0 0 1 4 14z"/><path d="M13.5 7.5H16v6.5a1.5 1.5 0 0 1-1.5 1.5h-1"/><path d="M6.5 7.5h4.5M6.5 10.5h4.5M6.5 13h3"/></svg>',
   // 用途・カテゴリのアイコン（二重符号化：文字＋形）
   star: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M10 2.8l2.2 4.6 5 .7-3.6 3.5.9 5-4.5-2.4-4.5 2.4.9-5L2.8 8.1l5-.7z"/></svg>',
   code: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 6l-4 4 4 4M13 6l4 4-4 4M11 4.5l-2 11"/></svg>',
@@ -1079,6 +1383,13 @@ const Data = {
       if (m.price && Object.keys(m.price).length && (!isNum(m.price.input) || !isNum(m.price.output))) warnings.push(`モデル ${m.id}: price.input / price.output が数値ではありません`);
     });
     if (!d.meta || !d.meta.asOf) warnings.push("meta.asOf（基準日）がありません");
+    // 版と更新履歴：版は MAJOR.MINOR.PATCH、日時は "YYYY-MM-DD HH:MM"。最新の履歴と meta.version が一致すること
+    const SEMVER = /^\d+\.\d+\.\d+$/, cl = d.changelog || [];
+    if (d.meta?.version && !SEMVER.test(d.meta.version)) warnings.push(`meta.version "${d.meta.version}" は 1.2.3 の形式で指定してください`);
+    cl.forEach(c => { if (!SEMVER.test(c.version || "")) warnings.push(`更新履歴: 版 "${c.version}" は 1.2.3 の形式で指定してください`); if (!/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(c.date || "")) warnings.push(`更新履歴 ${c.version}: date は "YYYY-MM-DD HH:MM" で指定してください`); });
+    if (cl.length && d.meta?.version && !cl.some(c => c.version === d.meta.version)) warnings.push(`meta.version ${d.meta.version} の更新履歴がありません`);
+    const NC = new Set((d.newsCats || []).map(c => c.id));
+    (d.news || []).forEach(n => { if (!/^\d{4}-\d{2}-\d{2}$/.test(n.date || "")) warnings.push(`ニュース ${n.id}: date は YYYY-MM-DD で指定してください`); if (NC.size && !NC.has(n.cat)) warnings.push(`ニュース ${n.id}: 未定義の分野 "${n.cat}"`); (n.srcs || []).forEach(x => { if (S.size && !S.has(x)) warnings.push(`ニュース ${n.id}: 未定義の出典 "${x}"`); }); });
     return { errors, warnings };
   },
 
@@ -1087,7 +1398,9 @@ const Data = {
     const out = structuredClone(base);
     const byId = (arr = [], extra = []) => { const map = new Map(arr.map(x => [x.id, x])); extra.forEach(x => map.set(x.id, map.has(x.id) ? deep(map.get(x.id), x) : x)); return [...map.values()]; };
     const deep = (a, b) => { const r = { ...a }; for (const [k, v] of Object.entries(b)) r[k] = v && typeof v === "object" && !Array.isArray(v) && a[k] && typeof a[k] === "object" && !Array.isArray(a[k]) ? deep(a[k], v) : v; return r; };
-    for (const k of ["categories", "benchmarks", "providers", "sources", "models"]) if (add[k]) out[k] = byId(out[k], add[k]);
+    for (const k of ["categories", "benchmarks", "providers", "sources", "models", "news", "newsCats", "newsConf", "leakTypes", "newsTopics"]) if (add[k]) out[k] = byId(out[k], add[k]);
+    // 更新履歴は版番号で突き合わせる（同じ版は上書き、新しい版は追加）
+    if (add.changelog) { const map = new Map((out.changelog || []).map(x => [x.version, x])); add.changelog.forEach(x => map.set(x.version, map.has(x.version) ? deep(map.get(x.version), x) : x)); out.changelog = [...map.values()]; }
     for (const k of ["useCases", "kpis", "history"]) if (add[k]) out[k] = add[k];
     if (add.meta) out.meta = { ...out.meta, ...add.meta };
     if (add.outlook) { const o = out.outlook || {}; out.outlook = { ...o, ...add.outlook }; for (const k of ["upcoming", "trends", "events", "lanes", "confidence"]) if (add.outlook[k]) out.outlook[k] = byId(o[k], add.outlook[k]); }
@@ -1114,7 +1427,8 @@ const Data = {
     });
     return { raw: d, meta: d.meta || {}, pv, bm, src, cats, models, benchmarks: d.benchmarks, providers: d.providers,
       useCases: d.useCases || [], kpis: d.kpis || [], abilities: d.abilities || [], kinds: new Map((d.kinds || []).map(k => [k.id, k])),
-      outlook: { upcoming: [], trends: [], events: [], lanes: [], confidence: [], statuses: {}, ...(d.outlook || {}) }, history: d.history || null };
+      outlook: { upcoming: [], trends: [], events: [], lanes: [], confidence: [], statuses: {}, ...(d.outlook || {}) }, history: d.history || null,
+      news: d.news || [], newsCats: d.newsCats || [], newsConf: d.newsConf || [], leakTypes: d.leakTypes || [], newsTopics: d.newsTopics || [], changelog: d.changelog || [] };
   },
 };
 
@@ -1133,6 +1447,7 @@ const S = {
   guideBench: store.get("guideBench", null),
   profile: store.get("profile", null),
   upcoming: store.get("upcoming", null),
+  news: store.get("news", null), leak: store.get("leak", null), newsMonth: null, newsCat: null, newsConfF: null, newsSet: null, newsSub: null, ver: null,
   source: "seed",
 };
 function visible() {
@@ -1459,6 +1774,8 @@ const Chart = {
 const card = (title, sub, body, opt = {}) => `<section class="card" style="${opt.style || ""}"><div class="card-h"><h2>${title}</h2>${sub ? `<span class="sub">${sub}</span>` : ""}${opt.right ? `<div class="right">${opt.right}</div>` : ""}</div><div class="body">${body}</div>${opt.foot || ""}</section>`;
 const host = id => `<div class="chart" id="${id}"></div>`;
 
+/** ナビのキー割り当て（画面の並び順） */
+const NAV_KEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "^"];
 const VIEWS = [
   { id: "overview", label: "概要", hint: "結論と推奨", lead: "まず結論：用途ごとに何を選ぶべきか", render: renderOverview },
   { id: "models", label: "モデル特徴", hint: "強みと注意点", lead: "モデルごとの得意・不得意と立ち位置", subs: () => [{ id: "matrix", label: "早見表" }, { id: "profile", label: "プロフィール" }], render: renderModels },
@@ -1469,8 +1786,9 @@ const VIEWS = [
   { id: "speed", label: "速度・容量", hint: "速さと文脈長", lead: "応答の速さと、一度に扱える情報量", render: renderSpeed },
   { id: "table", label: "仕様一覧", hint: "全項目の表", lead: "列見出しクリックで並べ替え", render: renderTable },
   { id: "future", label: "次世代・動向", hint: "今後と技術", lead: "旧世代 → 現行 → 次世代の流れと、技術・規制の動向", subs: () => [{ id: "roadmap", label: "系譜と投入予定" }, { id: "diffusion", label: "拡散型LM" }, { id: "capability", label: "能力とコスト" }, { id: "infra", label: "基盤と普及" }, { id: "frontier", label: "新領域" }, { id: "safety", label: "安全・規制" }], render: renderFuture },
+  { id: "news", label: "AIニュース", hint: "話題と事実関係", lead: "最近の話題と、情報漏洩・AI悪用の事実関係。記録は日付と版つきで残す", subs: () => [{ id: "recent", label: "最近の話題", n: S.D.news.filter(n => ymd(S.D.meta.asOf) - ymd(n.date) <= 30 * 864e5).length }, { id: "leak", label: "情報漏洩と中国AI", n: S.D.news.filter(n => n.topic === "leak").length }, { id: "archive", label: "ニュース記録", n: S.D.news.length }], render: renderNews },
   { id: "history", label: "AIの歴史", hint: "誕生から現在", lead: "1943年の形式ニューロンから現在まで。年表と性能の伸び", subs: () => [{ id: "timeline", label: "年表" }, { id: "growth", label: "性能の伸び" }], render: renderHistory },
-  { id: "data", label: "データ管理", hint: "最新化と出典", lead: "JSONの読込／URL自動取得でHTMLを編集せずに最新化", render: renderData },
+  { id: "data", label: "データ管理", hint: "最新化・更新履歴", lead: "JSONの読込／URL自動取得でHTMLを編集せずに最新化。版ごとの変更も確認できる", subs: () => [{ id: "manage", label: "最新化と出典" }, { id: "versions", label: "更新履歴", n: S.D.changelog.length }], render: v => (S.sub.data === "versions" ? renderVersions : renderData)(v) },
 ];
 
 function renderOverview(v) {
@@ -1860,7 +2178,7 @@ function renderData(v) {
   </div>`;
   const tpl = JSON.stringify({ meta: { asOf: "YYYY-MM-DD" }, models: [{ id: "new-model", name: "New Model", provider: "openai", released: "YYYY-MM-DD", tier: "フラッグシップ", openWeights: "no", context: 1000000, maxOutput: 128000, price: { input: 1, output: 5 }, speed: { v: 100, src: "aa" }, scores: { tb4: { v: 60.0, src: "aa", note: "任意" } }, notes: "", sources: ["aa"] }], benchmarks: [{ id: "new_bench", label: "New Bench", short: "NB", category: "agentic", unit: "%", max: 100, desc: "" }] }, null, 2);
   // 出典：参照モデル数の多い順。件数は棒で示す（収まらない分は件数を明示）
-  const srcN = s => D.models.filter(m => Object.values(m.scores).some(x => x.src === s.id) || (m.sources || []).includes(s.id) || m.speedObj?.src === s.id).length;
+  const srcN = s => D.models.filter(m => Object.values(m.scores).some(x => x.src === s.id) || (m.sources || []).includes(s.id) || m.speedObj?.src === s.id).length + [...D.news, ...D.outlook.upcoming, ...D.outlook.trends].filter(x => (x.srcs || []).includes(s.id)).length;
   const srcArr = [...D.src.values()].map(s => ({ s, n: srcN(s) })).sort((a, b) => b.n - a.n), srcMax = Math.max(1, ...srcArr.map(x => x.n));
   // 画面の見本は「1要素＝1行」に詰めて全体を見渡せるようにする（ダウンロードされるテンプレートは整形済み）
   const tplObj = JSON.parse(tpl), tplView = "{\n" + Object.entries(tplObj).map(([k, val]) => Array.isArray(val) ? `  "${k}": [\n${val.map(x => "    " + JSON.stringify(x).replace(/,"/g, ', "').replace(/":/g, '": ')).join(",\n")}\n  ]` : `  "${k}": ${JSON.stringify(val).replace(/":/g, '": ')}`).join(",\n") + "\n}";
@@ -1868,7 +2186,7 @@ function renderData(v) {
   // 左＝操作（取り込み → 書式の見本）、右＝現状（データの状態 → 出典）。各列とも上は内容の高さ、下が残りを使う
   v.style.gridTemplateColumns = "minmax(0,1fr) minmax(0,1.25fr)";
   v.innerHTML = `<div style="display:grid;grid-template-rows:auto minmax(0,1fr);gap:12px;min-height:0">${card("データを最新化", "HTMLを編集せずに差し替え・追記", imp, { style: "flex:none" })}${card("追記用JSONの書式", "差分のみ・id一致で上書き", `<pre class="code">${esc(tplView)}</pre>`)}</div>`
-    + `<div style="display:grid;grid-template-rows:auto minmax(0,1fr);gap:12px;min-height:0">${card("現在のデータ", "", stat, { style: "flex:none" })}${card("出典", `${D.src.size}件・参照モデル数の多い順`, srcs)}</div>`;
+    + `<div style="display:grid;grid-template-rows:auto minmax(0,1fr);gap:12px;min-height:0">${card("現在のデータ", "", stat, { style: "flex:none" })}${card("出典", `${D.src.size}件・参照数（モデル・ニュース・見通し）の多い順`, srcs)}</div>`;
   fitRows($("#srcWrap"), 22, 30, n => `ほか ${n} 件（「現在のデータを書き出し」で全件）`);
   // JSON見本：1要素1行のまま、幅に入らない行は区切り（, ）の位置で「…」に置き換えて閉じる（行の途中で切らない）
   const pre = v.querySelector("pre.code");
@@ -2280,6 +2598,8 @@ function timeScale(t0, t1, x0, x1, split, frac) {
   const ticks = () => {
     const out = [], yr = 365.25 * 864e5;
     const seg = (a, b, xa, xb) => { const pxYear = (xb - xa) / ((b - a) / yr || 1);
+      // 1か月が十分に広い（直近30日など）ときは週の目盛り：月初＝「n月」、8・15・22日＝「m/d」
+      if (pxYear > 3000) { const d = new Date(a); d.setUTCDate(1); for (; d.getTime() <= b; d.setUTCMonth(d.getUTCMonth() + 1)) for (const day of [1, 8, 15, 22]) { const t = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), day), m = d.getUTCMonth() + 1; if (t >= a && t <= b) out.push({ t, label: day === 1 ? `${m}月` : `${String(m).padStart(2, "0")}/${String(day).padStart(2, "0")}`, major: day === 1 }); } return; }
       const step = pxYear > 400 ? 1 : pxYear > 130 ? 3 : pxYear > 40 ? 12 : pxYear > 18 ? 24 : pxYear > 9 ? 60 : pxYear > 4 ? 120 : 240; // 月数
       const d = new Date(a); d.setUTCDate(1); d.setUTCMonth(Math.ceil(d.getUTCMonth() / Math.min(step, 12)) * Math.min(step, 12));
       if (step >= 12) { d.setUTCMonth(0); let y = d.getUTCFullYear(); if (d.getTime() < a) y++; const sy = step / 12; y = Math.ceil(y / sy) * sy; for (; ; y += sy) { const t = Date.UTC(y, 0, 1); if (t > b) break; out.push({ t, label: String(y), major: true }); } }
@@ -2302,7 +2622,7 @@ Chart.events = function (host, events, lanes, opt = {}) {
   if (opt.series) lanes = [...lanes, { id: "__series", label: opt.series.label }];
   const L = clamp(Math.max(...lanes.map(l => measure(l.label, 11, 600))) + 14, 56, 110), R = 12, eraH = opt.eras ? 22 : 0, T = 4 + eraH, Bm = 20, laneH = (H - T - Bm) / lanes.length;
   const sc = timeScale(t0, t1, L, W - R, opt.split, opt.frac), X = sc.X;
-  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(opt.title || "年表")}">`;
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(opt.title || "年表")}"><defs><pattern id="ev-hatch" width="3" height="3" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="1.4" height="3" fill="var(--ink)"/></pattern></defs>`;
   (opt.eras || []).forEach((e, i) => {
     const a = X(Math.max(t0, yearT(e.from))), b = X(Math.min(t1, yearT(e.to))), win = e.kind === "winter";
     const fill = win ? "url(#era-w)" : e.kind === "boom" ? "color-mix(in oklab,var(--seq-hi) 9%,transparent)" : "transparent";
@@ -2311,7 +2631,9 @@ Chart.events = function (host, events, lanes, opt = {}) {
     s += `${i ? "" : `<defs><pattern id="era-w" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="2" height="6" fill="var(--axis)" opacity=".35"/></pattern></defs>`}<g data-t="${tip}"><rect x="${a}" y="${T}" width="${Math.max(1, b - a)}" height="${H - T - Bm}" fill="${fill}"/>
       <rect x="${a}" y="2" width="${Math.max(1, b - a - 1)}" height="${eraH - 6}" rx="3" fill="${win ? "var(--surface-2)" : "var(--surface-3)"}"/>${lbl ? `<text x="${a + 4}" y="${eraH - 8}" style="font-size:10.5px;font-weight:600;fill:${win ? "var(--muted)" : "var(--text-2)"}">${esc(lbl)}</text>` : ""}</g>`;
   });
-  sc.ticks().forEach(k => { const x = X(k.t); s += `<line class="gl" x1="${x}" x2="${x}" y1="${T}" y2="${H - Bm}"${k.major ? ' style="stroke:var(--axis)"' : ""}/>${x + 30 < W - R ? `<text class="ax" x="${x + 3}" y="${H - 6}">${esc(k.label)}</text>` : ""}`; });
+  let tickEnd = -1e9;   // 目盛りの文字は左から順に置き、右端の目盛りは右寄せ（直前の文字と重なるときは省く）
+  sc.ticks().filter(k => k.t >= t0 && k.t <= t1).forEach(k => { const x = X(k.t), w = measure(k.label, 10.5), right = x + 30 >= W - R, a = right ? x - 3 - w : x + 3, show = a > tickEnd + 6;
+    s += `<line class="gl" x1="${x}" x2="${x}" y1="${T}" y2="${H - Bm}"${k.major ? ' style="stroke:var(--axis)"' : ""}/>${show ? `<text class="ax" x="${right ? x - 3 : x + 3}" y="${H - 6}"${right ? ' text-anchor="end"' : ""}>${esc(k.label)}</text>` : ""}`; if (show) tickEnd = a + w; });
   if (sc.splitX != null) s += `<text class="ax" x="${sc.splitX}" y="${T + 10}" text-anchor="middle" style="fill:var(--text-2)">≈</text><text class="ax" x="${sc.splitX - 4}" y="${H - Bm - 4}" text-anchor="end">← 圧縮</text>`;
   const ax = asOf <= t1 ? X(asOf) : null;
   if (ax != null) s += `<text class="ax" x="${ax - 4}" y="${T + 10}" text-anchor="end" style="fill:var(--text);font-weight:600">今日</text>`;
@@ -2332,8 +2654,11 @@ Chart.events = function (host, events, lanes, opt = {}) {
       if (f && l) s += `<text class="lb2" x="${X(yearT(f[1])) + 8}" y="${Math.min(Y(f[2]) + 16, y0 + laneH - 2)}">${esc(f[0])} ${esc(fmt.big(f[2], g.unit))}</text><text class="lb2" x="${X(yearT(l[1])) - 10}" y="${Y(l[2]) - 6}" text-anchor="end">${esc(l[0])} ${esc(fmt.big(l[2], g.unit))}</text>`;
       return;
     }
+    if (opt.focus?.lane === ln.id) s += `<rect x="${X(Math.max(t0, opt.focus.from))}" y="${y0 + 2}" width="${Math.max(0, X(Math.min(t1, asOf)) - X(Math.max(t0, opt.focus.from)))}" height="${laneH - 4}" rx="4" fill="color-mix(in oklab,var(--seq-hi) 12%,transparent)"/>`;
     s += `<text class="lb2" x="0" y="${cy + 4}" style="fill:var(--text);font-weight:600">${esc(ln.label)}</text>${i ? `<line class="gl" x1="0" x2="${W - R}" y1="${y0}" y2="${y0}"/>` : ""}<line x1="${L}" x2="${W - R}" y1="${cy}" y2="${cy}" stroke="var(--border-strong)"/>`;
-    const evs = events.filter(e => e.lane === ln.id).sort((a, b) => a.t - b.t);
+    let evs = events.filter(e => e.lane === ln.id).sort((a, b) => a.t - b.t);
+    if (opt.cluster) { const g = []; evs.forEach(e => { const last = g[g.length - 1]; if (last && !e.sel && !last.items.some(q => q.sel) && X(e.t) - X(last.items[last.items.length - 1].t) < opt.cluster) last.items.push(e); else g.push({ items: [e] }); });
+      evs = g.map(({ items }) => items.length === 1 ? items[0] : { id: items.map(e => e.id).join(","), t: items[Math.floor(items.length / 2)].t, when: `${items[0].when}〜${items[items.length - 1].when.slice(5)}`, title: `${items.length}件`, detail: items.map(e => "・" + e.title).join(" "), lane: ln.id, conf: items.every(e => e.conf === items[0].conf) ? items[0].conf : "report", sel: items.some(e => e.sel), n: items.length }); }
     evs.forEach(e => placed.push({ x: X(e.t) - 6, y: cy - 6, w: 12, h: 12 }));
     evs.forEach(e => {
       const x = X(e.t), w = measure(e.title, 11) + 4, h = 13, fut = e.t > asOf;
@@ -2350,7 +2675,8 @@ Chart.events = function (host, events, lanes, opt = {}) {
       if (!pos && !opt.hideOverlap) pos = cands.reduce((m, c) => cost(c) < cost(m) ? c : m, cands[0] || [x, cy - 9 - h]);
       if (pos) { placed.push({ x: pos[0], y: pos[1], w, h }); labels.push({ x: pos[0], y: pos[1], w, h }); leaders.push(...lead(pos)); }
       const tip = Tip.add(`<div class="tt">${esc(e.title)}</div><div class="tm">${esc(e.when || "")}${fut ? "（予定）" : ""}</div><div class="tm" style="margin-top:4px">${esc(e.detail || "")}</div>`);
-      s += `<g data-t="${tip}"><circle class="hit" cx="${x}" cy="${cy}" r="9"/><circle cx="${x}" cy="${cy}" r="${opt.small ? 4 : 5.5}" fill="${fut ? "var(--surface)" : "var(--ink)"}" stroke="var(--ink)" stroke-width="2"/>
+      const mk = e.conf ? CONF_STYLE[e.conf] : null, fill = fut || mk === "outline" ? "var(--surface)" : mk === "hatch" ? "url(#ev-hatch)" : "var(--ink)";
+      s += `<g data-t="${tip}"${opt.pick ? ` data-news="${esc(e.id)}" style="cursor:pointer"` : ""}><circle class="hit" cx="${x}" cy="${cy}" r="9"/>${e.sel ? `<circle cx="${x}" cy="${cy}" r="9" fill="none" stroke="var(--ink)" stroke-width="2"/>` : ""}${e.n ? `<circle cx="${x + 3}" cy="${cy - 3}" r="5.5" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.5"/>` : ""}<circle cx="${x}" cy="${cy}" r="${opt.small ? 4 : 5.5}" fill="${fill}" stroke="var(--ink)" stroke-width="2"${mk === "outline" ? ' stroke-dasharray="2.5 2"' : ""}/>
         ${pos ? (() => { // 引き出し線：点から縦にラベルの段まで伸ばし、ラベルの端（または中央）へ短く横に接続する
           const ly = pos[1] < cy ? pos[1] + h - 1 : pos[1] + 1, inside = x >= pos[0] - 1 && x <= pos[0] + w + 1, ex = inside ? x : x < pos[0] ? pos[0] : pos[0] + w;
           leadDefs.push({ x, cy, ly, ex, inside, own: { x: pos[0], y: pos[1], w, h } });
@@ -2575,6 +2901,244 @@ function renderRoadmap(v) {
 }
 
 /* ==================================================================
+   AIニュース：最近の話題・情報漏洩の事実関係・ニュース記録
+   一覧（左）＋選択中の詳細（右）は「系譜と投入予定」と同じ型。
+   記事の確度＝塗り（実線＝確認済み・斜線＝報道・主張・破線＝未確認：系譜と同じ）
+   事実の判定＝色と形（✓ 確認・△ 主張・✕ 否定・食い違い）。2つは別物として凡例を分ける
+   ================================================================== */
+const newsCat = id => S.D.newsCats.find(c => c.id === id) || { id, label: id, icon: "doc" };
+const newsConf = id => S.D.newsConf.find(c => c.id === id) || { id, label: id, desc: "" };
+const newsSorted = () => [...S.D.news].sort((a, b) => b.date.localeCompare(a.date) || a.id.localeCompare(b.id));
+const md = s => s.slice(5).replace("-", "/");
+const FACT = [["ok", "✓", "確認", "確認されている事実", "confirmed"], ["rp", "△", "主張", "報道・主張（未確認を含む）", "alleged"], ["ng", "✕", "否定・食い違い", "否定・反論・食い違い", "disputed"]];
+const factN = ns => FACT.map(f => [].concat(ns).reduce((a, n) => a + (n?.[f[4]]?.length || 0), 0));
+/** 事実の判定の件数：色つきの記号＋件数（色だけに頼らず形と数でも読める） */
+const factTally = ns => { const c = factN(ns); return c.some(Boolean) ? `<span class="ft" aria-label="${FACT.map((f, i) => `${f[2]} ${c[i]}件`).join("・")}">${FACT.map((f, i) => c[i] ? `<span class="fk ${f[0]}">${f[1]}</span><b class="num">${c[i]}</b>` : "").join("")}</span>` : ""; };
+const confLegend = () => `<span class="legend"><span class="lgt">記事の確度</span>${S.D.newsConf.map(c => `<span title="${esc(c.desc)}">${confKey(c.id)}${esc(c.label)}</span>`).join("")}</span>`;
+const factLegend = () => `<span class="legend"><span class="lgt">事実の判定</span>${FACT.map(f => `<span><span class="fk ${f[0]}">${f[1]}</span>${f[2]}</span>`).join("")}</span>`;
+/** ニュース1行：日付・分野（全文）・見出し・確度・記録した日と版（同じ版が続く行は日付のみ）・押せる印 */
+function newsRow(n, sel, opt = {}) {
+  const c = newsCat(n.cat), cf = newsConf(n.conf), lt = opt.full && S.D.leakTypes.find(t => t.id === n.type);
+  const rec = opt.rec ? `<span class="nrc num">記録 ${esc(md(n.recorded || ""))}${opt.showVer ? `・v${esc(n.ver)}` : ""}</span>` : "";
+  return `<button class="li nrow${opt.full ? " full" : ""}" data-news="${esc(n.id)}" aria-current="${n.id === sel}" title="${esc(cf.label)}：${esc(cf.desc)}"><span class="nd num">${esc(opt.full ? fmt.date(n.date) : md(n.date))}</span><span class="nc">${lt ? esc(lt.short) : `${ico(c.icon)}${esc(c.label)}`}</span><span class="ntl">${esc(n.title)}</span>${opt.full ? factTally(n) || `<span class="ft muted">—</span>` : ""}${rec}${confKey(n.conf)}<span class="chev">›</span></button>`;
+}
+/** 確認されている事実／報道・主張／否定・食い違い の3段（色と形で区別） */
+function factBlocks(n) {
+  return FACT.map(([k, mark, , title, key]) => n[key]?.length ? `<div class="fb ${k}"><div class="sec-h"><span class="fk ${k}">${mark}</span>${title}</div><ul class="plain">${n[key].map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>` : "").join("");
+}
+/** 同じ分野（情報漏洩は同じ種類）の記事を、選択中の前後で最大6件 */
+function neighbors(n, pool) {
+  const same = pool.filter(x => (n.topic === "leak" ? x.type === n.type : x.cat === n.cat)).sort((a, b) => a.date.localeCompare(b.date) || a.id.localeCompare(b.id));
+  const i = same.findIndex(x => x.id === n.id), a = Math.max(0, Math.min(i - 5, same.length - 10));
+  return same.slice(a, a + 10);
+}
+/** この話題の前後：時間の線上に同じ分野の記事を並べ、選択中を強調（点は押せる） */
+function miniLane(n, xs) {
+  if (xs.length < 2) return "";
+  const t = xs.map(x => ymd(x.date)), t0 = Math.min(...t), t1 = Math.max(...t), px = t.map(v => 4 + (v - t0) / (t1 - t0 || 1) * 92);
+  for (let i = 1; i < px.length; i++) px[i] = Math.max(px[i], px[i - 1] + 5);   // 近い日付の点が重ならないよう最小間隔を確保し、はみ出せば全体を縮める
+  const k = px[px.length - 1] > 96 ? 92 / (px[px.length - 1] - 4) : 1; for (let i = 0; i < px.length; i++) px[i] = 4 + (px[i] - 4) * k;
+  return `<div class="mlane"><i class="ml"></i>${xs.map((x, i) => `<button class="md${x.id === n.id ? " on" : ""}" data-news="${esc(x.id)}" style="left:${px[i].toFixed(1)}%" aria-label="${esc(x.title)}"></button>`).join("")}<span class="mla num" style="left:0">${esc(fmt.date(xs[0].date))}</span><span class="mla num" style="right:0">${esc(fmt.date(xs[xs.length - 1].date))}</span></div>`;
+}
+/** 選択中のニュースの詳細：結論（要点）→ 根拠（数値・事実）→ 意味すること → 前後の流れ・関連 → 出典・記録した版 */
+function newsDetail(n, pool) {
+  if (!n) return `<div class="empty">該当するニュースはありません</div>`;
+  const c = newsCat(n.cat), cf = newsConf(n.conf), lt = n.type && S.D.leakTypes.find(t => t.id === n.type);
+  const nb = neighbors(n, pool || S.D.news), rel = nb.filter(x => x.id !== n.id).reverse();
+  return `<div class="stack" id="nwDetail" style="position:absolute;inset:0;overflow:hidden;gap:9px">
+    <div class="nchips"><span class="kb num">${esc(fmt.date(n.date))}</span><span class="kb">${ico(c.icon)}${esc(c.label)}</span>${lt ? `<span class="kb">${esc(lt.label)}</span>` : ""}<span class="kb" title="${esc(cf.desc)}">${confKey(n.conf)}記事の確度：${esc(cf.label)}</span></div>
+    <h3 class="nt">${esc(n.title)}</h3>
+    <div class="impl"><span>${esc(n.lead)}</span></div>
+    ${n.stats?.length ? `<div class="stats nstats">${n.stats.map(x => `<div class="stat"><b>${esc(x.v)}</b><span>${esc(x.l)}</span></div>`).join("")}</div>` : ""}
+    ${n.confirmed || n.alleged || n.disputed ? factBlocks(n) : n.facts?.length ? `<ul class="pros">${n.facts.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}
+    ${n.impl ? `<div class="nimpl"><div class="sec-h">意味すること</div><p class="txt t2">${esc(n.impl)}</p></div>` : ""}
+    ${rel.length ? `<div class="nrel"><div class="sec-h">この話題の前後（${esc(lt ? lt.short : c.label)}・${nb.length}件）</div>${miniLane(n, nb)}<div class="rels">${rel.map(x => `<button class="li rel" data-news="${esc(x.id)}"><span class="nd num">${esc(fmt.date(x.date))}</span><span class="ntl">${esc(x.title)}</span>${confKey(x.conf)}<span class="chev">›</span></button>`).join("")}</div></div>` : ""}
+    <div class="nfoot">${srcLinks(n.srcs)}<div class="nrec">記録 <b class="num">${esc(fmt.date(n.recorded || ""))}</b>・<button class="go" data-ver="${esc(n.ver || "")}">v${esc(n.ver || "—")} の更新内容</button></div></div>
+  </div>`;
+}
+/** 縦一覧が枠に収まらなければ、選択中以外の行を末尾から畳み、件数と全件を見る方法を示す（スクロールさせない） */
+function foldTail(box, rowSel, more) {
+  if (!box || box.scrollHeight <= box.clientHeight + 1) return 0;
+  box.insertAdjacentHTML("beforeend", `<div class="muted more" style="font-size:11px;padding:3px 8px"></div>`);
+  const tag = box.lastElementChild; let cut = 0;
+  const lone = () => box.querySelectorAll(".li-g").forEach(g => { const nx = g.nextElementSibling; if (!nx || nx.classList.contains("li-g") || nx === tag) g.remove(); });   // 行がなくなった見出しは消す
+  for (const r of [...box.querySelectorAll(rowSel)].reverse()) { if (box.scrollHeight <= box.clientHeight + 1) break; if (r.getAttribute("aria-current") === "true") continue; r.remove(); cut++; tag.textContent = more(cut); lone(); }
+  return cut;
+}
+/** 詳細が収まらなければ、指定の順に後ろから1つずつ省き、空になった塊は消す（詳細欄そのものは消さない） */
+function fitDetail(id = "nwDetail", sels = [".rels .rel", ".nrel .mlane", ".fb.ng li", ".fb.rp li", ".pros li", ".nstats .stat", ".nimpl", ".fb.ok li"]) {
+  const d = $("#" + id); if (!d) return;
+  for (const sel of sels) for (const el of [...d.querySelectorAll(sel)].reverse()) { if (d.scrollHeight <= d.clientHeight + 1) return; const box = el.parentElement; el.remove(); if (box && !box.children.length) (box.closest(".fb,.nstats,.cg,.nrel,.vnews") || box).remove(); else if (box?.classList.contains("rels") && !box.children.length) box.closest(".nrel")?.remove(); }
+  d.querySelectorAll(".nrel,.vnews").forEach(r => { if (!r.querySelector(".rel")) r.remove(); });   // 行が残らない見出しは消す
+}
+/** 年表の点・一覧・関連・前後の点：どれを押しても同じ選択に切り替わる（まとめた点は、その数件に一覧を絞る） */
+function bindNews(v, key) {
+  v.querySelectorAll("[data-news]").forEach(el => el.onclick = e => { e.stopPropagation(); const ids = el.dataset.news.split(","); S.newsSet = ids.length > 1 ? ids : S.newsSet; S[key] = ids[0]; store.set(key, ids[0]); Tip.hide(); render(); });
+  v.querySelectorAll("[data-ver]").forEach(el => el.onclick = () => { if (!el.dataset.ver) return; S.ver = el.dataset.ver; go("data", "versions"); });
+  v.querySelectorAll("[data-unset]").forEach(el => el.onclick = () => { S.newsSet = null; S.newsCat = null; S.newsConfF = null; render(); });
+}
+const evOf = (ns, lane, sel) => ns.map(n => ({ id: n.id, t: ymd(n.date), when: fmt.date(n.date), title: n.short || n.title, detail: n.lead, lane: lane(n), conf: n.conf, sel: n.id === sel }));
+/** 直近10日とその前の20日を比べ、最も増えた分野（見出しの結論と年表の強調帯で共用） */
+function newsSurge() {
+  const D = S.D, asOf = ymd(D.meta.asOf), rec = D.news.filter(n => asOf - ymd(n.date) <= 30 * 864e5), r10 = rec.filter(n => asOf - ymd(n.date) <= 10 * 864e5);
+  return D.newsCats.map(c => { const a = r10.filter(n => n.cat === c.id).length, p = rec.filter(n => n.cat === c.id).length - a; return { c, a, p, g: a - p / 2 }; }).sort((x, y) => y.g - x.g || y.a - x.a)[0];
+}
+const setNote = (n, label) => `<span class="fset">${esc(label)} ${n}件に絞り込み中 <button class="go" data-unset="1">解除</button></span>`;
+
+function renderNews(v) {
+  const sub = S.sub.news || "recent";
+  if (sub === "leak") return renderLeak(v);
+  const D = S.D, all = newsSorted(), asOf = ymd(D.meta.asOf), DAY = 864e5, isArc = sub === "archive";
+  if (S.newsSub !== sub) { S.newsSet = null; S.newsSub = sub; }
+  // 最近の話題＝基準日から30日以内。記録＝全件（月の棒・分野・確度で絞り込み）
+  const recent = all.filter(n => asOf - ymd(n.date) <= 30 * DAY);
+  const ms0 = all.map(n => n.date.slice(0, 7)).sort(), months = []; if (ms0.length) for (let [y, m] = ms0[0].split("-").map(Number); `${y}-${String(m).padStart(2, "0")}` <= ms0[ms0.length - 1]; m = m === 12 ? (y++, 1) : m + 1) months.push(`${y}-${String(m).padStart(2, "0")}`);
+  if (isArc && S.newsMonth && !months.includes(S.newsMonth)) S.newsMonth = null;
+  const catOk = n => (!S.newsCat || n.cat === S.newsCat) && (!S.newsConfF || n.conf === S.newsConfF);
+  let list = isArc ? all.filter(n => (!S.newsMonth || n.date.startsWith(S.newsMonth)) && catOk(n)) : recent;
+  if (S.newsSet) list = list.filter(n => S.newsSet.includes(n.id));
+  if (!list.some(n => n.id === S.news)) S.news = list[0]?.id;
+  const sel = list.find(n => n.id === S.news);
+  v.style.gridTemplateColumns = "minmax(0,1.45fr) minmax(0,1fr)";
+  v.style.gridTemplateRows = "minmax(0,1fr)";
+  // 一覧：記録は版の見出しで区切らず、月の見出し＋各行に記録日（版が前の行と変わるときだけ版名）
+  let pv = null;
+  const row = n => { const r = newsRow(n, S.news, { rec: isArc, showVer: n.ver !== pv }); pv = n.ver; return r; };
+  const rows = isArc
+    ? months.slice().reverse().filter(mo => list.some(n => n.date.startsWith(mo))).map(mo => { pv = null; return `<div class="li-g">${mo.replace("-", "年").replace(/年0/, "年")}月・${list.filter(n => n.date.startsWith(mo)).length}件</div>${list.filter(n => n.date.startsWith(mo)).map(row).join("")}`; }).join("")
+    : list.map(n => newsRow(n, S.news)).join("");
+  const chip = (k, val, label, n, ico2 = "") => `<button class="fchip" data-${k}="${esc(val)}" aria-pressed="${(k === "cat" ? S.newsCat : S.newsConfF) === val}">${ico2}${esc(label)}<b class="num">${n}</b>${(k === "cat" ? S.newsCat : S.newsConfF) === val ? '<span aria-hidden="true">✕</span>' : ""}</button>`;
+  const base = all.filter(n => !S.newsMonth || n.date.startsWith(S.newsMonth));
+  const filters = isArc ? `<div class="fchips">${D.newsCats.map(c => chip("cat", c.id, c.label, base.filter(n => n.cat === c.id).length, ico(c.icon))).join("")}<span class="fsep"></span>${D.newsConf.map(c => chip("conf", c.id, c.label, base.filter(n => n.conf === c.id).length, confKey(c.id))).join("")}</div>` : "";
+  const cur = [S.newsMonth && S.newsMonth.replace("-", "年").replace(/年0/, "年") + "月", S.newsCat && newsCat(S.newsCat).label, S.newsConfF && newsConf(S.newsConfF).label].filter(Boolean);
+  const top = isArc
+    ? card("月別の記録件数", (S.newsCat || S.newsConfF) ? "数字＝該当／全体・濃い棒＝該当・棒を押すとその月に絞り込み" : S.newsMonth ? "同じ棒をもう一度押すと解除" : "棒を押すとその月に絞り込み", `<div class="mbars" id="mbars"></div>${filters}`, { style: "flex:none" })
+    : card(`直近30日の話題（分野別・${recent.length}件）`, "青帯＝直近10日で増えた分野", host("ch-news"), { style: "flex:none;height:47%", right: confLegend() });
+  const listSub = S.newsSet ? setNote(list.length, "年表の") : isArc ? (cur.length ? `${cur.join("・")}で絞り込み中 <button class="go" data-unset="1">すべて解除</button>` : "発生日の新しい順・各行に記録した日") : "新しい順・押すと右に詳細";
+  const left = `<div style="display:flex;flex-direction:column;gap:12px;min-height:0">${top}
+    ${card(isArc ? `ニュース記録（${list.length}件）` : "話題の一覧", listSub, `<div class="nlist" id="nlist">${rows || `<div class="empty">該当する記録はありません</div>`}</div>`, { style: "flex:1;min-height:0", right: isArc ? confLegend() : "" })}</div>`;
+  v.innerHTML = left + card(sel ? "選択中の話題" : "話題", sel ? `${newsCat(sel.cat).label}・${fmt.date(sel.date)}` : "", newsDetail(sel, all));
+  if (isArc) monthBars($("#mbars"), all, months, all.filter(catOk));   // 月の棒は分野・確度の絞り込みだけを反映（月の絞り込みでほかの月を0にしない）
+  else Chart.events($("#ch-news"), evOf(recent, n => n.cat, S.news), D.newsCats.filter(c => recent.some(n => n.cat === c.id)).map(c => ({ id: c.id, label: c.label })),
+    { from: asOf - 31 * DAY, to: asOf + 2 * DAY, hideOverlap: true, pick: true, cluster: 15, title: "直近30日の話題", focus: { lane: newsSurge()?.c.id, from: asOf - 10 * DAY } });
+  foldTail($("#nlist"), ".nrow", k => `ほか ${k} 件（${isArc ? "月・分野で絞り込むと全件表示" : "古い順に省略・全件は「ニュース記録」"}）`);
+  fitDetail(); bindNews(v, "news");
+  v.querySelectorAll("[data-mo]").forEach(el => el.onclick = () => { S.newsMonth = S.newsMonth === el.dataset.mo ? null : el.dataset.mo; S.news = null; render(); });
+  v.querySelectorAll("[data-cat]").forEach(el => el.onclick = () => { S.newsCat = S.newsCat === el.dataset.cat ? null : el.dataset.cat; S.news = null; render(); });
+  v.querySelectorAll("[data-conf]").forEach(el => el.onclick = () => { S.newsConfF = S.newsConfF === el.dataset.conf ? null : el.dataset.conf; S.news = null; render(); });
+}
+/** 月別の件数：共通の基線から伸びる棒（0件の月は「0」）。絞り込み中は該当分を濃く、全体を薄く重ねる。年は下段に1回だけ */
+function monthBars(box, all, months, shown) {
+  const tot = mo => all.filter(n => n.date.startsWith(mo)).length, hit = mo => shown.filter(n => n.date.startsWith(mo)).length;
+  const mx = Math.max(1, ...months.map(tot)), part = S.newsCat || S.newsConfF;
+  box.innerHTML = months.map((mo, i) => { const t = tot(mo), h = part ? hit(mo) : t, on = S.newsMonth === mo, y = mo.slice(0, 4), first = i === 0 || mo.endsWith("-01");
+    return `<button class="mb" data-mo="${mo}" aria-pressed="${on}" ${t ? "" : "disabled"} title="${y}年${+mo.slice(5)}月：${t}件${part ? `（うち該当 ${h}件）` : ""}"><span class="mbv num">${part ? `${h}<small>/${t}</small>` : t}</span><span class="mbt">${part ? `<i class="all" style="height:${t / mx * 100}%"></i>` : ""}<i style="height:${h / mx * 100}%"></i></span><span class="mbl num">${+mo.slice(5)}</span><span class="mby">${first ? y + "年" : ""}</span></button>`; }).join("");
+}
+
+/** 情報漏洩×中国AI：種類別の時系列 → 事実関係の一覧 → 結論（主張×根拠）と選択中の詳細 */
+function renderLeak(v) {
+  const D = S.D, T = D.newsTopics.find(t => t.id === "leak") || {}, all = newsSorted().filter(n => n.topic === "leak");
+  if (S.newsSub !== "leak") { S.newsSet = null; S.newsSub = "leak"; }
+  const ns = S.newsSet ? all.filter(n => S.newsSet.includes(n.id)) : all;
+  if (!ns.some(n => n.id === S.leak)) S.leak = ns[0]?.id;
+  const sel = ns.find(n => n.id === S.leak);
+  v.style.gridTemplateColumns = "minmax(0,1.35fr) minmax(0,1fr)";
+  v.style.gridTemplateRows = "minmax(0,1fr)";
+  const byId = id => all.find(n => n.id === id);
+  // 結論：4つの主張それぞれに、根拠記事の事実判定の件数と、根拠記事へのチップ（押すと時系列・一覧・詳細が同時に切り替わる）
+  const verdict = `<div class="verdict">${(T.verdict || []).map(x => { const refs = (x.refs || []).map(byId).filter(Boolean), shown = refs.slice(0, 3), rest = refs.slice(3);
+      return `<div class="vd ${esc(x.k)}"><div class="vclaim"><span class="vtl2">噂・主張</span>${esc(x.claim || "")}</div>
+        <div class="vjudge"><span class="vtl2">判定</span><span class="fk ${esc(x.k)}">${x.k === "ok" ? "✓" : x.k === "ng" ? "✕" : "△"}</span><b>${esc(x.t)}</b></div>
+        <span class="vdd">${esc(x.d)}</span>
+        <div class="vrefs"><span class="vtl2">根拠 ${refs.length}件</span>${shown.map(n => `<button class="vref${n.id === S.leak ? " on" : ""}" data-news="${esc(n.id)}">${esc(n.short || n.title)}<span class="chev">›</span></button>`).join("")}${rest.length ? `<button class="vref more" data-news="${esc(refs.map(n => n.id).join(","))}" title="根拠の${refs.length}件に一覧を絞り込む">ほか ${rest.length}件<span class="chev">›</span></button>` : ""}</div></div>`; }).join("")}</div>
+    ${T.actions?.length ? `<div class="aflow"><span class="lgt">企業の対策</span>${(T.actShort || T.actions).map((a, i) => `<span class="af" title="${esc(T.actions[i] || a)}"><i class="num">${i + 1}</i>${esc(a)}</span>`).join('<span class="ar" aria-hidden="true">→</span>')}</div>` : ""}`;
+  const rows = `<div class="nhead"><span>日付</span><span>種類</span><span>出来事</span><span>事実の判定（件）</span><span>確度</span></div>` + ns.map(n => newsRow(n, S.leak, { full: true })).join("");
+  v.innerHTML = `<div style="display:flex;flex-direction:column;gap:12px;min-height:0">
+      ${card("時系列：何が起きたか（種類別）", "点・「n件」を押すと詳細", host("ch-leak"), { style: "flex:none;height:42%", right: confLegend() })}
+      ${card(`事実関係の一覧（${ns.length}件）`, S.newsSet ? setNote(ns.length, "選んだ") : "新しい順・押すと右に詳細", `<div class="nlist" id="nlist">${rows}</div>`, { style: "flex:1;min-height:0", right: factLegend() })}</div>
+    <div style="display:flex;flex-direction:column;gap:12px;min-height:0">
+      ${card("結論：確かなこと・言い過ぎなこと", T.asOf ? `${fmt.date(T.asOf)}時点・チップで根拠へ` : "", `<div class="stack" id="vdBox" style="gap:9px">${verdict}</div>`, { style: "flex:none" })}
+      ${card("選択中の出来事", sel ? fmt.date(sel.date) : "", newsDetail(sel, all), { style: "flex:1;min-height:0" })}</div>`;
+  const types = D.leakTypes.filter(t => all.some(n => n.type === t.id)), t0 = Math.min(...all.map(n => ymd(n.date)));
+  Chart.events($("#ch-leak"), evOf(all, n => n.type, S.leak), types.map(t => ({ id: t.id, label: t.short || t.label })), { from: Date.UTC(new Date(t0).getUTCFullYear(), new Date(t0).getUTCMonth() - 1, 1), pad: 1, hideOverlap: true, pick: true, cluster: 15, title: "情報漏洩とAI悪用の時系列" });
+  foldTail($("#nlist"), ".nrow", k => `ほか ${k} 件（「ニュース記録」で全件）`);
+  const det = $("#nwDetail");
+  if (det && det.clientHeight < 300) v.querySelectorAll("#vdBox .vrefs").forEach(r => { const cs = [...r.querySelectorAll(".vref:not(.more)")]; if (cs.length < 3) return; const drop = cs.slice(2).filter(c => !c.classList.contains("on")); drop.forEach(c => c.remove());
+    const all = (r.querySelector(".vref.more")?.dataset.news || cs.map(c => c.dataset.news).join(",")).split(","), k = all.length - r.querySelectorAll(".vref:not(.more)").length; let mo = r.querySelector(".vref.more");
+    if (k <= 0) { mo?.remove(); return; }
+    if (!mo) { r.insertAdjacentHTML("beforeend", `<button class="vref more" data-news="${esc(all.join(","))}">ほか ${k}件<span class="chev">›</span></button>`); } else mo.firstChild.textContent = `ほか ${k}件`; });
+  fitDetail(); bindNews(v, "leak");
+}
+
+/* ==================================================================
+   更新履歴（版の管理）：MAJOR＝データ形式の非互換変更／MINOR＝画面・機能の追加／PATCH＝データ更新・修正
+   版ごとに公開日時・データ基準日・変更内容（参照つき）・収録件数を記録し、推移と内容を振り返れるようにする
+   ================================================================== */
+const CHG = { feature: ["機能", "＋", "f"], add: ["追加", "＋", "d"], update: ["更新", "↻", "d"], retire: ["旧世代へ", "↓", "d"], remove: ["削除", "−", "d"], fix: ["修正", "✓", "x"], news: ["ニュース記録", "＋", "n"] };
+const CHG_GROUP = [["f", "機能"], ["d", "データ"], ["n", "ニュース"], ["x", "修正"]];
+const VTYPE = { major: "MAJOR・形式の変更", minor: "MINOR・機能追加", patch: "PATCH・データ更新・修正" };
+const versions = () => [...S.D.changelog].sort((a, b) => cmpVer(b.version, a.version));
+const cmpVer = (a, b) => { const x = a.split(".").map(Number), y = b.split(".").map(Number); for (let i = 0; i < 3; i++) if (x[i] !== y[i]) return x[i] - y[i]; return 0; };
+const vBadge = t => `<span class="vtag ${esc(t)}">${esc((t || "").toUpperCase())}</span>`;
+/** 変更の内訳：機能・データ・ニュース・修正の項目数を横に積む（長さ＝項目数） */
+const chgBar = (x, unit = 9) => { const g = CHG_GROUP.map(([k]) => (x.changes || []).filter(c => CHG[c.k]?.[2] === k).length); return `<span class="cbar" aria-label="${CHG_GROUP.map(([, l], i) => `${l} ${g[i]}`).join("・")}">${g.map((n, i) => n ? `<i class="${CHG_GROUP[i][0]}" style="width:${n * unit}px"></i>` : "").join("")}</span>`; };
+const chgLegend = () => `<span class="legend">${CHG_GROUP.map(([k, l]) => `<span><i class="cbk ${k}"></i>${l}</span>`).join("")}</span>`;
+/** 参照（m:モデル／n:ニュース／u:見通し）を押せる名前にする */
+function refHtml(r) {
+  const [k, id] = r.split(":"), D = S.D;
+  if (k === "m") { const m = D.models.find(x => x.id === id); return m ? mName(m) : ""; }
+  if (k === "n") { const n = D.news.find(x => x.id === id); return n ? `<button class="go nref" data-nref="${esc(id)}">${esc(n.short || n.title)}</button>` : ""; }
+  if (k === "u") { const u = D.outlook.upcoming.find(x => x.id === id); return u ? `<button class="go nref" data-up="${esc(id)}">${esc(u.name)}</button>` : ""; }
+  return "";
+}
+/** 版の推移：横軸＝公開日（日付の間隔は経過日数に比例）。同じ日の版は寄せて並べ、日付は1回だけ。棒＝現行・旧世代の収録モデル数 */
+function versionBars(box, asc) {
+  const W = box.clientWidth, bw = 46, gap = 4, days = x => Math.round((ymd(x.date.slice(0, 10)) - ymd(asc[0].date.slice(0, 10))) / 864e5);
+  const groups = []; asc.forEach(x => { const d = x.date.slice(0, 10), g = groups[groups.length - 1]; g && g.d === d ? g.xs.push(x) : groups.push({ d, day: days(x), xs: [x] }); });
+  const span = Math.max(1, groups[groups.length - 1].day), need = groups.reduce((a, g) => a + g.xs.length * (bw + gap) + 18, 0), scale = Math.max(0, (W - need) / span);
+  let x = 0, prevDay = 0; groups.forEach(g => { x += (g.day - prevDay) * scale; g.x = x; x += g.xs.length * (bw + gap) + 18; prevDay = g.day; });
+  const mx = Math.max(1, ...asc.map(v => v.snapshot?.models || 0));
+  box.innerHTML = groups.map(g => `<div class="vg" style="left:${g.x}px">${g.xs.map(v => { const s = v.snapshot || {}, cu = (s.models || 0) - (s.legacy || 0), on = v.version === S.ver;
+      return `<button class="vb" data-v="${esc(v.version)}" aria-pressed="${on}" title="v${esc(v.version)}（${esc(v.date)}）：モデル${s.models ?? "—"}件（現行${cu}・旧世代${s.legacy ?? 0}）"><b class="num">v${esc(v.version)}</b>${vBadge(v.type)}<span class="vbn num">${s.models ?? "—"}</span><span class="vbt"><i class="lg" style="height:${(s.legacy || 0) / mx * 100}%"></i><i class="cu" style="height:${cu / mx * 100}%"></i></span></button>`; }).join("")}<span class="vgd num">${esc(fmt.date(g.d).slice(5))}</span></div>`).join("") + `<i class="vbase"></i>`;
+}
+function renderVersions(v) {
+  const D = S.D, vs = versions();
+  if (!vs.some(x => x.version === S.ver)) S.ver = vs[0]?.version;
+  const cur = vs.find(x => x.version === S.ver), idx = vs.indexOf(cur), prev = vs[idx + 1];
+  v.style.gridTemplateColumns = "minmax(0,1fr) minmax(0,1.15fr)";
+  v.style.gridTemplateRows = "auto minmax(0,1fr)";
+  const legend = `<span class="legend"><span><i class="lgk cu"></i>現行モデル</span><span><i class="lgk lg"></i>旧世代</span><span>${vBadge("major")}形式の変更</span><span>${vBadge("minor")}機能追加</span><span>${vBadge("patch")}データ更新・修正</span></span>`;
+  const list = vs.map(x => `<button class="li vrow" data-v="${esc(x.version)}" aria-current="${x.version === S.ver}"><span class="vv"><b class="num">v${esc(x.version)}</b>${vBadge(x.type)}</span><span class="vdt num">${esc(fmt.date(x.date.slice(0, 10)))} ${esc(x.date.slice(11, 16))}</span><span class="vtl">${esc(x.title)}<small>${esc(x.summary || "")}</small></span>${chgBar(x)}<span class="chev">›</span></button>`).join("");
+  // 選択中の版：前の版との差（件数）→ 変更の内訳 → 種類ごとの変更（参照は押すとモデル詳細・ニュースへ）→ この版で記録したニュース
+  const s = cur?.snapshot || {}, p = prev?.snapshot || {}, dl = (a, b) => a == null || b == null ? "" : a - b > 0 ? `<i class="up">+${a - b}</i>` : a - b < 0 ? `<i>${a - b}</i>` : `<i class="muted">±0</i>`;
+  const tiles = [["モデル", s.models, p.models], ["旧世代", s.legacy, p.legacy], ["ベンチ", s.bench, p.bench], ["見通し", s.upcoming, p.upcoming], ["ニュース", s.news, p.news]]
+    .map(([l, a, b]) => `<div class="dt vt"><b class="num">${a ?? "—"}</b><span>${l}</span>${prev ? dl(a, b) : ""}</div>`).join("");
+  const groups = Object.keys(CHG).map(k => { const xs = (cur?.changes || []).filter(c => c.k === k); return xs.length ? `<div class="cg"><div class="sec-h"><span class="cgm ${CHG[k][2]}">${CHG[k][1]}</span>${CHG[k][0]}</div><ul class="plain cgl">${xs.map(c => `<li>${esc(c.t)}${c.refs?.length ? `<span class="crefs">${c.refs.map(refHtml).join("")}</span>` : ""}</li>`).join("")}</ul></div>` : ""; }).join("");
+  const vnews = cur ? D.news.filter(n => n.ver === cur.version).sort((a, b) => b.date.localeCompare(a.date)) : [];
+  const pr = cur?.pr && D.meta.repo ? safeUrl(`${D.meta.repo}/pull/${cur.pr}`) : null;
+  const detail = cur ? `<div class="stack" id="verDetail" style="position:absolute;inset:0;overflow:hidden;gap:10px">
+      <div class="nchips">${vBadge(cur.type)}<span class="kb">${esc((VTYPE[cur.type] || cur.type).split("・").slice(1).join("・"))}</span><span class="kb">公開 <i class="num">${esc(fmt.date(cur.date.slice(0, 10)))} ${esc(cur.date.slice(11, 16))}</i></span><span class="kb">データ基準日 <i class="num">${esc(fmt.date(cur.asOf))}</i></span>${pr ? `<a class="kb" href="${esc(pr)}" target="_blank" rel="noopener noreferrer" title="GitHubの変更（プルリクエスト）">変更の記録 #${cur.pr} ›</a>` : ""}</div>
+      <div class="impl"><span>${esc(cur.summary || cur.title)}</span></div>
+      <div class="dtiles vtiles">${tiles}</div>
+      <div class="vmix"><span class="sec-h" style="margin:0">変更の内訳</span>${chgBar(cur, 16)}<span class="muted" style="font-size:11.5px">${CHG_GROUP.map(([k, l]) => { const n = (cur.changes || []).filter(c => CHG[c.k]?.[2] === k).length; return n ? `${l} ${n}` : ""; }).filter(Boolean).join("・")}</span></div>
+      <div class="cgs">${groups}</div>
+      ${vnews.length ? `<div class="vnews"><div class="sec-h">この版で記録したニュース ${vnews.length}件${s.news > vnews.length ? `（ほか ${s.news - vnews.length}件は以前の版で記録済み）` : ""}</div>${vnews.map(n => `<button class="li rel" data-nref="${esc(n.id)}"><span class="nd num">${esc(fmt.date(n.date))}</span><span class="ntl">${esc(n.title)}</span>${confKey(n.conf)}<span class="chev">›</span></button>`).join("")}</div>` : ""}
+    </div>` : `<div class="empty">更新履歴がありません</div>`;
+  v.innerHTML = card("版ごとの収録モデル数", "横軸＝公開日（間隔は経過日数）・棒を押すとその版の内容", `<div class="vbars" id="vbars"></div>`, { style: "grid-column:1/-1", right: legend })
+    + card(`更新履歴（${vs.length}版・新しい順）`, "帯の長さ＝変更の項目数", `<div class="nlist" id="vlist">${list}</div>`, { right: chgLegend() })
+    + card(cur ? `v${esc(cur.version)}：${esc(cur.title)}` : "版", prev ? `前の版 v${esc(prev.version)} との差` : "最初の版", detail);
+  versionBars($("#vbars"), vs.slice().reverse());
+  const vl = $("#vlist"); for (const sm of [...vl.querySelectorAll(".vrow .vtl small")].reverse()) { if (vl.scrollHeight <= vl.clientHeight + 1) break; if (sm.closest(".vrow").getAttribute("aria-current") === "true") continue; sm.remove(); }
+  foldTail(vl, ".vrow", k => `ほか ${k} 版（上の棒で選ぶと表示）`);
+  fitDetail("verDetail", [".vnews .rel", ".crefs > *", ".cgl li", ".vmix"]);
+  // 省いたニュースの件数と、全件を見る場所を示す（行を消したまま黙らない）
+  const vn = v.querySelector(".vnews"); if (vn) { const k = vnews.length - vn.querySelectorAll(".rel").length; if (k > 0) { vn.insertAdjacentHTML("beforeend", `<div class="muted" style="font-size:11px;padding:2px 6px">ほか ${k} 件（「AIニュース › ニュース記録」で全件）</div>`); fitDetail("verDetail", [".vnews .rel"]); const k2 = vnews.length - vn.querySelectorAll(".rel").length; vn.lastElementChild.textContent = `ほか ${k2} 件（「AIニュース › ニュース記録」で全件）`; } }
+  v.querySelectorAll("[data-v]").forEach(el => el.onclick = () => { S.ver = el.dataset.v; Tip.hide(); render(); });
+  v.querySelectorAll("[data-nref]").forEach(el => el.onclick = e => { e.stopPropagation(); const n = D.news.find(x => x.id === el.dataset.nref); if (!n) return; S.newsSet = null; if (n.topic === "leak") { S.leak = n.id; go("news", "leak"); } else { S.news = n.id; S.newsMonth = null; S.newsCat = null; S.newsConfF = null; go("news", "archive"); } });
+  v.querySelectorAll(".nref[data-up]").forEach(el => el.onclick = e => { e.stopPropagation(); S.upcoming = el.dataset.up; go("future", "roadmap"); });
+}
+
+/* ==================================================================
    6. Import / Export
    ================================================================== */
 function download(text, name, type) { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000); }
@@ -2609,6 +3173,7 @@ function renderShell() {
     <span class="sep"></span><button class="chip toggle" id="fOpen" aria-pressed="${S.f.open}" title="オープンウェイト（一部公開含む）のみ表示">オープンのみ</button>
     <button class="chip toggle" id="fLegacy" aria-pressed="${S.f.legacy}" title="旧世代モデルも表示">旧世代も表示</button>
     <span class="t2 num" style="font-size:11.5px;white-space:nowrap;margin-left:4px">${shown}/${all}モデル</span>${S.f.off.size || S.f.open ? `<button class="reset" id="fReset" title="提供元・オープンのみの絞り込みを解除">絞り込み中・解除</button>` : ""}`;
+  { const na = ["news", "data"].includes(S.view), f = $("#filters"); f.classList.toggle("na", na); if (na) f.insertAdjacentHTML("beforeend", `<span class="nanote">提供元・旧世代の絞り込みは、この画面では使いません（モデルの画面で有効）</span>`); }
   $("#filters").querySelectorAll("[data-prov]").forEach(b => {
     const ids = b.dataset.prov.split(",");
     b.onclick = () => { const on = ids.some(id => !S.f.off.has(id)); ids.forEach(id => on ? S.f.off.add(id) : S.f.off.delete(id)); persistF(); render(); };
@@ -2620,12 +3185,14 @@ function renderShell() {
   // 鮮度バッジ
   const days = daysSince(D.meta.asOf), stale = days > 30;
   const fr = $("#fresh"); fr.classList.toggle("warn", stale);
-  fr.lastElementChild.textContent = `データ基準日 ${fmt.date(D.meta.asOf)}${stale ? `（${days}日経過・要更新）` : ""}`;
+  fr.lastElementChild.innerHTML = `<span class="xl">データ</span>基準日 ${fmt.date(D.meta.asOf)}${stale ? `（${days}日経過・要更新）` : ""}`;
   fr.title = stale ? "データ管理タブから最新データを取り込んでください" : "データ基準日";
   // ナビ
   // 目的別のまとまり（結論／性能／動向／コストと仕様／管理）を区切り線で示す
   const GROUP_END = new Set(["compare", "guide", "table", "history"]);
-  $("#rail").innerHTML = VIEWS.map((vw, i) => `<button class="nav-item" data-view="${vw.id}"${S.view === vw.id ? ' aria-current="page"' : ""} title="${esc(vw.label)}：${esc(vw.hint)}${i < 10 ? `（キー ${i < 9 ? i + 1 : 0}）` : ""}">${ICON[vw.id] || ""}<span>${esc(vw.label)}<small>${esc(vw.hint)}</small></span>${i < 10 ? `<kbd>${i < 9 ? i + 1 : 0}</kbd>` : "<span></span>"}</button>${GROUP_END.has(vw.id) ? '<div class="nav-sep" aria-hidden="true"></div>' : ""}`).join("");
+  // 版：最新の版と公開日（クリックで更新履歴へ）
+  const lv = versions()[0]; $("#verBtn").textContent = `v${D.meta.version || lv?.version || "—"}`; $("#verBtn").title = lv ? `v${lv.version}（${fmt.date(lv.date.slice(0, 10))} ${lv.date.slice(11, 16)}公開）：クリックで更新履歴` : "更新履歴"; $("#verBtn").onclick = () => { S.ver = null; go("data", "versions"); };
+  $("#rail").innerHTML = VIEWS.map((vw, i) => `<button class="nav-item" data-view="${vw.id}"${S.view === vw.id ? ' aria-current="page"' : ""} title="${esc(vw.label)}：${esc(vw.hint)}${NAV_KEYS[i] ? `（キー ${NAV_KEYS[i]}）` : ""}">${ICON[vw.id] || ""}<span>${esc(vw.label)}<small>${esc(vw.hint)}</small></span>${NAV_KEYS[i] ? `<kbd>${NAV_KEYS[i]}</kbd>` : "<span></span>"}</button>${GROUP_END.has(vw.id) ? '<div class="nav-sep" aria-hidden="true"></div>' : ""}`).join("");
   $("#rail").querySelectorAll("[data-view]").forEach(b => b.onclick = () => go(b.dataset.view));
   // サブバー
   const vw = VIEWS.find(x => x.id === S.view);
@@ -2691,6 +3258,20 @@ function conclusion(view, sub) {
     return C(gs ? esc(gs) : ts.map(t => esc(t.title)).slice(0, 2).join("／"), O.groupShort?.[sub] ? esc(O.groupShort[sub]) : ts[0] ? esc(ts[0].title) : null, next ? { label: next[0], run: () => go(next[1], next[2]) } : null);
   }
   if (view === "history") return sub === "growth" ? C(`学習計算量は12年で約9桁、価格は5年で約1,000分の1。伸びは今も加速中`, `学習計算量は12年で約9桁増加`, null) : C(`1956年の誕生から約70年。2度の冬の時代を経て、2012年の深層学習から急成長`, `誕生から約70年、2012年から急成長`, { label: "性能の伸びを見る", run: () => go("history", "growth") });
+  if (view === "news") {
+    const asOf = ymd(D.meta.asOf), rec = D.news.filter(n => asOf - ymd(n.date) <= 30 * 864e5).sort((a, c) => c.date.localeCompare(a.date));
+    if (sub === "leak") { const T = D.newsTopics.find(t => t.id === "leak"); return C(esc(T?.headline || "情報漏洩とAI悪用の事実関係"), esc(T?.headShort || "情報漏洩とAI悪用の事実関係"), { label: "時系列の記録を見る", run: () => { S.newsMonth = null; go("news", "archive"); } }); }
+    if (sub === "archive") {   // 記録の偏り：直近2か月の割合と最多の分野
+      const d60 = D.news.filter(n => asOf - ymd(n.date) <= 61 * 864e5).length, top = D.newsCats.map(c => [c, D.news.filter(n => n.cat === c.id).length]).sort((a, c) => c[1] - a[1])[0];
+      return C(`記録 ${D.news.length} 件の ${b(Math.round(d60 / Math.max(1, D.news.length) * 100) + "%")} が直近2か月。最多は ${b(top?.[0].label || "—")}（${top?.[1] || 0} 件）`, `記録の ${b(Math.round(d60 / Math.max(1, D.news.length) * 100) + "%")} が直近2か月`, { label: "情報漏洩の事実関係を見る", run: () => go("news", "leak") });
+    }
+    // 直近10日とその前の20日を比べ、増えた分野を示す（件数の羅列ではなく変化を伝える）
+    const cmp = newsSurge();
+    const lead = rec[0];
+    return C(`直近10日は ${b(cmp?.c.label || "—")} が ${cmp?.a ?? 0} 件（前の20日は ${cmp?.p ?? 0} 件）。最新は ${b(lead?.short || lead?.title || "—")}（${lead ? md(lead.date) : "—"}）`, `直近10日は ${b(cmp?.c.label || "—")} が ${cmp?.a ?? 0} 件`, { label: "情報漏洩の事実関係を見る", run: () => go("news", "leak") });
+  }
+  if (view === "data" && sub === "versions") { const vs = versions(), f = vs[vs.length - 1], l = vs[0]; const days = Math.round((ymd(l.date.slice(0, 10)) - ymd(f.date.slice(0, 10))) / 864e5), pt = vs.slice(0, 4).filter(x => x.type === "patch").length;
+    return l ? C(`${days} 日で ${vs.length} 版、モデルは ${f.snapshot?.models ?? "—"} → ${b((l.snapshot?.models ?? "—") + " 件")}。現在 ${b("v" + l.version)}（${fmt.date(l.date.slice(0, 10))}）${pt >= 2 ? "・直近はデータ更新が中心" : ""}`, `現在 ${b("v" + l.version)}・${vs.length} 版`, { label: "最新の変更を見る", run: () => { S.ver = l.version; render(); } }) : C("更新履歴はまだありません", null, null); }
   if (view === "data") { const v = Data.validate(D.raw); return C(`基準日 ${fmt.date(D.meta.asOf)}（${daysSince(D.meta.asOf)}日前）・モデル ${D.models.length} 件・検証エラー ${v.errors.length} 件`, null, null); }
   return C(esc(VIEWS.find(x => x.id === view)?.lead || ""), null, null);
 }
@@ -2726,7 +3307,7 @@ function openDrawer(id) {
   const ow = { yes: "オープン", partial: "一部公開", no: "非公開" }[m.openWeights] || "—";
   const srcIds = [...new Set([...(m.sources || []), ...Object.values(m.scores).map(s => s.src).filter(Boolean), m.speedObj?.src].filter(Boolean))];
   $("#drawer").innerHTML = `<header><span class="sw" style="width:12px;height:12px;margin-top:6px;background:${color(m)}"></span><div style="flex:1;min-width:0"><h3>${esc(m.name)}</h3>
-      <div class="meta">${esc(m.prov.label)} · ${esc(m.tier || "")} · 発表 ${esc(fmt.date(m.released))}${m.legacy ? " · 旧世代" : ""}</div></div>
+      <div class="meta">${esc(m.prov.label)} · ${esc(m.tier || "")} · 発表 ${esc(fmt.date(m.released))}${m.legacy ? " · 旧世代" : ""}${(() => { const c = versions().slice().reverse().find(x => (x.changes || []).some(ch => ch.k === "add" && (ch.refs || []).includes("m:" + m.id))); return c ? ` · 収録 v${esc(c.version)}（${esc(fmt.date(c.date.slice(0, 10)))}）` : ""; })()}</div></div>
       <button class="icon-btn" id="dClose" aria-label="閉じる">✕</button></header>
     <div class="dbody">
       <dl class="kv">
@@ -2787,7 +3368,7 @@ function boot() {
   document.addEventListener("keydown", e => {
     if (e.key === "Escape") return closeDrawer();
     if (e.target.matches("input,select,textarea") || e.ctrlKey || e.metaKey || e.altKey) return;
-    const i = e.key === "0" ? 10 : +e.key; if (i >= 1 && i <= VIEWS.length) go(VIEWS[i - 1].id);
+    const i = NAV_KEYS.indexOf(e.key); if (i >= 0 && i < VIEWS.length) go(VIEWS[i].id);
   });
   window.addEventListener("hashchange", () => { readHash(); render(); });
   let rt; new ResizeObserver(() => { clearTimeout(rt); rt = setTimeout(render, 120); }).observe($("#view"));
