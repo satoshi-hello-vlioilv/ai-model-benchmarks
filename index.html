@@ -27,7 +27,7 @@
   --c-other:#8a8983;
   --good:#0ca30c; --good-text:#1d7a2e; --warning:#fab219; --critical:#d03b3b;
   --f-ok:#1f6fb8; --f-rp:#e3a20f; --f-ng:#c93a3a; --v-lg:#b9c8db;   /* 事実の判定（確認・主張・否定）／旧世代の帯 */
-  --s-pos:#2a64a8; --s-mix:#cfccc4; --s-neg:#a84c18; --s-mix-text:#1a1a19;   /* 評判の比率（好評＝青・賛否＝灰・不評＝橙：色覚の違いでも区別できる発散配色） */
+  --s-pos:#237a57; --s-mix:#cfccc4; --s-neg:#a3412c; --s-mix-text:#1a1a19;   /* 評判の比率（好評＝深緑・賛否＝灰・不評＝赤茶）。提供元の色と区別し、色以外に＋±−の記号と数値も添える */
   --shadow:0 1px 2px rgba(20,20,18,.05),0 4px 16px rgba(20,20,18,.05);
   --radius:10px;
 }
@@ -41,7 +41,7 @@
     --grid:#2a2a27; --axis:#4a4a45;
     --c1:#3987e5; --c2:#d95926; --c3:#199e70; --c4:#c98500;
     --c5:#d55181; --c6:#008300; --c7:#9085e9; --c8:#e66767;
-    --seq-lo:#232321; --seq-hi:#5598e7; --f-ok:#4a90e2; --f-rp:#e8ab1c; --f-ng:#e05858; --v-lg:#6f7f96; --s-pos:#2a64a8; --s-mix:#4a4a45; --s-neg:#a84c18; --s-mix-text:#f2f1ec; --c-other:#9a9990; --bar:color-mix(in oklab,#5598e7 28%,transparent);
+    --seq-lo:#232321; --seq-hi:#5598e7; --f-ok:#4a90e2; --f-rp:#e8ab1c; --f-ng:#e05858; --v-lg:#6f7f96; --s-pos:#237a57; --s-mix:#4a4a45; --s-neg:#a3412c; --s-mix-text:#f2f1ec; --c-other:#9a9990; --bar:color-mix(in oklab,#5598e7 28%,transparent);
     --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
   }
 }
@@ -54,7 +54,7 @@
   --grid:#2a2a27; --axis:#4a4a45;
   --c1:#3987e5; --c2:#d95926; --c3:#199e70; --c4:#c98500;
   --c5:#d55181; --c6:#008300; --c7:#9085e9; --c8:#e66767;
-  --seq-lo:#232321; --seq-hi:#5598e7; --f-ok:#4a90e2; --f-rp:#e8ab1c; --f-ng:#e05858; --v-lg:#6f7f96; --s-pos:#2a64a8; --s-mix:#4a4a45; --s-neg:#a84c18; --s-mix-text:#f2f1ec; --c-other:#9a9990; --bar:color-mix(in oklab,#5598e7 28%,transparent);
+  --seq-lo:#232321; --seq-hi:#5598e7; --f-ok:#4a90e2; --f-rp:#e8ab1c; --f-ng:#e05858; --v-lg:#6f7f96; --s-pos:#237a57; --s-mix:#4a4a45; --s-neg:#a3412c; --s-mix-text:#f2f1ec; --c-other:#9a9990; --bar:color-mix(in oklab,#5598e7 28%,transparent);
   --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
 }
 
@@ -431,7 +431,7 @@ ul.plain{list-style:none;margin:0;padding:0}
 .tag b{font-variant-numeric:tabular-nums}
 .lead-q{font-size:15px;font-weight:600;line-height:1.5;margin:0}
 /* 評判（SNS）：発散する積み上げ棒（中央＝賛否の中心、左＝好評・右＝不評） */
-.rep-ax,.rep-row{display:grid;grid-template-columns:166px minmax(0,1fr) 92px 66px;gap:10px;align-items:center}
+.rep-ax,.rep-row{display:grid;grid-template-columns:166px minmax(0,1fr) 84px 66px 8px;gap:10px;align-items:center}
 .rep-ax{font-size:11px;color:var(--text-2);padding:0 8px 4px;border-bottom:1px solid var(--border)}
 .rep-ax .ax{position:relative;height:14px}.rep-ax .ax span{position:absolute;top:0;white-space:nowrap}
 .rep-row{padding:0 8px;border-radius:7px;cursor:pointer;min-height:var(--rh,26px);font-size:12px}
@@ -443,16 +443,22 @@ ul.plain{list-style:none;margin:0;padding:0}
 .rbar::before{content:"";position:absolute;left:var(--c);top:-4px;bottom:-4px;border-left:1px dashed var(--axis)}
 .rbar i{position:absolute;top:0;bottom:0;display:grid;place-items:center;font-style:normal;font-size:10.5px;font-weight:650;font-variant-numeric:tabular-nums;color:#fff;overflow:hidden}
 .rbar i.p{background:var(--s-pos);border-radius:4px 0 0 4px}.rbar i.x{background:var(--s-mix);color:var(--s-mix-text)}.rbar i.n{background:var(--s-neg);border-radius:0 4px 4px 0}
-.rbar.early i{opacity:.55}
 .rbar .none{position:absolute;inset:3px 10%;border-radius:4px;border:1px dashed var(--border-strong);display:grid;place-items:center;font-size:10.5px;color:var(--text-2)}
-.rtone{font-size:11.5px;color:var(--text-2);white-space:nowrap}
+.rtone{display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 7px;border-radius:10px;font-size:11px;font-weight:650;white-space:nowrap;justify-self:start;border:1px solid var(--border-strong);color:var(--text-2)}
+.rtone.pos{background:color-mix(in oklab,var(--s-pos) 14%,var(--surface));border-color:var(--s-pos);color:var(--text)}
+.rtone.neg{background:color-mix(in oklab,var(--s-neg) 14%,var(--surface));border-color:var(--s-neg);color:var(--text)}
+.rtone b{font-variant-numeric:tabular-nums}
+.rep-row .chev{color:var(--muted);font-size:13px}.rep-row:hover .chev,.rep-row[aria-current="true"] .chev{color:var(--text)}
+.rbig{height:24px}.rbig i{font-size:12px}
 .rconf{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--text-2);white-space:nowrap;justify-content:flex-end}
 .rconf b{display:inline-flex;gap:2px}.rconf b i{width:5px;height:5px;border-radius:50%;background:var(--text-2)}.rconf b i.o{background:none;box-shadow:inset 0 0 0 1px var(--border-strong)}
 .rep-k{display:inline-flex;gap:10px;font-size:11.5px;color:var(--text-2)}.rep-k span{display:inline-flex;align-items:center;gap:4px}.rep-k i{width:10px;height:10px;border-radius:2px}
 .theme{display:grid;gap:3px;padding:7px 0;border-top:1px solid var(--border)}.theme:first-child{border-top:0;padding-top:0}
 .theme .t{font-size:12.5px;font-weight:650}.theme .d{font-size:11.5px;color:var(--text-2);line-height:1.5}
-.theme .ms{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:11.5px}
-.rpick{cursor:pointer;border-bottom:1px dotted var(--border-strong)}.rpick:hover{color:var(--text)}
+.theme .ms{display:flex;flex-wrap:wrap;gap:4px 6px;font-size:11.5px}
+.rpick{cursor:pointer;display:inline-flex;align-items:center;gap:4px;height:21px;padding:0 8px;border-radius:11px;border:1px solid var(--border-strong);background:var(--surface);color:var(--text-2)}
+.rpick:hover{color:var(--text);border-color:var(--text-2)}.rpick[aria-current="true"]{background:var(--ink);color:var(--ink-text);border-color:var(--ink);font-weight:600}
+.rpick .sw{width:8px;height:8px}
 .txt{font-size:12px;line-height:1.65;color:var(--text);margin:0}
 .stack{display:grid;gap:12px;align-content:start}
 .mat td.cat{text-align:center;font-variant-numeric:tabular-nums;font-size:11.5px;padding:0 4px}
@@ -1239,7 +1245,7 @@ button.info:hover{border-color:var(--ink);color:var(--text)}
     ],
     "statuses": {"training": "学習中", "post-training": "事後学習中", "limited": "限定提供中", "planned": "計画を表明", "unannounced": "未発表", "rumor": "噂段階", "halted": "公開見送り"},
     "upcoming": [
-      {"id": "gagent", "name": "Gemini agent の一般提供", "provider": "google", "status": "planned", "window": ["2026-11", "2026-12"], "conf": "official", "summary": "Google Cloudが10/8に発表した業務用エージェント。現在は限定プレビューで、10月末までに北米から一般提供の予定。", "points": ["GeminiとClaudeを仕事に応じて使い分ける", "一時的なサブエージェントが数時間〜数日動き、ノートPCを閉じても作業を続ける", "セッション・意味・手続き・エピソードの4種類の記憶を持つ", "11/11時点でも一般提供・価格の発表はない（限定プレビューのまま）"], "srcs": ["gagent", "gagent2"]},
+      {"id": "gagent", "name": "Gemini agent の一般提供", "provider": "google", "status": "planned", "window": ["2026-11", "2026-12"], "conf": "official", "summary": "Google Cloudが10/8に発表した業務用エージェント。10月末とされた一般提供は、11/11時点でも発表がなく限定プレビューのまま。", "points": ["GeminiとClaudeを仕事に応じて使い分ける", "一時的なサブエージェントが数時間〜数日動き、ノートPCを閉じても作業を続ける", "セッション・意味・手続き・エピソードの4種類の記憶を持つ"], "srcs": ["gagent", "gagent2"]},
       {"id": "astra61", "name": "GPT-6.1 Astra（公開見送り）", "provider": "openai", "status": "halted", "window": ["2026-12", "2027-06"], "conf": "forecast", "summary": "OpenAIは、安全性と整合性の基準を満たさないとして公開を見送った（WSJ報道、9月末）。再公開の時期は未定。", "points": ["許可を求めずにタスクを続けたり、危険でも外部ツールを使おうとする傾向が見つかった", "作業内容の説明の信頼性が下がった。一方で途中で投げ出す「怠け」は改善しており、両者のトレードオフと説明", "基盤モデルは今後の安全な版に活用する方針"], "srcs": ["astra61", "astra61b"]},
       {"id": "gemini4", "name": "Gemini 4 Flash", "provider": "google", "status": "rumor", "window": ["2026-11", "2027-06"], "conf": "report", "summary": "上位版Carbonは11/10に一般提供済み。軽量版Flashはコードネーム「Hydrogen」の流出情報だけで、公式発表はない。", "points": ["11/9時点でAPIのモデル一覧にない", "Argonの導入価格（$2/$10）は11/30まで", "過去の周期（旗艦の数か月後に軽量版）からは2027年前半までが目安"], "srcs": ["gem4fl", "carbonga", "argonga", "gem4b"]},
       {"id": "gpt6x", "name": "GPT-6.x（音声・動画入力の追加版）", "provider": "openai", "status": "unannounced", "window": ["2026-11", "2027-06"], "conf": "forecast", "summary": "GPT-7の前に、Astraの改良版（GPT-6.5など）で音声・動画入力が加わるとアナリストは予想している。", "points": ["OpenAIは後継モデルを未発表"], "srcs": ["gpt7"]},
@@ -1378,7 +1384,7 @@ button.info:hover{border-color:var(--ink);color:var(--text)}
     {"version": "1.4.2", "date": "2026-10-24 07:41", "type": "patch", "pr": 9, "asOf": "2026-10-23", "title": "データ更新（10/23）", "summary": "Gemini 4 Argonの一般提供、Kimi K3.1 Pro・Muse Spark Openの追加、DeepSeek V4.1 Flashの更新版を反映。", "snapshot": {"models": 39, "legacy": 12, "bench": 14, "upcoming": 14, "news": 0}, "changes": [{"k": "add", "t": "2モデルを追加", "refs": ["m:kimi-k3-1-pro", "m:muse-spark-open"]}, {"k": "retire", "t": "旧世代へ", "refs": ["m:kimi-k3"]}, {"k": "update", "t": "一般提供・更新版の値に更新", "refs": ["m:gemini-4-argon", "m:deepseek-v4-1-flash", "m:glm-5-3"]}, {"k": "add", "t": "今後の見通しを追加", "refs": ["u:kimi-k31-open"]}, {"k": "remove", "t": "実現した見通しを削除（Muse Sparkの重み公開・Kimi K3.1の噂）"}, {"k": "fix", "t": "散布図の縦軸名が点と重ならないよう配置を調整"}]},
     {"version": "1.5.0", "date": "2026-10-24 15:49", "type": "minor", "pr": 10, "asOf": "2026-10-24", "title": "AIニュースと更新履歴", "summary": "最近の話題・情報漏洩と中国AIの事実関係・ニュース記録を見られる「AIニュース」画面と、版ごとの変更を振り返る更新履歴を追加。", "snapshot": {"models": 39, "legacy": 12, "bench": 14, "upcoming": 14, "news": 49}, "changes": [{"k": "feature", "t": "AIニュース（最近の話題・情報漏洩と中国AI・ニュース記録）"}, {"k": "feature", "t": "更新履歴（版ごとの収録件数の推移・変更内容）と、ヘッダーの版表示"}, {"k": "feature", "t": "版の管理（MAJOR＝形式の変更・MINOR＝機能追加・PATCH＝データ更新）と、ニュースごとの記録日・記録した版"}, {"k": "news", "t": "情報漏洩・AI悪用の事実関係 22件を記録（確認済み／報道／否定を区別）", "refs": ["n:l-kr-bank", "n:l-gmo", "n:l-gtg1002", "n:l-anth-sep", "n:l-cisa", "n:l-rizap"]}, {"k": "news", "t": "最近の話題 18件を記録", "refs": ["n:n-oai-val", "n:n-ftc", "n:n-states", "n:n-tsmc", "n:n-cn-nvidia", "n:n-accord"]}, {"k": "news", "t": "既存データとして記録済みのモデル発表8件を、元の記録日・版のままニュースにも掲載"}, {"k": "fix", "t": "ファビコンにPNG版を追加（SVGに対応しない環境・ホーム画面用）"}]},
     {"version": "1.5.1", "date": "2026-10-31 10:30", "type": "patch", "pr": 11, "asOf": "2026-10-31", "title": "データ更新（10/31）・総合指数をv5.0へ", "summary": "Artificial Analysisの総合指数がv5.0に改訂されたため全モデルの値を移行。Gemini 4 Carbon・GPT-6.1 Terra・Mercury 3を追加し、Mistral Large 4の重み公開と10/24〜10/31のニュースを記録。", "snapshot": {"models": 42, "legacy": 14, "bench": 14, "upcoming": 13, "news": 69}, "changes": [{"k": "update", "t": "総合指数（AA指数）をv4.3からv5.0へ移行。v5.0の値がないモデルは空欄にし、旧値は注記に残した", "refs": ["m:gemini-4-carbon", "m:claude-opus-5-5", "m:gpt-6-astra", "m:kimi-k3-1-pro", "m:muse-wonder"]}, {"k": "add", "t": "3モデルを追加", "refs": ["m:gemini-4-carbon", "m:gpt-6-1-terra", "m:mercury-3"]}, {"k": "update", "t": "重み公開・価格・ライセンス・TB 4.0を更新", "refs": ["m:mistral-large-4"]}, {"k": "retire", "t": "後継の登場で旧世代へ", "refs": ["m:gpt-5-6-terra", "m:mercury-2-5"]}, {"k": "remove", "t": "実現した見通しを削除（Mistral Large 4の重み公開）"}, {"k": "update", "t": "見通しを更新（Gemini 4 Carbonの限定公開、Qwen 4、次世代Claudeの学習停止の開示など）", "refs": ["u:gemini4", "u:qwen4", "u:claude-next"]}, {"k": "news", "t": "ニュース 20件を記録", "refs": ["n:n-aa-v5", "n:n-carbon", "n:n-anth-s1", "n:n-hyper-q3", "n:l-kr-arrest", "n:l-astra-dist"]}, {"k": "fix", "t": "記録の訂正：韓国の金融機関（7社・約6.8万人）、Storm-0940（中国系とMicrosoftが判断・攻撃の成否）、OpenAIの学習停止の開始日", "refs": ["n:l-kr-bank", "n:n-storm0940", "n:n-oai-pause"]}]},
-    {"version": "1.6.0", "date": "2026-11-12 04:52", "type": "minor", "pr": 12, "asOf": "2026-11-11", "title": "評判（SNS）の追加・データ更新（11/11）", "summary": "X・Hacker News・開発者フォーラムなどの反応から、25モデルの評判（好評・賛否・不評の比率、好評点と不満点、推移）をまとめた画面を追加。Claude Fable 5.2・Muse Ember・Inkling 2 Smallを追加し、Gemini 4 Carbonの一般提供、AA指数v5.0.1、10/31〜11/11のニュースと情報漏洩の記録を更新。", "snapshot": {"models": 46, "legacy": 16, "bench": 14, "upcoming": 11, "news": 95}, "changes": [{"k": "feature", "t": "モデル特徴に「評判（SNS）」を追加：好評と不評の差で並べた発散棒グラフ、モデルごとの好評点・不満点・用途・推移・出典、モデルをまたぐ傾向"}, {"k": "feature", "t": "プロフィールから評判へ移動するボタンを追加"}, {"k": "add", "t": "4モデルを追加", "refs": ["m:claude-fable-5-2", "m:claude-mythos-5-2", "m:muse-ember", "m:inkling-2-small"]}, {"k": "update", "t": "一般提供・AA指数（v5.0.1）・価格・速度を更新", "refs": ["m:gemini-4-carbon", "m:muse-spark-1-3", "m:gpt-6-luna", "m:deepseek-v4-pro"]}, {"k": "update", "t": "重みの公開（11/4）・ライセンスを更新", "refs": ["m:kimi-k3-1-pro"]}, {"k": "retire", "t": "後継の登場で旧世代へ", "refs": ["m:claude-fable-5-1", "m:claude-mythos-5-1"]}, {"k": "remove", "t": "実現した見通しを削除（Kimi K3.1 Proの重み公開）。重複していたGemini 4 Flashの項目を統合"}, {"k": "update", "t": "見通しを更新（Qwen4-Max-Previewの限定公開、Mythos 5.2、Gemini 4 Flashの流出情報など）", "refs": ["u:qwen4", "u:mythos-ga", "u:gemini4"]}, {"k": "news", "t": "ニュース 19件を記録", "refs": ["n:n-fable52", "n:n-carbon-ga", "n:n-anth-ipo", "n:n-kimi-open", "n:n-ember", "n:n-aus-reg"]}, {"k": "news", "t": "情報漏洩・AI悪用の事実関係 7件を記録（ARTEXを動かすAIが中国製中心に）", "refs": ["n:l-cp-artex", "n:l-storm3358", "n:l-vapor", "n:l-workos", "n:l-artex-dk", "n:l-jp-pkg"]}, {"k": "fix", "t": "記録の追記：CohereのQwen送信試行（11/11時点でAlibabaの反応なし・発生頻度）", "refs": ["n:l-qwen-beijing"]}, {"k": "fix", "t": "対数の帯グラフで、値のラベルが枠からはみ出す・目盛りと重なる場合に配置を自動で切り替え"}]}
+    {"version": "1.6.0", "date": "2026-11-12 04:52", "type": "minor", "pr": 12, "asOf": "2026-11-11", "title": "評判（SNS）の追加・データ更新（11/11）", "summary": "SNS・コミュニティでの25モデルの評判をまとめた画面を追加。Claude Fable 5.2など4モデルを追加し、10/31〜11/11の動きを反映。", "snapshot": {"models": 46, "legacy": 16, "bench": 14, "upcoming": 11, "news": 95}, "changes": [{"k": "feature", "t": "モデル特徴に「評判（SNS）」を追加：好評と不評の差で並べた発散棒グラフ、モデルごとの好評点・不満点・用途・推移・出典、モデルをまたぐ傾向"}, {"k": "feature", "t": "プロフィールから評判へ移動するボタンを追加"}, {"k": "add", "t": "4モデルを追加", "refs": ["m:claude-fable-5-2", "m:claude-mythos-5-2", "m:muse-ember", "m:inkling-2-small"]}, {"k": "update", "t": "一般提供・AA指数（v5.0.1）・価格・速度を更新", "refs": ["m:gemini-4-carbon", "m:muse-spark-1-3", "m:gpt-6-luna", "m:deepseek-v4-pro"]}, {"k": "update", "t": "重みの公開（11/4）・ライセンスを更新", "refs": ["m:kimi-k3-1-pro"]}, {"k": "retire", "t": "後継の登場で旧世代へ", "refs": ["m:claude-fable-5-1", "m:claude-mythos-5-1"]}, {"k": "remove", "t": "実現した見通しを削除（Kimi K3.1 Proの重み公開）。重複していたGemini 4 Flashの項目を統合"}, {"k": "update", "t": "見通しを更新（Qwen4-Max-Previewの限定公開、Mythos 5.2、Gemini 4 Flashの流出情報など）", "refs": ["u:qwen4", "u:mythos-ga", "u:gemini4"]}, {"k": "news", "t": "ニュース 19件を記録", "refs": ["n:n-fable52", "n:n-carbon-ga", "n:n-anth-ipo", "n:n-kimi-open", "n:n-ember", "n:n-aus-reg"]}, {"k": "news", "t": "情報漏洩・AI悪用の事実関係 7件を記録（ARTEXを動かすAIが中国製中心に）", "refs": ["n:l-cp-artex", "n:l-storm3358", "n:l-vapor", "n:l-workos", "n:l-artex-dk", "n:l-jp-pkg"]}, {"k": "fix", "t": "記録の追記：CohereのQwen送信試行（11/11時点でAlibabaの反応なし・発生頻度）", "refs": ["n:l-qwen-beijing"]}, {"k": "fix", "t": "対数の帯グラフで、値のラベルが枠からはみ出す・目盛りと重なる場合に配置を自動で切り替え"}]}
   ],
   "newsCats": [
     {"id": "model", "label": "モデル・製品", "short": "モデル・製品", "icon": "star"},
@@ -1502,7 +1508,7 @@ button.info:hover{border-color:var(--ink);color:var(--text)}
   "reputation": {
     "asOf": "2026-11-11",
     "method": "X・Hacker News・開発者フォーラム（Cursor・Google AI Developers）・note・Zenn・Qiita・知乎・LINUX DOなどの投稿と、反応をまとめた記事を、英語・日本語・中国語で検索して集めた（約90回の検索）。各社・提携企業の発信、宣伝目的のレビューサイトは利用者の声として数えていない。",
-    "caveats": ["比率は、集めた数件〜十数件の投稿を読んだ大まかな印象で、統計ではない", "Redditのスレッドは検索で直接取れず、転載記事経由の間接情報", "検索結果の要約から作成（各ページは開いていない）"],
+    "caveats": ["比率は、モデルごとに数件〜十数件の投稿・記事から読み取った印象で、統計ではない", "Redditの声は、それを紹介した記事を通じた間接的なもの", "各社・提携企業の発信は利用者の声に数えていない"],
     "themes": [
       {"t": "上位モデルの不満は、性能より利用上限と速度", "d": "Astra・Opus 5.5・Fable 5.2・Carbon・Kimi K3.1 Proで「枠がすぐ尽きる」「遅い」が繰り返し出る。実用の標準は一段下（GPT-6.1 Sol・Sonnet 5.5）に移る", "refs": ["gpt-6-astra", "claude-opus-5-5", "claude-fable-5-2", "gemini-4-carbon", "kimi-k3-1-pro"]},
       {"t": "コーディングの比較基準は Claude Opus 5.5", "d": "Argon・Carbon・Grok 4.7・Muse Wonderのレビューは「Opus 5.5にどこまで迫るか」で書かれる", "refs": ["claude-opus-5-5", "gemini-4-argon", "grok-4-7", "muse-wonder"]},
@@ -2121,7 +2127,7 @@ function renderOverview(v) {
     const head = `${ico(metricIcon(u.metric, u.icon), "lg")}<div class="u">${phr(u.label)}<small>${esc(mt.short)}</small></div>`;
     if (!a) return `<div class="rec">${head}<div class="w na">該当データなし</div><span></span></div>`;
     return `<div class="rec">${head}
-      <div class="w"><div class="wl">${mName(a.m)}<b class="num">${esc(mt.fmt(a.v))}</b></div><div class="wr"><span class="why">${b ? `次点 ${esc(b.m.name)}（${esc(mt.fmt(b.v))}）` : "比較対象なし"}</span>${lane(r, mt, { top: 2 })}</div></div>
+      <div class="w"><div class="wl">${mName(a.m)}<b class="num">${esc(mt.fmt(a.v))}</b></div><div class="wr"><span class="why">${b ? (mt.fmt(a.v) === mt.fmt(b.v) ? `${esc(b.m.name)} と同値` : `次点 ${esc(b.m.name)}（${esc(mt.fmt(b.v))}）`) : "比較対象なし"}</span>${lane(r, mt, { top: 2 })}</div></div>
       ${b ? `<button class="go" data-cmp="${esc(a.m.id)},${esc(b.m.id)}" title="${esc(a.m.name)} と ${esc(b.m.name)} を比較">比較</button>` : "<span></span>"}</div>`;
   }).join("");
   // ③ 根拠：ベンチマーク別の上位3（位置のレーン＋名前）
@@ -2699,7 +2705,11 @@ function renderModels(v) {
 }
 
 /* ---------- 評判（SNS）：比率は定性的な標本の印象。並び＝好評−不評の差（評価前のモデルは末尾） ---------- */
-const REP_TONE = { pos: "おおむね好評", mixed: "賛否が分かれる", neg: "不評が優勢", early: "評価はまだ早い" };
+const REP_TONE = { pos: "好評", mixed: "賛否", neg: "不評", early: "評価前" }, REP_SYM = { pos: "＋", mixed: "±", neg: "−", early: "…" };
+const REP_RULE = { pos: 25, neg: -10 };   // 傾向＝好評−不評の差で判定（+25以上＝好評・−10以下＝不評・その間＝賛否）。発表直後（tone: early）は判定しない
+const repTone = r => r.tone === "early" ? "early" : !r.has ? "mixed" : r.net >= REP_RULE.pos ? "pos" : r.net <= REP_RULE.neg ? "neg" : "mixed";
+const repNet = v => (v > 0 ? "+" : v < 0 ? "−" : "±") + Math.abs(v);
+const repChip = r => { const t = repTone(r); return `<span class="rtone ${t}">${REP_SYM[t]} ${REP_TONE[t]}${r.has ? ` <b>${repNet(r.net)}</b>` : ""}</span>`; };
 const REP_CONF = { high: ["高", 3], mid: ["中", 2], low: ["低", 1] };
 function repItems(ms = visible()) {
   const its = S.D.raw.reputation?.items || [];
@@ -2707,43 +2717,44 @@ function repItems(ms = visible()) {
     .map(r => ({ ...r, net: r.has ? r.split[0] - r.split[2] : null, early: r.tone === "early" }))
     .sort((a, b) => a.early - b.early || b.has - a.has || (b.net ?? 0) - (a.net ?? 0) || (b.split?.[0] ?? 0) - (a.split?.[0] ?? 0));
 }
-const repConf = r => { const [l, k] = REP_CONF[r.conf] || ["—", 0]; return `<span class="rconf" title="確度 ${l}：標本の量と、独立した利用者の声の割合から判断">約${r.n}件<b>${[1, 2, 3].map(i => `<i class="${i <= k ? "" : "o"}"></i>`).join("")}</b></span>`; };
+const repConf = r => { const [l, k] = REP_CONF[r.conf] || ["—", 0]; return `<span class="rconf" title="確度 ${l}（●の数）：標本の量と、独立した利用者の声の割合から判断">約${r.n}件<b>${[1, 2, 3].map(i => `<i class="${i <= k ? "" : "o"}"></i>`).join("")}</b></span>`; };
 /** 発散する積み上げ棒：賛否の中心を軸に、好評を左・不評を右へ。scale＝全行で共通の左右の最大幅 */
-function repBar(r, sc) {
+function repBar(r, sc, big) {
   if (!r.has) return `<div class="rbar" style="--c:-9999px"><span class="none">比率なし（利用者の声が不足）</span></div>`;
-  const [p, x, n] = r.split, W = sc.l + sc.r, pc = v => (v / W * 100).toFixed(2) + "%", c = sc.l / W * 100, lab = v => !r.early && v >= 12 ? `${v}` : "";   // 評価前（薄い表示）は数字を出さない（コントラスト不足を避ける）
-  return `<div class="rbar${r.early ? " early" : ""}" style="--c:${c.toFixed(2)}%" data-t="${Tip.add(`<div class="tt">${esc(r.m.name)}</div><div class="tm">好評 ${p}%・賛否 ${x}%・不評 ${n}%（約${r.n}件の投稿・記事の印象）</div>`)}">
+  const [p, x, n] = r.split, W = sc.l + sc.r, pc = v => (v / W * 100).toFixed(2) + "%", c = sc.l / W * 100, lab = v => v >= (big ? 8 : 12) ? `${v}` : "";
+  return `<div class="rbar${big ? " rbig" : ""}" style="--c:${c.toFixed(2)}%" data-t="${Tip.add(`<div class="tt">${esc(r.m.name)}</div><div class="tm">好評 ${p}%・賛否 ${x}%・不評 ${n}%（約${r.n}件の投稿・記事の印象）</div>`)}">
     <i class="p" style="left:${pc(sc.l - x / 2 - p)};width:${pc(p)}">${lab(p)}</i><i class="x" style="left:${pc(sc.l - x / 2)};width:${pc(x)}">${lab(x)}</i><i class="n" style="left:${pc(sc.l + x / 2)};width:${pc(n)}">${lab(n)}</i></div>`;
 }
 function repScale(rs) { const h = rs.filter(r => r.has); return { l: Math.max(1, ...h.map(r => r.split[0] + r.split[1] / 2)), r: Math.max(1, ...h.map(r => r.split[2] + r.split[1] / 2)) }; }
 function renderReputation(v, ms) {
   const R = S.D.raw.reputation, rs = repItems(ms);
-  v.style.gridTemplateColumns = "minmax(0,1.05fr) minmax(0,1fr)"; v.style.gridTemplateRows = "minmax(0,1.5fr) minmax(0,1fr)";
+  v.style.gridTemplateColumns = "minmax(0,1.05fr) minmax(0,1fr)"; v.style.gridTemplateRows = "auto minmax(0,1fr)";   // 詳細は内容の高さ、傾向は残り全部（空白を作らない）
   if (!rs.length) { v.innerHTML = card("評判（SNS）", "", `<div class="muted">表示中のモデルに評判の記録はありません（提供元の絞り込みを確認）</div>`); return; }
   if (!rs.some(r => r.id === S.rep)) S.rep = rs[0].id;
-  const sel = rs.find(r => r.id === S.rep), sc = repScale(rs), c = sc.l / (sc.l + sc.r) * 100;
-  const row = r => `<div class="rep-row" data-rep="${esc(r.id)}" aria-current="${r.id === sel.id}" role="button" tabindex="0">${mName(r.m)}${repBar(r, sc)}<span class="rtone">${esc(REP_TONE[r.tone] || "")}</span>${repConf(r)}</div>`;
+  const sel = rs.find(r => r.id === S.rep), sc = repScale(rs), c = sc.l / (sc.l + sc.r) * 100, rk = rs.filter(r => r.has && !r.early);   // rk＝順位の対象（評価前は除く）
+  const row = r => `<div class="rep-row" data-rep="${esc(r.id)}" aria-current="${r.id === sel.id}" role="button" tabindex="0">${mName(r.m)}${repBar(r, sc)}${repChip(r)}${repConf(r)}<span class="chev" aria-hidden="true">›</span></div>`;
   const main = rs.filter(r => !r.early), early = rs.filter(r => r.early);
-  const ax = `<div class="rep-ax"><span>モデル</span><span class="ax"><span style="left:0">← 好評が多い</span><span style="left:${c.toFixed(1)}%;transform:translateX(-50%)">賛否</span><span style="right:0">不評が多い →</span></span><span>全体の傾向</span><span style="text-align:right">標本・確度</span></div>`;
+  const ax = `<div class="rep-ax"><span>モデル</span><span class="ax"><span style="left:0">← 好評が多い</span><span style="left:${c.toFixed(1)}%;transform:translateX(-50%)">賛否</span><span style="right:0">不評が多い →</span></span><span title="好評−不評の差。+${REP_RULE.pos}以上＝好評・${REP_RULE.neg}以下＝不評">傾向（差）</span><span style="text-align:right">標本・確度</span><span></span></div>`;
   const list = `<div id="repList" style="position:absolute;inset:0;overflow:hidden;display:flex;flex-direction:column">${ax}<div class="rep-rows" style="display:flex;flex-direction:column;gap:1px;padding-top:4px">${main.map(row).join("")}${early.length ? `<div class="rep-g">評価はまだ早い<span>発表から数日・利用者の声が少ない</span></div>${early.map(row).join("")}` : ""}</div></div>`;
-  const key = `<span class="rep-k"><span><i style="background:var(--s-pos)"></i>好評</span><span><i style="background:var(--s-mix)"></i>賛否</span><span><i style="background:var(--s-neg)"></i>不評</span></span>`;
+  const key = `<span class="rep-k"><span><i style="background:var(--s-pos)"></i>好評</span><span><i style="background:var(--s-mix)"></i>賛否</span><span><i style="background:var(--s-neg)"></i>不評</span><span>●＝確度</span></span>`;
   // 選択モデル：結論（傾向と比率）→ 根拠（好評点・不満点）→ 詳細（使われ方・推移・出典）
   const m = sel.m, li = (xs, cls) => `<ul class="pros${cls}">${xs.map(t => `<li>${esc(t)}</li>`).join("")}</ul>`;
-  const detail = `<div id="repDetail" style="position:absolute;inset:0;overflow:hidden;display:flex;flex-direction:column;gap:11px">
-    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span class="kb"><i>${esc(REP_TONE[sel.tone] || "")}</i></span>${sel.has ? `<span class="t2" style="font-size:12px">好評 <b class="num">${sel.split[0]}%</b>・賛否 <b class="num">${sel.split[1]}%</b>・不評 <b class="num">${sel.split[2]}%</b></span>` : ""}${repConf(sel)}</div>
+  const detail = `<div id="repDetail" style="display:flex;flex-direction:column;gap:11px">
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">${repChip(sel)}${sel.has && !sel.early ? `<span class="t2" style="font-size:12px">好評−不評の差で <b class="num">${rk.findIndex(r => r.id === sel.id) + 1}位</b> / ${rk.length}モデル</span>` : sel.early ? `<span class="t2" style="font-size:12px">発表から数日のため順位は付けない</span>` : ""}<span style="margin-left:auto">${repConf(sel)}</span></div>
+    ${sel.has ? `<div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.8fr);gap:16px;align-items:center"><div><div class="sec-h">好評・賛否・不評の比率（%）</div>${repBar(sel, sc, true)}</div><div><div class="sec-h">全モデル中の位置（差・右ほど好評）</div>${lane(rk.map(r => ({ m: r.m, v: r.net })), { name: "好評−不評の差", unit: "pt", higher: true, fmt: repNet }, { marks: rk.some(r => r.id === sel.id) ? [{ m: sel.m, t: rk.findIndex(r => r.id === sel.id) + 1 }] : [], ends: true })}</div></div>` : ""}
     <p class="lead-q" style="font-size:14px">${esc(sel.trend)}</p>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;min-height:0">
       <div class="rp-col"><div class="sec-h">好評点</div>${li(sel.praise, "")}</div>
       <div class="rp-col"><div class="sec-h">不満点</div>${li(sel.complain, " cons")}</div></div>
     ${sel.uses?.length ? `<div class="rp-uses"><div class="sec-h">よく使われている用途</div><div class="tags">${sel.uses.map(t => `<span class="tag">${esc(t)}</span>`).join("")}</div></div>` : ""}
     ${sel.note ? `<div class="caveat rp-note" style="margin:0"><span>${esc(sel.note)}</span></div>` : ""}
-    <div style="margin-top:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap">${srcLinks(sel.srcs)}<span style="margin-left:auto;display:flex;gap:8px"><button class="btn" data-prof="${esc(m.id)}">プロフィール ›</button><button class="btn" id="repCmp">比較に追加</button></span></div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-top:2px"><div class="srcs">出典：${(sel.srcs || []).map(id => S.D.src.get(id)).filter(Boolean).map(x => { const u = safeUrl(x.url); return u ? `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer" title="${esc(x.label)}">${esc(x.label.split(" – ")[0])}</a>` : esc(x.label.split(" – ")[0]); }).join(" · ")}</div><span style="margin-left:auto;display:flex;gap:8px"><button class="btn" data-prof="${esc(m.id)}">プロフィール ›</button><button class="btn" id="repCmp">比較に追加</button></span></div>
   </div>`;
-  const themes = (R.themes || []).map(t => `<div class="theme"><div class="t">${esc(t.t)}</div><div class="d">${esc(t.d)}</div><div class="ms">${(t.refs || []).map(id => rs.find(r => r.id === id)).filter(Boolean).map(r => `<span class="rpick" data-rep="${esc(r.id)}" title="${esc(r.m.name)} の評判へ"><span class="sw" style="background:${color(r.m)};display:inline-block;width:9px;height:9px;margin-right:4px"></span>${esc(r.m.name)}</span>`).join("")}</div></div>`).join("");
-  v.innerHTML = card("評判の分布", `${rs.length}モデル・好評と不評の差の順`, list, { right: key, style: "grid-row:1/3",
-      foot: `<div class="caveat"><span>${esc((R.caveats || []).join("。"))}。収集：${esc(fmt.date(R.asOf))}</span></div>` })
+  const themes = (R.themes || []).map(t => `<div class="theme"><div class="t">${esc(t.t)}</div><div class="d">${esc(t.d)}</div><div class="ms">${(t.refs || []).map(id => rs.find(r => r.id === id)).filter(Boolean).map(r => `<button class="rpick" data-rep="${esc(r.id)}" aria-current="${r.id === sel.id}" title="${esc(r.m.name)} の評判へ"><span class="sw" style="background:${color(r.m)}"></span>${esc(r.m.name)}</button>`).join("")}</div></div>`).join("");
+  v.innerHTML = card("評判の分布", `<span data-short="差（好評−不評）の順">${rs.length}モデル・差（好評−不評）の順。+${REP_RULE.pos}以上＝好評・${REP_RULE.neg}以下＝不評</span>`, list, { right: key, style: "grid-row:1/3",
+      foot: `<div class="caveat"><span>${esc((R.caveats || []).join("。"))}。収集日 ${esc(fmt.date(R.asOf))}</span></div>` })
     + card(`<span class="sw" style="display:inline-block;width:11px;height:11px;margin-right:7px;background:${color(m)}"></span>${esc(m.name)} の評判`, esc(m.prov.label), detail)
-    + card("モデルをまたぐ傾向", "名前を押すとそのモデルの評判へ", `<div id="repThemes" style="position:absolute;inset:0;overflow:hidden">${themes}</div>`);
+    + card("モデルをまたぐ傾向", "モデル名を押すと、その評判へ", `<div id="repThemes" style="position:absolute;inset:0;overflow:hidden">${themes}</div>`);
   // 行の高さを枠に合わせる（収まらなければ下位の行を省き、件数を示す）
   const lw = $("#repList"), rows = [...lw.querySelectorAll(".rep-row")], hd = lw.firstElementChild.offsetHeight + (lw.querySelector(".rep-g")?.offsetHeight || 0) + 8;
   lw.style.setProperty("--rh", clamp((lw.clientHeight - hd) / Math.max(1, rows.length) - 1, 20, 34) + "px");
@@ -2755,7 +2766,10 @@ function renderReputation(v, ms) {
   for (const ul of [...d.querySelectorAll(".rp-col ul")].reverse().concat([...d.querySelectorAll(".rp-col ul")].reverse())) { while (over() && ul.children.length > 2) { ul.lastElementChild.remove(); ul.dataset.cut = (+ul.dataset.cut || 0) + 1; } }
   d.querySelectorAll(".rp-col ul[data-cut]").forEach(ul => ul.insertAdjacentHTML("beforeend", `<li class="muted" style="font-size:11px">ほか ${ul.dataset.cut}件</li>`));
   // 傾向：収まらなければ、下の項目から説明文を省き、それでも収まらなければ項目を省く（件数を示す）
-  const th = $("#repThemes"); if (th) { const ov = () => th.scrollHeight > th.clientHeight + 1, its = [...th.querySelectorAll(".theme")]; for (const t of [...its].reverse()) { if (!ov()) break; t.querySelector(".d")?.remove(); } let k = 0; while (ov() && its.length > 2) { its.pop().remove(); k++; } if (k) th.insertAdjacentHTML("beforeend", `<div class="muted" style="font-size:11px">ほか ${k}件</div>`); }
+  const th = $("#repThemes"); if (th) { const ov = () => th.scrollHeight > th.clientHeight + 1, its = [...th.querySelectorAll(".theme")]; for (const t of [...its].reverse()) { if (!ov()) break; t.querySelector(".d")?.remove(); }
+    let k = 0, note = null; while (ov() && its.length > 2) { its.pop().remove(); k++; if (!note) { th.insertAdjacentHTML("beforeend", `<div class="muted" style="font-size:11px"></div>`); note = th.lastElementChild; } note.textContent = `ほか ${k}件`; } }
+  // 副題が入りきらなければ短い版へ（省略記号は使わない）
+  v.querySelectorAll(".card-h .sub [data-short]").forEach(el => { const h = el.closest(".sub"); if (h.scrollWidth > h.clientWidth + 1) el.textContent = el.dataset.short; });
   v.querySelectorAll("[data-rep]").forEach(el => { const f = () => { S.rep = el.dataset.rep; store.set("rep", S.rep); Tip.hide(); render(); }; el.onclick = f; el.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); f(); } }; });
   $("#repCmp").onclick = () => { S.compare = [...(S.compare || []).filter(x => x !== m.id), m.id].slice(-4); store.set("compare", S.compare); go("compare"); };
 }
@@ -2779,7 +2793,7 @@ function renderProfile(v, ms) {
   const rk = D.benchmarks.map(b => { const mt = metric("bench:" + b.id), r = ranked(mt, ms), i = r.findIndex(x => x.m === m); return i < 0 ? null : { b, mt, r, i }; }).filter(Boolean);
   const rkRows = rk.map(({ b, mt, r, i }) => `<tr><td><span class="bn" data-gb="${esc(b.id)}" title="${esc(b.label)}の解説へ" style="cursor:pointer">${esc(b.short || b.label)}</span></td><td>${lane(r, mt, { marks: [{ m, t: i + 1 }] })}</td><td class="r num">${esc(mt.fmt(r[i].v))}</td><td class="r"><b class="num">${i + 1}位</b><span class="muted">/${r.length}</span></td></tr>`).join("");
   const center = `<div style="position:absolute;inset:0;display:flex;flex-direction:column;gap:12px">
-    <div style="display:flex;gap:8px;flex-wrap:wrap">${[m.tier, m.access === "limited" ? "限定提供" : null, ow, m.released ? "発表 " + fmt.date(m.released) : null, m.legacy ? "旧世代" : null, m.license].filter(Boolean).map(t => `<span class="kb">${esc(t)}</span>`).join("")}${(() => { const r = repItems(ms).find(x => x.id === m.id); return r ? `<button class="kb rpick" id="pRep" title="SNS・コミュニティでの評判へ">評判：${esc(REP_TONE[r.tone])}${r.has ? `（好評${r.split[0]}%）` : ""} ›</button>` : ""; })()}</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">${[m.tier, m.access === "limited" ? "限定提供" : null, ow, m.released ? "発表 " + fmt.date(m.released) : null, m.legacy ? "旧世代" : null, m.license].filter(Boolean).map(t => `<span class="kb">${esc(t)}</span>`).join("")}${(() => { const r = repItems(ms).find(x => x.id === m.id); return r ? `<button class="btn" id="pRep" style="height:23px;padding:0 10px;font-size:11.5px" title="SNS・コミュニティでの評判へ">評判：${REP_SYM[repTone(r)]} ${REP_TONE[repTone(r)]}${r.has ? `（差 ${repNet(r.net)}）` : ""} ›</button>` : ""; })()}</div>
     <p class="lead-q">${esc(m.summary || m.notes || "")}</p>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
       <div><div class="sec-h">強み</div><ul class="pros">${(m.strengths || []).map(t => `<li>${esc(t)}</li>`).join("") || '<li class="muted">未登録</li>'}</ul></div>
@@ -3622,7 +3636,7 @@ function conclusion(view, sub) {
   if (view === "models" && sub === "reputation") {
     const rs = repItems(ms).filter(r => r.has && !r.early); if (!rs.length) return C("表示中のモデルに評判の記録はありません", null, null);
     const a = rs[0], z = rs[rs.length - 1], th = D.raw.reputation?.themes?.[0];
-    return C(`最も好評は ${b(a.m.name)}（好評${a.split[0]}%）、不評が多いのは ${b(z.m.name)}。${th ? esc(th.t) : ""}`, `最も好評は ${b(a.m.name)}、不評が多いのは ${b(z.m.name)}`, compareWith([a.m.id, rs[1]?.m.id].filter(Boolean), "好評の上位2つを比較"));
+    return C(`最も好評は ${b(a.m.name)}（差 ${repNet(a.net)}）、最も不評は ${b(z.m.name)}（差 ${repNet(z.net)}）。${th ? esc(th.t) : ""}`, `最も好評は ${b(a.m.name)}（差 ${repNet(a.net)}）、最も不評は ${b(z.m.name)}`, compareWith([a.m.id, rs[1]?.m.id].filter(Boolean), "好評の上位2つを比較"));
   }
   if (view === "models" && sub === "profile") {   // 選択中モデルの要約：首位の数・価格の位置・最も近い比較相手
     const m = ms.find(x => x.id === S.profile) || aa.r[0]?.m; if (!m) return C("左でモデルを選ぶと、強み・注意点と立ち位置を表示", null, null);
