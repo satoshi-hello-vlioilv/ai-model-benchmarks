@@ -442,6 +442,7 @@ ul.plain{list-style:none;margin:0;padding:0}
 .rbar{position:relative;height:16px}
 .rbar::before{content:"";position:absolute;left:var(--c);top:-4px;bottom:-4px;border-left:1px dashed var(--axis)}
 .rbar i{position:absolute;top:0;bottom:0;display:grid;place-items:center;font-style:normal;font-size:10.5px;font-weight:650;font-variant-numeric:tabular-nums;color:#fff;overflow:hidden}
+.rbar i.e{background:var(--surface-3);color:var(--text)}
 .rbar i.p{background:var(--s-pos);border-radius:4px 0 0 4px}.rbar i.x{background:var(--s-mix);color:var(--s-mix-text)}.rbar i.n{background:var(--s-neg);border-radius:0 4px 4px 0}
 .rbar .none{position:absolute;inset:3px 10%;border-radius:4px;border:1px dashed var(--border-strong);display:grid;place-items:center;font-size:10.5px;color:var(--text-2)}
 .rtone{display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 7px;border-radius:10px;font-size:11px;font-weight:650;white-space:nowrap;justify-self:start;border:1px solid var(--border-strong);color:var(--text-2)}
@@ -2705,11 +2706,11 @@ function renderModels(v) {
 }
 
 /* ---------- 評判（SNS）：比率は定性的な標本の印象。並び＝好評−不評の差（評価前のモデルは末尾） ---------- */
-const REP_TONE = { pos: "好評", mixed: "賛否", neg: "不評", early: "評価前" }, REP_SYM = { pos: "＋", mixed: "±", neg: "−", early: "…" };
+const REP_TONE = { pos: "好評", mixed: "賛否", neg: "不評", early: "評価前" };
 const REP_RULE = { pos: 25, neg: -10 };   // 傾向＝好評−不評の差で判定（+25以上＝好評・−10以下＝不評・その間＝賛否）。発表直後（tone: early）は判定しない
 const repTone = r => r.tone === "early" ? "early" : !r.has ? "mixed" : r.net >= REP_RULE.pos ? "pos" : r.net <= REP_RULE.neg ? "neg" : "mixed";
 const repNet = v => (v > 0 ? "+" : v < 0 ? "−" : "±") + Math.abs(v);
-const repChip = r => { const t = repTone(r); return `<span class="rtone ${t}">${REP_SYM[t]} ${REP_TONE[t]}${r.has ? ` <b>${repNet(r.net)}</b>` : ""}</span>`; };
+const repChip = r => { const t = repTone(r); return `<span class="rtone ${t}" title="${t === "early" ? "発表から数日のため傾向は判定せず、順位からも外す（差は参考値）" : `好評−不評の差 ${r.has ? repNet(r.net) : "—"}`}">${REP_TONE[t]}${r.has ? ` <b>${t === "early" ? "参考" : ""}${repNet(r.net)}</b>` : ""}</span>`; };
 const REP_CONF = { high: ["高", 3], mid: ["中", 2], low: ["低", 1] };
 function repItems(ms = visible()) {
   const its = S.D.raw.reputation?.items || [];
@@ -2732,7 +2733,8 @@ function renderReputation(v, ms) {
   if (!rs.length) { v.innerHTML = card("評判（SNS）", "", `<div class="muted">表示中のモデルに評判の記録はありません（提供元の絞り込みを確認）</div>`); return; }
   if (!rs.some(r => r.id === S.rep)) S.rep = rs[0].id;
   const sel = rs.find(r => r.id === S.rep), sc = repScale(rs), c = sc.l / (sc.l + sc.r) * 100, rk = rs.filter(r => r.has && !r.early);   // rk＝順位の対象（評価前は除く）
-  const row = r => `<div class="rep-row" data-rep="${esc(r.id)}" aria-current="${r.id === sel.id}" role="button" tabindex="0">${mName(r.m)}${repBar(r, sc)}${repChip(r)}${repConf(r)}<span class="chev" aria-hidden="true">›</span></div>`;
+  // 行のモデル名は提供元の色点を付けない（評判の色と混同しないため。提供元は選択カードの見出しで示す）
+  const row = r => `<div class="rep-row" data-rep="${esc(r.id)}" aria-current="${r.id === sel.id}" role="button" tabindex="0" title="${esc(r.m.prov.label)}"><span class="mname"><span>${esc(r.m.name)}</span>${r.m.access === "limited" ? LIM : ""}${r.m.arch === "diffusion" ? DIFF : ""}</span>${repBar(r, sc)}${repChip(r)}${repConf(r)}<span class="chev" aria-hidden="true">›</span></div>`;
   const main = rs.filter(r => !r.early), early = rs.filter(r => r.early);
   const ax = `<div class="rep-ax"><span>モデル</span><span class="ax"><span style="left:0">← 好評が多い</span><span style="left:${c.toFixed(1)}%;transform:translateX(-50%)">賛否</span><span style="right:0">不評が多い →</span></span><span title="好評−不評の差。+${REP_RULE.pos}以上＝好評・${REP_RULE.neg}以下＝不評">傾向（差）</span><span style="text-align:right">標本・確度</span><span></span></div>`;
   const list = `<div id="repList" style="position:absolute;inset:0;overflow:hidden;display:flex;flex-direction:column">${ax}<div class="rep-rows" style="display:flex;flex-direction:column;gap:1px;padding-top:4px">${main.map(row).join("")}${early.length ? `<div class="rep-g">評価はまだ早い<span>発表から数日・利用者の声が少ない</span></div>${early.map(row).join("")}` : ""}</div></div>`;
@@ -2741,7 +2743,7 @@ function renderReputation(v, ms) {
   const m = sel.m, li = (xs, cls) => `<ul class="pros${cls}">${xs.map(t => `<li>${esc(t)}</li>`).join("")}</ul>`;
   const detail = `<div id="repDetail" style="display:flex;flex-direction:column;gap:11px">
     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">${repChip(sel)}${sel.has && !sel.early ? `<span class="t2" style="font-size:12px">好評−不評の差で <b class="num">${rk.findIndex(r => r.id === sel.id) + 1}位</b> / ${rk.length}モデル</span>` : sel.early ? `<span class="t2" style="font-size:12px">発表から数日のため順位は付けない</span>` : ""}<span style="margin-left:auto">${repConf(sel)}</span></div>
-    ${sel.has ? `<div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.8fr);gap:16px;align-items:center"><div><div class="sec-h">好評・賛否・不評の比率（%）</div>${repBar(sel, sc, true)}</div><div><div class="sec-h">全モデル中の位置（差・右ほど好評）</div>${lane(rk.map(r => ({ m: r.m, v: r.net })), { name: "好評−不評の差", unit: "pt", higher: true, fmt: repNet }, { marks: rk.some(r => r.id === sel.id) ? [{ m: sel.m, t: rk.findIndex(r => r.id === sel.id) + 1 }] : [], ends: true })}</div></div>` : ""}
+    ${sel.has ? `<div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.8fr);gap:16px;align-items:center"><div><div class="sec-h">好評・賛否・不評の比率（%）</div>${repBar(sel, sc, true)}</div><div><div class="sec-h">全モデル中の位置（差・左ほど好評）</div>${lane(rk.map(r => ({ m: r.m, v: -r.net })), { name: "好評−不評の差", unit: "pt", higher: true, fmt: v => repNet(-v) }, { marks: rk.some(r => r.id === sel.id) ? [{ m: sel.m, t: rk.findIndex(r => r.id === sel.id) + 1 }] : [], ends: true })}</div></div>` : ""}
     <p class="lead-q" style="font-size:14px">${esc(sel.trend)}</p>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;min-height:0">
       <div class="rp-col"><div class="sec-h">好評点</div>${li(sel.praise, "")}</div>
@@ -2750,28 +2752,33 @@ function renderReputation(v, ms) {
     ${sel.note ? `<div class="caveat rp-note" style="margin:0"><span>${esc(sel.note)}</span></div>` : ""}
     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-top:2px"><div class="srcs">出典：${(sel.srcs || []).map(id => S.D.src.get(id)).filter(Boolean).map(x => { const u = safeUrl(x.url); return u ? `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer" title="${esc(x.label)}">${esc(x.label.split(" – ")[0])}</a>` : esc(x.label.split(" – ")[0]); }).join(" · ")}</div><span style="margin-left:auto;display:flex;gap:8px"><button class="btn" data-prof="${esc(m.id)}">プロフィール ›</button><button class="btn" id="repCmp">比較に追加</button></span></div>
   </div>`;
-  const themes = (R.themes || []).map(t => `<div class="theme"><div class="t">${esc(t.t)}</div><div class="d">${esc(t.d)}</div><div class="ms">${(t.refs || []).map(id => rs.find(r => r.id === id)).filter(Boolean).map(r => `<button class="rpick" data-rep="${esc(r.id)}" aria-current="${r.id === sel.id}" title="${esc(r.m.name)} の評判へ"><span class="sw" style="background:${color(r.m)}"></span>${esc(r.m.name)}</button>`).join("")}</div></div>`).join("");
+  // 構成：判定ごとのモデル数（1本の帯）
+  const cnt = ["pos", "mixed", "neg", "early"].map(t => [t, rs.filter(r => repTone(r) === t).length]).filter(x => x[1]);
+  const comp = `<div class="rp-comp" style="margin-bottom:10px"><div class="sec-h">${rs.length}モデルの内訳（傾向の判定）</div><div class="rbar" style="--c:-9999px;height:18px">${(() => { let x = 0; return cnt.map(([t, n]) => { const w = n / rs.length * 100, h = `<i class="${{ pos: "p", mixed: "x", neg: "n", early: "e" }[t]}" style="left:${x}%;width:${w}%;border-radius:${x === 0 ? "4px 0 0 4px" : x + w >= 99.9 ? "0 4px 4px 0" : "0"}" data-t="${Tip.add(`<div class="tt">${REP_TONE[t]}</div><div class="tm">${n}モデル</div>`)}">${w >= 14 ? `${REP_TONE[t]} ${n}` : n}</i>`; x += w; return h; }).join(""); })()}</div></div>`;
+  const themes = comp + (R.themes || []).map(t => `<div class="theme"><div class="t">${esc(t.t)}</div><div class="d">${esc(t.d)}</div><div class="ms">${(t.refs || []).map(id => rs.find(r => r.id === id)).filter(Boolean).map(r => `<button class="rpick" data-rep="${esc(r.id)}" aria-current="${r.id === sel.id}" title="${esc(r.m.name)} の評判へ"><span class="sw" style="background:${color(r.m)}"></span>${esc(r.m.name)}</button>`).join("")}</div></div>`).join("");
   v.innerHTML = card("評判の分布", `<span data-short="差（好評−不評）の順">${rs.length}モデル・差（好評−不評）の順。+${REP_RULE.pos}以上＝好評・${REP_RULE.neg}以下＝不評</span>`, list, { right: key, style: "grid-row:1/3",
       foot: `<div class="caveat"><span>${esc((R.caveats || []).join("。"))}。収集日 ${esc(fmt.date(R.asOf))}</span></div>` })
-    + card(`<span class="sw" style="display:inline-block;width:11px;height:11px;margin-right:7px;background:${color(m)}"></span>${esc(m.name)} の評判`, esc(m.prov.label), detail)
-    + card("モデルをまたぐ傾向", "モデル名を押すと、その評判へ", `<div id="repThemes" style="position:absolute;inset:0;overflow:hidden">${themes}</div>`);
+    + (S.repAll ? "" : card(`<span class="sw" style="display:inline-block;width:11px;height:11px;margin-right:7px;background:${color(m)}"></span>${esc(m.name)} の評判`, esc(m.prov.label), detail))
+    + card("モデルをまたぐ傾向", "モデル名を押すと、その評判へ", `<div id="repThemes" style="position:absolute;inset:0;overflow:hidden">${themes}</div>`, S.repAll ? { style: "grid-row:1/3", right: `<button class="btn" id="repBack">${esc(m.name)} の評判に戻る</button>` } : {});
   // 行の高さを枠に合わせる（収まらなければ下位の行を省き、件数を示す）
   const lw = $("#repList"), rows = [...lw.querySelectorAll(".rep-row")], hd = lw.firstElementChild.offsetHeight + (lw.querySelector(".rep-g")?.offsetHeight || 0) + 8;
   lw.style.setProperty("--rh", clamp((lw.clientHeight - hd) / Math.max(1, rows.length) - 1, 20, 34) + "px");
   let cut = 0; while (lw.scrollHeight > lw.clientHeight + 1 && rows.length > 3) { const r = rows.splice(rows.findLastIndex(x => x.dataset.rep !== sel.id && !x.previousElementSibling?.classList.contains("rep-g")), 1)[0]; r.remove(); cut++; }
   if (cut) lw.lastElementChild.insertAdjacentHTML("beforeend", `<div class="muted" style="font-size:11px;padding:2px 8px">ほか ${cut} モデル（提供元の絞り込みで表示を切り替え）</div>`);
   // 詳細：収まらなければ、注記 → 用途 → 各一覧の末尾の順に省く（省いた件数は示す）
-  const d = $("#repDetail"), over = () => d.scrollHeight > d.clientHeight + 1;
+  const d = $("#repDetail") || document.createElement("div"), over = () => d.scrollHeight > d.clientHeight + 1;
   for (const sel2 of [".rp-note", ".rp-uses"]) { if (!over()) break; d.querySelector(sel2)?.remove(); }
   for (const ul of [...d.querySelectorAll(".rp-col ul")].reverse().concat([...d.querySelectorAll(".rp-col ul")].reverse())) { while (over() && ul.children.length > 2) { ul.lastElementChild.remove(); ul.dataset.cut = (+ul.dataset.cut || 0) + 1; } }
   d.querySelectorAll(".rp-col ul[data-cut]").forEach(ul => ul.insertAdjacentHTML("beforeend", `<li class="muted" style="font-size:11px">ほか ${ul.dataset.cut}件</li>`));
   // 傾向：収まらなければ、下の項目から説明文を省き、それでも収まらなければ項目を省く（件数を示す）
   const th = $("#repThemes"); if (th) { const ov = () => th.scrollHeight > th.clientHeight + 1, its = [...th.querySelectorAll(".theme")]; for (const t of [...its].reverse()) { if (!ov()) break; t.querySelector(".d")?.remove(); }
-    let k = 0, note = null; while (ov() && its.length > 2) { its.pop().remove(); k++; if (!note) { th.insertAdjacentHTML("beforeend", `<div class="muted" style="font-size:11px"></div>`); note = th.lastElementChild; } note.textContent = `ほか ${k}件`; } }
+    let k = 0, note = null; while (ov() && its.length > 2) { its.pop().remove(); k++; if (!note) { th.insertAdjacentHTML("beforeend", `<div class="muted" style="font-size:11px"></div>`); note = th.lastElementChild; } note.textContent = `ほか ${k}件`; }
+    if (note) { note.outerHTML = `<button class="go" id="repAll" style="font-size:11.5px">ほか ${k}件を含め、すべての傾向を表示</button>`; $("#repAll").onclick = () => { S.repAll = true; render(); }; } }
+  if ($("#repBack")) $("#repBack").onclick = () => { S.repAll = false; render(); };
   // 副題が入りきらなければ短い版へ（省略記号は使わない）
   v.querySelectorAll(".card-h .sub [data-short]").forEach(el => { const h = el.closest(".sub"); if (h.scrollWidth > h.clientWidth + 1) el.textContent = el.dataset.short; });
-  v.querySelectorAll("[data-rep]").forEach(el => { const f = () => { S.rep = el.dataset.rep; store.set("rep", S.rep); Tip.hide(); render(); }; el.onclick = f; el.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); f(); } }; });
-  $("#repCmp").onclick = () => { S.compare = [...(S.compare || []).filter(x => x !== m.id), m.id].slice(-4); store.set("compare", S.compare); go("compare"); };
+  v.querySelectorAll("[data-rep]").forEach(el => { const f = () => { S.repAll = false; S.rep = el.dataset.rep; store.set("rep", S.rep); Tip.hide(); render(); }; el.onclick = f; el.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); f(); } }; });
+  if ($("#repCmp")) $("#repCmp").onclick = () => { S.compare = [...(S.compare || []).filter(x => x !== m.id), m.id].slice(-4); store.set("compare", S.compare); go("compare"); };
 }
 
 function renderProfile(v, ms) {
@@ -2793,14 +2800,14 @@ function renderProfile(v, ms) {
   const rk = D.benchmarks.map(b => { const mt = metric("bench:" + b.id), r = ranked(mt, ms), i = r.findIndex(x => x.m === m); return i < 0 ? null : { b, mt, r, i }; }).filter(Boolean);
   const rkRows = rk.map(({ b, mt, r, i }) => `<tr><td><span class="bn" data-gb="${esc(b.id)}" title="${esc(b.label)}の解説へ" style="cursor:pointer">${esc(b.short || b.label)}</span></td><td>${lane(r, mt, { marks: [{ m, t: i + 1 }] })}</td><td class="r num">${esc(mt.fmt(r[i].v))}</td><td class="r"><b class="num">${i + 1}位</b><span class="muted">/${r.length}</span></td></tr>`).join("");
   const center = `<div style="position:absolute;inset:0;display:flex;flex-direction:column;gap:12px">
-    <div style="display:flex;gap:8px;flex-wrap:wrap">${[m.tier, m.access === "limited" ? "限定提供" : null, ow, m.released ? "発表 " + fmt.date(m.released) : null, m.legacy ? "旧世代" : null, m.license].filter(Boolean).map(t => `<span class="kb">${esc(t)}</span>`).join("")}${(() => { const r = repItems(ms).find(x => x.id === m.id); return r ? `<button class="btn" id="pRep" style="height:23px;padding:0 10px;font-size:11.5px" title="SNS・コミュニティでの評判へ">評判：${REP_SYM[repTone(r)]} ${REP_TONE[repTone(r)]}${r.has ? `（差 ${repNet(r.net)}）` : ""} ›</button>` : ""; })()}</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">${[m.tier, m.access === "limited" ? "限定提供" : null, ow, m.released ? "発表 " + fmt.date(m.released) : null, m.legacy ? "旧世代" : null, m.license].filter(Boolean).map(t => `<span class="kb">${esc(t)}</span>`).join("")}</div>
     <p class="lead-q">${esc(m.summary || m.notes || "")}</p>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
       <div><div class="sec-h">強み</div><ul class="pros">${(m.strengths || []).map(t => `<li>${esc(t)}</li>`).join("") || '<li class="muted">未登録</li>'}</ul></div>
       <div><div class="sec-h">注意点</div><ul class="pros cons">${(m.cautions || []).map(t => `<li>${esc(t)}</li>`).join("") || '<li class="muted">未登録</li>'}</ul></div>
     </div>
     ${m.bestFor?.length ? `<div><div class="sec-h">向いている用途</div><div class="tags">${m.bestFor.map(t => `<span class="tag">${esc(t)}</span>`).join("")}</div></div>` : ""}
-    <div class="row"><button class="btn" id="pCmp">比較に追加</button><button class="btn" id="pAll">全ベンチ値と出典</button></div>
+    <div class="row"><button class="btn" id="pCmp">比較に追加</button><button class="btn" id="pAll">全ベンチ値と出典</button>${(() => { const r = repItems(ms).find(x => x.id === m.id); return r ? `<button class="btn" id="pRep" title="SNS・コミュニティでの評判へ">評判：${REP_TONE[repTone(r)]}${r.has ? `（差 ${repNet(r.net)}${repTone(r) === "early" ? "・参考" : ""}）` : ""} ›</button>` : ""; })()}</div>
     <div class="sec-h" style="margin:0">全ベンチマークでの位置（色の点＝このモデル・番号＝順位・灰＝その他）</div>
     <div style="flex:1;min-height:0;position:relative">${rk.length ? `<div style="position:absolute;inset:0;overflow:hidden" id="profRanks"><table class="tbl" style="table-layout:fixed"><colgroup><col style="width:22%"><col><col style="width:13%"><col style="width:13%"></colgroup><tbody>${rkRows}</tbody></table></div>` : '<div class="muted" style="font-size:12px">公表済みのベンチマーク値はありません</div>'}</div>
   </div>`;
@@ -3270,7 +3277,7 @@ function renderRoadmap(v) {
   const bar = x => { const c = provColor(D.pv.get(x.provider)), st = CONF_STYLE[x.conf];
     return `<i class="gb ${st}" style="left:${gx(mi(x.window[0]))};width:calc(${gx(mi(x.window[1]) + 1)} - ${gx(mi(x.window[0]))});--c:${c}"></i>`; };
   const today = `<i class="gt" style="left:${gx(mi(D.meta.asOf.slice(0, 7)) + Number(D.meta.asOf.slice(8, 10)) / 31)}"></i>`;
-  const yrs = []; for (let k = Math.ceil(g0 / 12) * 12; k < g1; k += 12) yrs.push(`<span style="left:${gx(k)}">${k / 12}</span>`);
+  const nowK = mi(D.meta.asOf.slice(0, 7)), yrs = []; for (let k = Math.ceil(g0 / 12) * 12; k < g1; k += 12) if (Math.abs(k - nowK) / Math.max(1, g1 - g0) > .12) yrs.push(`<span style="left:${gx(k)}">${k / 12}</span>`);   // 「今日」と近い年の目盛りは省く（ラベルの接触を防ぐ）
   const others = `<div class="gantt"><div class="gh"><span></span><div class="gtrack gaxis">${yrs.join("")}<span class="gnow" style="left:${gx(mi(D.meta.asOf.slice(0, 7)))}">今日</span></div></div>${sorted.map(x => `<button class="li" data-up="${esc(x.id)}" aria-current="${x.id === u?.id}" title="${esc(x.name)}：${esc(x.window[0].replace("-", "/"))}〜${esc(x.window[1].replace("-", "/"))}"><span class="gn"><span class="sw" style="background:${provColor(D.pv.get(x.provider))}"></span>${esc(x.name)}</span><span class="gtrack">${today}${bar(x)}</span></button>`).join("")}</div>`;
   const detail = u ? `<div class="stack" id="upDetail" style="position:absolute;inset:0;overflow:hidden;gap:10px">
       <div style="display:flex;gap:6px;flex-wrap:wrap"><span class="kb"><span class="sw" style="background:${provColor(p)}"></span>${esc(p?.label || u.provider)}</span><span class="kb">${esc(O.statuses[u.status] || u.status)}</span><span class="kb" title="${esc(conf?.desc || "")}">${confKey(u.conf, provColor(p))}確度：${esc(conf?.label || "")}</span></div>
