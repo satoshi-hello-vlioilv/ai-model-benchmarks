@@ -12,7 +12,7 @@ if (shotDir) fs.mkdirSync(shotDir, { recursive: true });
 
 // Windows 11 / 125% スケーリングの実効CSSピクセル（2160x1440 → 1728x1152、FHD → 1536x864）を含む
 const VIEWPORTS = [[1536, 864], [1728, 1152], [1920, 1080], [2560, 1440]];
-const ROUTES = ["overview", "models/matrix", "models/profile", "guide/map", "guide/detail", "future/roadmap", "future/diffusion", "history/timeline", "history/growth", "future/capability", "future/infra", "future/frontier", "future/safety", "bench/index", "bench/agentic", "bench/reason", "bench/work", "bench/computer", "bench/heat", "cost", "speed", "compare", "table", "data", "news/recent", "news/leak", "news/archive", "data/versions"];
+const ROUTES = ["overview", "models/matrix", "models/profile", "models/reputation", "guide/map", "guide/detail", "future/roadmap", "future/diffusion", "history/timeline", "history/growth", "future/capability", "future/infra", "future/frontier", "future/safety", "bench/index", "bench/agentic", "bench/reason", "bench/work", "bench/computer", "bench/heat", "cost", "speed", "compare", "table", "data", "news/recent", "news/leak", "news/archive", "data/versions"];
 
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || undefined });
 const failures = [];
@@ -89,7 +89,7 @@ for (const theme of ["light", "dark"]) {
     }
     await page.evaluate(() => { S.f.legacy = false; });
     // 個別解説・プロフィールを全件巡回（項目により文章量が異なるため）
-    for (const [route, ids, key] of [["guide/detail", await page.evaluate(() => S.D.benchmarks.map(b => b.id)), "guideBench"], ["models/profile", await page.evaluate(() => visible().map(m => m.id)), "profile"], ["future/roadmap", await page.evaluate(() => S.D.outlook.upcoming.map(u => u.id)), "upcoming"]]) {
+    for (const [route, ids, key] of [["guide/detail", await page.evaluate(() => S.D.benchmarks.map(b => b.id)), "guideBench"], ["models/profile", await page.evaluate(() => visible().map(m => m.id)), "profile"], ["models/reputation", await page.evaluate(() => repItems().map(r => r.id)), "rep"], ["future/roadmap", await page.evaluate(() => S.D.outlook.upcoming.map(u => u.id)), "upcoming"]]) {
       for (const id of ids) {
         await page.evaluate(([r, k, i]) => { S[k] = i; location.hash = r; render(); }, [route, key, id]);
         const bad = await page.evaluate(() => [...document.querySelectorAll("#view .body > div")].filter(el => el.scrollHeight > el.clientHeight + 2 || el.scrollWidth > el.clientWidth + 2).map(el => el.closest(".card")?.querySelector("h2")?.textContent + ` ${el.scrollHeight}>${el.clientHeight}`));
